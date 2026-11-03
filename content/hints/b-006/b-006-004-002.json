@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-004-002",
+  "questionId": "B-006-004-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the strengths and weaknesses of open-wire line.",
+      "fr": "Revoyez les forces et faiblesses de la ligne ouverte."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-02",
+    "sectionAnchor": "feedline-loss"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Principle item: a content hint would restate the rule that selects one option; topic pointer and lesson link only."
+}

@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-004-004-001",
+  "questionId": "B-004-004-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review how the FET section names the semiconductor between source and drain.",
+      "fr": "Revoyez comment la section sur les FET nomme le semi-conducteur entre la source et le drain."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-004-02",
+    "sectionAnchor": "field-effect-transistors-voltage-controlled-channel-devices"
+  },
+  "singleLevelReason": "Name-pair recall: a second hint would list or eliminate the channel types.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

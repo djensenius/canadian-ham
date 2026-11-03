@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-006-009-010.\n\nWhy the correct answer is right: The suffix dBi means decibels relative to an isotropic radiator. The letter i identifies the isotropic reference antenna.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"integral\": Integral is a mathematics term and is not an antenna reference. The reference for dBi is the ideal isotropic radiator.\n- sourceIndex 2: \"ionospheric\": The ionosphere affects propagation, but it is not the reference antenna used in a dBi gain figure.\n- sourceIndex 3: \"interpolated\": Interpolation is a way to estimate between values. The i in dBi names the isotropic reference, not a calculation method.",
+    "en": "Question B-006-009-010.\n\nWhy the correct answer is right: The suffix dBi means decibels relative to an isotropic radiator, the ideal point source that radiates equally in all directions and is used as a reference. The letter i points to that isotropic reference.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"integral\": Integral is a mathematics term and is not an antenna reference. The reference for dBi is the ideal isotropic radiator.\n- sourceIndex 2: \"ionospheric\": The ionosphere affects propagation, but it is not the reference antenna used in a dBi gain figure.\n- sourceIndex 3: \"interpolated\": Interpolation is a way to estimate between values. The i in dBi names the isotropic reference, not a calculation method.",
     "fr": null
   },
   "citations": [

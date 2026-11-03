@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-005-003-004",
+  "questionId": "B-005-003-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the circuit fault conditions and what each does to current.",
+      "fr": "Revoyez les états de panne d'un circuit et ce que chacun fait au courant."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-02",
+    "sectionAnchor": "open-closed-and-short-circuits"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Fault-condition recall: any second hint would paraphrase or name the circuit condition."
+}

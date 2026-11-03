@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-007-003-011.\n\nWhy the correct answer is right: Raising the refracting region puts the bending path higher above Earth. With the same general launch geometry, the wave comes back at a greater ground distance.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"It increases, due to the increase in critical frequency\": The distance increase is geometric; the question asks about region height, not a changed critical frequency.\n- sourceIndex 2: \"It decreases, due to the geometry of the signal path\": The geometric effect is reversed here, because a higher layer lengthens the path.\n- sourceIndex 3: \"It decreases, due to the increase in critical frequency\": This combines the wrong distance change with an unrelated critical-frequency explanation.",
+    "en": "Question B-007-003-011.\n\nWhy the correct answer is right: Raising the refracting region puts the bending path higher above Earth. With the same general launch geometry, the wave comes back at a greater ground distance.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"It increases, due to the increase in critical frequency\": The distance increase is geometric. The question asks about region height, not a changed critical frequency.\n- sourceIndex 2: \"It decreases, due to the geometry of the signal path\": The geometric effect is reversed here, because a higher layer lengthens the path.\n- sourceIndex 3: \"It decreases, due to the increase in critical frequency\": This combines the wrong distance change with an unrelated critical-frequency explanation.",
     "fr": null
   },
   "citations": [

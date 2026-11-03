@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-019-008.\n\nWhy the correct answer is right: A single-point ground or bonding panel gives all station chassis a common reference and avoids uncontrolled loops or daisy-chain paths.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"To separate ground electrodes\": Separate electrodes can sit at different voltages during faults or lightning, placing dangerous potential between pieces of equipment.\n- sourceIndex 2: \"To the antenna system ground\": The antenna ground must be bonded into the overall grounding system; using only that point can bypass the intended station single-point layout.\n- sourceIndex 3: \"To adjacent devices in a chain\": Daisy-chaining chassis depends on every jumper and cabinet connection, and it can create unwanted RF or fault-current paths.",
+    "en": "Question B-003-019-008.\n\nWhy the correct answer is right: A single-point ground or bonding panel gives all station chassis a common reference and avoids uncontrolled loops or daisy-chain paths.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"To separate ground electrodes\": Separate electrodes can sit at different voltages during faults or lightning, placing dangerous potential between pieces of equipment.\n- sourceIndex 2: \"To the antenna system ground\": The antenna ground must be bonded into the overall grounding system. Using only that point can bypass the intended station single-point layout.\n- sourceIndex 3: \"To adjacent devices in a chain\": Daisy-chaining chassis depends on every jumper and cabinet connection, and it can create unwanted radio-frequency (RF) or fault-current paths.",
     "fr": null
   },
   "citations": [

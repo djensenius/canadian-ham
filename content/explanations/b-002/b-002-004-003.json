@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-002-004-003.\n\nWhy the correct answer is right: For a brief HF SSB tuner adjustment near a net, move 3 kHz to 5 kHz away so the tuning signal does not cover the net.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"1 kHz away from the net frequency\": One kilohertz is too close for a voice signal and may still interfere with net audio.\n- sourceIndex 2: \"On the net frequency\": Tuning directly on the net frequency disrupts the net you are trying to join.\n- sourceIndex 3: \"On the band's centre frequency\": The band centre is not automatically clear or related to the net’s operating spot.",
+    "en": "Question B-002-004-003.\n\nWhy the correct answer is right: For a brief high-frequency (HF) single-sideband (SSB) tuner adjustment near a net, move 3 kHz to 5 kHz away so the tuning signal does not cover the net.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"1 kHz away from the net frequency\": One kilohertz is too close for a voice signal and may still interfere with net audio.\n- sourceIndex 2: \"On the net frequency\": Tuning directly on the net frequency disrupts the net you are trying to join.\n- sourceIndex 3: \"On the band's centre frequency\": The band centre is not automatically clear or related to the net’s operating spot.",
     "fr": null
   },
   "citations": [

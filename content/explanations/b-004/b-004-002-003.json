@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-004-002-003.\n\nWhy the correct answer is right: A Zener diode is designed to hold a circuit point near a specified voltage when used with proper current limiting.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"provide a voltage phase shift\": A phase-shift circuit changes timing between AC signals; a Zener's reverse-breakdown voltage is selected as a voltage reference or regulator instead.\n- sourceIndex 2: \"boost the power supply voltage\": A Zener diode does not boost supply voltage by itself.\n- sourceIndex 3: \"provide a path through which current can flow\": Many components can provide a current path; the distinctive Zener use is voltage regulation.",
+    "en": "Question B-004-002-003.\n\nWhy the correct answer is right: A Zener diode is designed to hold a circuit point near a specified voltage. It needs proper current limiting.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"provide a voltage phase shift\": A phase-shift circuit changes timing between alternating-current signals. A Zener's reverse-breakdown voltage is selected as a voltage reference or regulator instead.\n- sourceIndex 2: \"boost the power supply voltage\": A Zener diode does not boost supply voltage by itself.\n- sourceIndex 3: \"provide a path through which current can flow\": Many components can provide a current path; the distinctive Zener use is voltage regulation.",
     "fr": null
   },
   "citations": [

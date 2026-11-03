@@ -1,0 +1,49 @@
+<svg id="series-parallel-current-paths" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 720" role="img">
+  <title>Series and parallel current paths</title>
+  <desc>Two circuit sketches comparing a cell with two resistors in series and the same cell feeding two parallel branch resistors.</desc>
+  <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="120" y1="150" x2="120" y2="185" stroke-width="7"/>
+    <line x1="80" y1="185" x2="160" y2="185" stroke-width="8"/>
+    <line x1="98" y1="225" x2="142" y2="225" stroke-width="8"/>
+    <line x1="120" y1="225" x2="120" y2="285" stroke-width="7"/>
+    <line x1="120" y1="150" x2="260" y2="150" stroke-width="7"/>
+    <polyline points="260 150 278 125 296 175 314 125 332 175 350 125 368 175 386 150" stroke-width="7"/>
+    <line x1="386" y1="150" x2="560" y2="150" stroke-width="7"/>
+    <polyline points="560 150 578 125 596 175 614 125 632 175 650 125 668 175 686 150" stroke-width="7"/>
+    <line x1="686" y1="150" x2="850" y2="150" stroke-width="7"/>
+    <line x1="850" y1="150" x2="850" y2="285" stroke-width="7"/>
+    <line x1="850" y1="285" x2="120" y2="285" stroke-width="7"/>
+    <path d="M415 135 C454 128 502 128 540 135" stroke-width="8"/>
+
+    <line x1="120" y1="480" x2="120" y2="510" stroke-width="7"/>
+    <line x1="80" y1="510" x2="160" y2="510" stroke-width="8"/>
+    <line x1="98" y1="550" x2="142" y2="550" stroke-width="8"/>
+    <line x1="120" y1="550" x2="120" y2="610" stroke-width="7"/>
+    <line x1="120" y1="480" x2="620" y2="480" stroke-width="7"/>
+    <line x1="120" y1="610" x2="620" y2="610" stroke-width="7"/>
+    <line x1="380" y1="480" x2="380" y2="500" stroke-width="7"/>
+    <polyline points="380 500 355 513 405 526 355 539 405 552 380 565" stroke-width="7"/>
+    <line x1="380" y1="565" x2="380" y2="610" stroke-width="7"/>
+    <line x1="620" y1="480" x2="620" y2="500" stroke-width="7"/>
+    <polyline points="620 500 595 513 645 526 595 539 645 552 620 565" stroke-width="7"/>
+    <line x1="620" y1="565" x2="620" y2="610" stroke-width="7"/>
+    <line x1="330" y1="505" x2="330" y2="585" stroke-width="8"/>
+    <line x1="570" y1="505" x2="570" y2="585" stroke-width="8"/>
+  </g>
+  <g fill="currentColor">
+    <polygon points="540 129 516 117 520 145"/>
+    <polygon points="330 480 305 467 309 495"/>
+    <polygon points="330 585 316 560 344 560"/>
+    <polygon points="570 585 556 560 584 560"/>
+  </g>
+  <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
+    <text x="500" y="62" font-size="44" font-weight="700">Series: cell and two resistors</text>
+    <text x="500" y="108" font-size="38">same I through both resistors</text>
+    <text x="500" y="335" font-size="38">series resistance adds</text>
+    <text x="500" y="395" font-size="44" font-weight="700">Parallel: branch currents add</text>
+    <text x="255" y="450" font-size="38">I total</text>
+    <text x="290" y="555" font-size="38">I1</text>
+    <text x="530" y="555" font-size="38">I2</text>
+    <text x="500" y="690" font-size="38">I total = I1 + I2</text>
+  </g>
+</svg>

@@ -15,7 +15,7 @@ SwiftUI multiplatform first slice for iPhone, iPad, Mac, Apple TV, and Apple Vis
 - `CanadianHamTests/` — unit tests for bundled content decoding and answer shuffling.
 - `CanadianHamUITests/` — XCUITests for iPhone practice, subsection practice, settings reset, mock exams, split-view state persistence, and accessibility audits.
 
-The generated Basic 2025 question-bank files, lesson Markdown, explanation JSON, lesson quizzes, and subsection titles are referenced from `project.yml` under `../../content/` and copied into app/test bundles by the build; they are not duplicated under `apps/apple/`. ISED source reference-sheet files are not bundled in the Apple app. The iOS/iPadOS/macOS app target depends on the local `packages/content-swift` package (`CanadianHamContent`) to load and validate that bundled content offline. tvOS/visionOS targets stay on their existing shared question-bank resources.
+The generated Basic 2025 question-bank files, lesson Markdown, explanation JSON, lesson quizzes, and subsection titles are referenced from `project.yml` under `../../content/` and copied into app/test bundles by the build; they are not duplicated under `apps/apple/`. The ISED source PDFs are not bundled. Debug and explicitly opted-in internal beta builds include the official exam sheet as rendered pages plus accessible English text; default Release excludes it. The original study sheet remains available (see `docs/content-licensing.md`). The iOS/iPadOS/macOS app target depends on the local `packages/content-swift` package (`CanadianHamContent`) to load and validate that bundled content offline. tvOS/visionOS targets stay on their existing shared question-bank resources.
 
 ## Open and regenerate
 

@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-008-003-001",
+  "questionId": "B-008-003-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the names of the main interference types.",
+      "fr": "Revoyez les noms des principaux types de brouillage."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-02",
+    "sectionAnchor": "spurious-emissions-and-intermodulation"
+  },
+  "singleLevelReason": "Term recall: a second hint would state or paraphrase the term.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-013-001",
+  "questionId": "B-003-013-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review why an FM receiver can be noisy between usable signals.",
+      "fr": "Revoyez pourquoi un récepteur FM peut être bruyant entre les signaux utilisables."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-05",
+    "sectionAnchor": "fm-deviation-squelch-and-capture-effect"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

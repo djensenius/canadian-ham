@@ -70,17 +70,26 @@ private struct NativeGeneralSettingsTab: View {
                     .accessibilityIdentifier("native-mock-exam-timer-toggle")
                     .accessibilityLabel(Text("Enable optional mock-exam timer")) // l10n: localized
 
-                Picker("Question language", selection: bindings.language) {
-                    ForEach(BankLanguage.allCases) { language in
+                Picker("Language", selection: bindings.language) {
+                    ForEach(ApplePreferences.LanguagePreference.allCases) { language in
                         switch language {
+                        case .system:
+                            Text("System default").tag(language) // l10n: localized
                         case .english:
-                            Text(localizedNative(language.displayName, language: .english)).tag(language) // l10n: content(en)
+                            Text(localizedNative(BankLanguage.english.displayName, language: .english)).tag(language) // l10n: content(en)
                         case .french:
-                            Text(localizedNative(language.displayName, language: .french)).tag(language) // l10n: content(fr)
+                            Text(localizedNative(BankLanguage.french.displayName, language: .french)).tag(language) // l10n: content(fr)
                         }
                     }
                 }
-                .accessibilityLabel(Text("Question language")) // l10n: localized
+                .pickerStyle(.segmented)
+                .accessibilityIdentifier("native-language-setting-picker")
+                .accessibilityLabel(Text("Language")) // l10n: localized
+                if progressStore.preferences.language.requiresInterfaceRestart() {
+                    Text("Restart Canadian Ham to change the interface language.") // l10n: localized
+                        .foregroundStyle(DesignTokens.Colors.inkMuted)
+                        .accessibilityIdentifier("native-language-restart-note")
+                }
 
                 Picker("Appearance", selection: bindings.theme) {
                     ForEach(ApplePreferences.Theme.allCases) { theme in
@@ -88,6 +97,16 @@ private struct NativeGeneralSettingsTab: View {
                     }
                 }
                 .accessibilityLabel(Text("Appearance")) // l10n: localized
+#if ICLOUD_SYNC
+                Toggle(ICloudSyncCopy.toggleLabel, isOn: Binding(
+                    get: { progressStore.isICloudSyncEnabled },
+                    set: { enabled in updateICloudSync(enabled, progressStore: progressStore) }
+                )) // l10n: localized
+                .accessibilityIdentifier("native-icloud-sync-toggle")
+                .accessibilityLabel(Text(ICloudSyncCopy.toggleLabel)) // l10n: localized
+                Text(ICloudSyncCopy.macExplanation) // l10n: localized
+                    .foregroundStyle(DesignTokens.Colors.inkMuted)
+#endif
                 if !statusMessage.isEmpty {
                     Text(statusMessage) // l10n: localized
                         .foregroundStyle(DesignTokens.Colors.correctText)
@@ -135,6 +154,17 @@ private struct NativeGeneralSettingsTab: View {
         saveCourseSwitch(to: pendingCourseSwitch, progressStore: progressStore)
     }
 
+#if ICLOUD_SYNC
+    private func updateICloudSync(_ enabled: Bool, progressStore: ProgressStoreService) {
+        progressStore.updateICloudSyncOptIn(enabled)
+        appSettings.recordDataChanged()
+        statusMessage = enabled
+            ? ICloudSyncCopy.enabledAfterRestart
+            : ICloudSyncCopy.disabledAfterRestart
+        errorMessage = ""
+    }
+#endif
+
     private func saveCourseSwitch(to bankId: CourseBankID, progressStore: ProgressStoreService) {
         var next = progressStore.preferences
         next.activeBankId = bankId
@@ -167,7 +197,7 @@ struct NativeSettingsPreferenceBindings {
         binding(get: { $0.examTimerEnabled }, set: { $0.examTimerEnabled = $1 })
     }
 
-    var language: Binding<BankLanguage> {
+    var language: Binding<ApplePreferences.LanguagePreference> {
         binding(get: { $0.language }, set: { $0.language = $1 })
     }
 
@@ -195,7 +225,7 @@ struct NativeSettingsPreferenceBindings {
     }
 }
 
-private struct NativeDataSettingsTab: View {
+struct NativeDataSettingsTab: View {
     @ObservedObject var appSettings: AppSettingsModel
     @State private var exportDocument: ProgressExportDocument?
     @State private var showingExporter = false
@@ -263,7 +293,7 @@ private struct NativeDataSettingsTab: View {
             return
         }
         do {
-            let text = try progressStore.serializedExport(bank: bank, exportedAt: AppleStudyEngine.canonicalNow())
+            let text = try progressStore.serializedExport(bank: bank, exportedAt: AppleStudyEngine.canonicalNow(), morseSettings: appSettings.morseSettings.exportedPreferences)
             exportDocument = ProgressExportDocument(text: text)
             showingExporter = true
         } catch {
@@ -295,13 +325,12 @@ private struct NativeDataSettingsTab: View {
     }
 
     private func confirmImport() {
-        guard let progressStore = appSettings.progressStore, let bank = appSettings.bank, let pendingImport else {
+        guard appSettings.progressStore != nil, appSettings.bank != nil, let pendingImport else {
             errorMessage = String(localized: "Open a Canadian Ham window to load settings.")
             return
         }
         do {
-            try progressStore.importData(pendingImport, bank: bank)
-            appSettings.recordDataChanged(replacesLocalData: true)
+            try importProgress(pendingImport)
             self.pendingImport = nil
             statusMessage = String(localized: "Progress imported.")
             errorMessage = ""
@@ -310,11 +339,36 @@ private struct NativeDataSettingsTab: View {
         }
     }
 
+    func importProgress(_ imported: ProgressExportV1, defaults: UserDefaults = .standard) throws {
+        guard let progressStore = appSettings.progressStore, let bank = appSettings.bank else {
+            throw ProgressStoreError.openFailed(String(localized: "Open a Canadian Ham window to load settings."))
+        }
+        try progressStore.importData(imported, bank: bank)
+        appSettings.morseSettings = MorseTrainerSettings(exported: imported.preferences.morse).normalized()
+        appSettings.morseSettings.save(defaults: defaults)
+        appSettings.recordDataChanged(replacesLocalData: true)
+    }
+
     private func resetAllData() {
         guard let progressStore = appSettings.progressStore else {
             errorMessage = String(localized: "Open a Canadian Ham window to load settings.")
             return
         }
+#if ICLOUD_SYNC
+        Task { @MainActor in
+            do {
+                try await progressStore.resetAllData(client: .cloudKit())
+                MorseTrainerSettings.reset()
+                appSettings.morseSettings = .default
+                appSettings.recordDataChanged(replacesLocalData: true)
+                statusMessage = String(localized: "All local progress was reset.")
+                errorMessage = ""
+            } catch {
+                errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
+            }
+        }
+        return
+#endif
         do {
             try progressStore.resetAllData()
             MorseTrainerSettings.reset()

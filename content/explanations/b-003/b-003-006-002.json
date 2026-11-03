@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-006-002.\n\nWhy the correct answer is right: A microphone produces only a small audio signal, so a speech amplifier is needed to raise voice audio to a usable level for modulation.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"To match the balanced modulator's output impedance\": The speech amplifier is before the balanced modulator and feeds its input, so it cannot be matching the modulator's output impedance.\n- sourceIndex 2: \"The sideband filter requires a large audio signal to work\": The sideband filter does not require a large audio signal directly; it filters RF sideband energy after modulation.\n- sourceIndex 3: \"To improve signal fidelity\": Fidelity may be affected by design, but the essential reason for the stage is low microphone output level.",
+    "en": "Question B-003-006-002.\n\nWhy the correct answer is right: A microphone produces only a small audio signal, so a speech amplifier is needed to raise voice audio to a usable level for modulation.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"To match the balanced modulator's output impedance\": The speech amplifier is before the balanced modulator and feeds its input, so it cannot be matching the modulator's output impedance.\n- sourceIndex 2: \"The sideband filter requires a large audio signal to work\": The sideband filter does not require a large audio signal directly. It filters radio-frequency (RF) sideband energy after modulation.\n- sourceIndex 3: \"To improve signal fidelity\": Fidelity may be affected by design, but the essential reason for the stage is low microphone output level.",
     "fr": null
   },
   "citations": [

@@ -1,0 +1,51 @@
+{
+  "files": [
+    {
+      "file": "after-ipad-header-portrait-default-dark-inspector-hierarchy.txt",
+      "bytes": 15517,
+      "sha256": "6ee1809bfa61e8a26072cb669dc5701c3006c1e7ca56f4527da59978484f1194"
+    },
+    {
+      "file": "after-ipad-header-portrait-default-dark-inspector.png",
+      "bytes": 450607,
+      "sha256": "d8ce771cafc34c009cff7f6b1078d4bcca3d2bfc0fb453381caf9fab3b271207"
+    },
+    {
+      "file": "after-iphone-header-landscape-default-light-hierarchy.txt",
+      "bytes": 6602,
+      "sha256": "cf7e2e0b08574ad3483c9d517a57332e9c0add1ffccd8d114b81fcc3e6dad471"
+    },
+    {
+      "file": "after-iphone-header-landscape-default-light.png",
+      "bytes": 226117,
+      "sha256": "e09c66fa0f942d4027e9b4288d754f3b8f2f89f97258c6ee88f1818ee3e9c59d"
+    },
+    {
+      "file": "after-iphone-header-portrait-AXXXL-light-questions-hierarchy.txt",
+      "bytes": 6638,
+      "sha256": "88f3cc27435bcf8383e3d680f82d364e686d7ad65d6ab28d0dcf3fe583409d53"
+    },
+    {
+      "file": "after-iphone-header-portrait-AXXXL-light-questions.png",
+      "bytes": 251852,
+      "sha256": "6bb30d589aee6807c34260474dc486b9853e5e49e8ffd0fd9678748705b92329"
+    },
+    {
+      "file": "after-iphone-navigator-landscape-question-100.png",
+      "bytes": 248518,
+      "sha256": "8ab38c1ccc5d52c6114f583ed5d01c8b356b9e5f07018e5160eb881857276de4"
+    },
+    {
+      "file": "test-results.json",
+      "bytes": 7999,
+      "sha256": "61ba98a041c69e7381e564cfcf3f33c74f112c13847f70f518f3e007e28724dc"
+    },
+    {
+      "file": "visual-diffs.json",
+      "bytes": 76812,
+      "sha256": "3ec3d3e104870e981facbce2fdb7ab2c64cd2b1c78174130791e341999ae9897"
+    }
+  ],
+  "totalBytesExcludingManifest": 1290662,
+  "note": "Native PNGs are not resized or re-encoded. Apply EXIF orientation losslessly for display/comparison. All omitted source images and hierarchies are identified by SHA-256 and exact result-bundle paths in visual-diffs.json. The manifest excludes its own recursive hash."
+}

@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-006-011-003",
+  "questionId": "B-006-011-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Start with the practical driven-element estimate, then apply the shorter-director convention.",
+      "fr": "Commencez avec l’estimation pratique de l’élément alimenté, puis appliquez la convention du directeur plus court."
+    },
+    {
+      "level": 2,
+      "en": "Calculate 143 / 21.1 for the driven element, then multiply that length by 0.95.",
+      "fr": "Calculez 143 / 21,1 pour l’élément alimenté, puis multipliez cette longueur par 0,95."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-04",
+    "sectionAnchor": "worked-example-original-yagi-element-estimates"
+  },
+  "referenceSheetSection": "wavelength-dipole-length",
+  "licenseClass": "original"
+}

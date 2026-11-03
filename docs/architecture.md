@@ -116,7 +116,7 @@ Example manifest (deterministic: no generated timestamps):
 
 ## Data schemas
 
-Schema definitions should be versioned. JSON examples below show the intended shape, not final JSON Schema syntax.
+Schema definitions should be versioned. JSON examples below show the intended shape, not final JSON Schema syntax. Additive optional progress-export fields may stay on the current version when older imports and rows load unchanged with documented defaults.
 
 ### Question
 
@@ -338,7 +338,9 @@ Explanations are original project content and must not copy study-guide prose. P
   "correctAttempts": 3,
   "lastAttemptedAt": "2026-01-02T04:10:00.000Z",
   "lastResult": "incorrect",
+  "lastAnsweredWithHelp": false,
   "recentResults": [true, true, false, true, false],
+  "recentAnsweredWithHelp": [false, false, false, false, false],
   "leitner": {
     "box": 0,
     "dueAt": "2026-01-02T04:10:00.000Z"
@@ -547,9 +549,14 @@ This order is fixture-testable: fixtures provide mock attempts, per-category tot
 
 Weak subsection detection:
 
-- `recentResults` has maximum length 5 per question record, is ordered oldest to newest, and is updated by appending the newest result then truncating from the front until at most 5 entries remain.
-- A subsection's recent attempts are the multiset union of every boolean in `recentResults` from stored progress records for active questions in that subsection; duplicate true/false entries are counted, and questions with no progress record contribute zero attempts.
-- A subsection is weak if that union has at least two attempts and `correct / total < 70%`; exactly 70% is not weak, and a single pooled attempt is not enough to classify weakness.
+- `recentResults` has maximum length 5 per question record, is ordered oldest to newest, and is updated by appending the newest result then truncating from the front until at most 5 entries remain. `lastAnsweredWithHelp` flags whether the latest answer was submitted after a hint was shown, and `recentAnsweredWithHelp` is the same-length oldest-to-newest flag array for `recentResults`. Missing help fields in older exports, IndexedDB rows, or SwiftData rows default to `false`.
+- Basic progress exports carry `lessonIdVersion: 2` after the TASK-46.10 lesson split. Missing `lessonIdVersion`, or `lessonIdVersion: 1`, means legacy lesson IDs and quiz IDs whose meanings changed with that split; imports migrate only those legacy rows. Sync payloads also mark each lesson progress and lesson quiz device row with `lessonIdVersion` so a legacy device row arriving after migration is rewritten while a v2 row is preserved unchanged. The top-level schema `version` remains `1` because the field is additive and backward compatible. Imports validate raw rows before migration (including duplicate IDs, timestamps, scores, and exact version-1 quiz membership), then validate migrated rows against current membership; migration must not repair an invalid import into an accepted one.
+- TASK-46.10 read credit is conservative (coordinator decision 2026-10-19): a destination counts as read only when **every** old lesson contributing to it was read, with `readAt` the latest source timestamp and `readCount` the minimum source count. Thus new L-005-05 needs both old L-005-04 and L-005-05; both M8 destinations need both old M8 lessons; L-001-05 needs both old L-001-03 and L-001-05. L-005-06 needs only old L-005-05. Missing sources receive no credit; under-crediting is safer for learning. Apply this rule separately per device before summing counts across devices. If the raw per-device rows reproduce the raw top-level lesson progress, derive the migrated top level from the migrated device rows (sum of per-device minima, not minimum of aggregate sums). Incoherent exports retain the top-level migration fallback rather than letting device rows change their read credit.
+- Split quiz migration maps old concept-check IDs explicitly by their text at `350a3b53`, not by reused ID numbers. The two old M8 filter checks have no current equivalent and are dropped explicitly. Recomputed totals include assigned official questions and concept checks; correct concepts equal assigned concepts minus mapped wrong concepts. For partial attempts, `total − officialQuestionIds.count` is the answered concept count: include all explicit wrong IDs first, then fill only the remaining slots from non-wrong concepts in UI order. Across destinations, correct answers cannot exceed the original attempt's correct count; inconsistent scores use that count as a budget allocated to the original quiz destination first, then other quiz IDs in sorted order, without adding wrong IDs. Empty destinations are omitted. Official questions use subsection prefixes on both platforms so older local IDs outside the sampled historical quiz are preserved; imports still reject IDs outside exact historical membership before migration.
+- Apple's launch migration rewrites lesson and quiz device rows and inserts a keyed, local SwiftData `PreferencesEntity` marker in the same `context.save()` transaction. Marker presence, not UserDefaults, prevents replay. The marker survives user-preference reset/rollback and split-store preference copies. Web's IndexedDB upgrade clears/replaces legacy lesson stores in its upgrade transaction. Stored web device rows migrate in the same upgrade transaction; coherent raw device reads determine the migrated top level, while incoherent metadata is removed. In the gated `ICLOUD_SYNC` split-store layout, marker/data atomicity spans two SQLite stores (`LocalPreferences` and `LearningProgress`), so a single save does not provide the single-store atomicity guarantee. Unversioned legacy rows from not-yet-updated devices may also arrive through CloudKit after migration. Both split-store atomicity and late legacy CloudKit rows are post-v1 concerns. Pure sync deduplication does not migrate IDs on either platform. An explicitly null `lessonIdVersion` is invalid (only omission, `1`, or `2` is supported).
+- A subsection's recent attempts are the multiset union of every boolean in `recentResults` from stored progress records for active questions in that subsection; duplicate true/false entries are counted, and questions with no progress record contribute zero attempts. Accuracy remains based on actual correctness, so a hinted correct answer still increments `correctAttempts` and stores `lastResult: "correct"`.
+- Helped correct answers do not clear weak areas: when deriving weak subsections, a `true` result whose paired `recentAnsweredWithHelp` flag is `true` counts as an attempt but not as proficiency-correct, so a helped answer that rolls an older failure out of the five-result window still cannot clear the weak area. Helped incorrect answers count as incorrect attempts.
+- A subsection is weak if that proficiency-correct union has at least two attempts and `correct / total < 70%`; exactly 70% is not weak, and a single pooled attempt is not enough to classify weakness.
 - A subsection is also weak if it was missed or unanswered on the latest mock exam.
 - The output is the sorted union of progress-derived weak subsections and latest-exam missed/unanswered subsections.
 - Fixtures must cover the max length, ordering, append/truncate behaviour, pooled attempts, exact-threshold behaviour, and latest-exam union behaviour.
@@ -563,7 +570,7 @@ State per stored question record:
 
 - `box`: integer from 0 to 5.
 - `dueAt`: UTC timestamp.
-- `attempts`, `correctAttempts`, `recentResults` where `recentResults` follows the max-length and ordering rules above.
+- `attempts`, `correctAttempts`, `lastAnsweredWithHelp`, `recentResults`, and `recentAnsweredWithHelp` where the recent arrays follow the max-length and ordering rules above.
 
 Time rules:
 
@@ -575,7 +582,13 @@ Time rules:
 - A correct answer before `dueAt` still promotes; v1 does not block early promotion.
 - Repeated answers to the same question in one session are applied in answer order, each with its own explicit `now` value or the session submit time if the mode batches updates. Sequence-case output records are sorted by ordinal question ID.
 
-On correct answer:
+Answered-with-help rule:
+
+- Practice/review UI may set `answeredWithHelp` on an answer update after a hint was shown. Mock exams do not set this flag.
+- The correctness outcome is still stored in `lastResult`, `recentResults`, and `correctAttempts`; answered-with-help is an additional flag, not a third result.
+- A helped answer gives no new mastery credit and does not clear weak areas. A helped correct answer keeps the current Leitner box without promotion and is due immediately (`dueAt = now`); a helped incorrect answer behaves exactly like any incorrect answer.
+
+On unaided correct answer:
 
 - New box is `min(box + 1, 5)`.
 - Due interval by box after promotion:
@@ -586,7 +599,12 @@ On correct answer:
   - Box 5: `30 * 86400` seconds.
 - New `dueAt = now + intervalSeconds`.
 
-On incorrect answer:
+On helped correct answer:
+
+- New box remains the current box.
+- Due interval is immediate (`dueAt = now`).
+
+On incorrect answer, including helped incorrect:
 
 - New box is `0`.
 - Due interval is immediate (`dueAt = now`).

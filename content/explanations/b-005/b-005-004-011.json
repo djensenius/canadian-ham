@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-005-004-011.\n\nWhy the correct answer is right: Convert 300 mA to 0.3 A, then R = 3 V / 0.3 A = 10 ohms.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"9 ohms\": This multiplies 3 by 3 after treating 300 mA as 3 instead of 0.3 A.\n- sourceIndex 2: \"5 ohms\": This does not match 3 divided by 0.3; it is half of the correct resistance.\n- sourceIndex 3: \"3 ohms\": This repeats the voltage value instead of using Ohm’s law; 3 V / 0.3 A is 10 ohms.",
+    "en": "Question B-005-004-011.\n\nWhy the correct answer is right: Convert 300 mA to 0.3 A, then R = 3 V / 0.3 A = 10 ohms.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"9 ohms\": This multiplies 3 by 3 after treating 300 mA as 3 instead of 0.3 A.\n- sourceIndex 2: \"5 ohms\": This does not match 3 divided by 0.3; it is half of the correct resistance.\n- sourceIndex 3: \"3 ohms\": This repeats the voltage value instead of using E / I. Three volts divided by 0.3 A is 10 ohms.",
     "fr": null
   },
   "citations": [

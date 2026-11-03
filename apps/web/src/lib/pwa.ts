@@ -6,6 +6,8 @@ export const PWA_PUBLIC_ASSETS = [
   "./apple-touch-icon-180.png",
   "./pwa-icon-192.png",
   "./pwa-icon-512.png",
+  "./pwa-maskable-icon-192.png",
+  "./pwa-maskable-icon-512.png",
   "./manifest.webmanifest",
 ] as const;
 
@@ -39,8 +41,10 @@ export function createWebAppManifest(): WebAppManifest {
     background_color: "#F6EEDC",
     theme_color: "#F6EEDC",
     icons: [
-      { src: "./pwa-icon-192.png", sizes: "192x192", type: "image/png" },
-      { src: "./pwa-icon-512.png", sizes: "512x512", type: "image/png" },
+      { src: "./pwa-icon-192.png", sizes: "192x192", type: "image/png", purpose: "any" },
+      { src: "./pwa-icon-512.png", sizes: "512x512", type: "image/png", purpose: "any" },
+      { src: "./pwa-maskable-icon-192.png", sizes: "192x192", type: "image/png", purpose: "maskable" },
+      { src: "./pwa-maskable-icon-512.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
     ],
   };
 }

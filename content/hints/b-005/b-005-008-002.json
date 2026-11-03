@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-005-008-002",
+  "questionId": "B-005-008-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the decibel shortcut table for power losses.",
+      "fr": "Revoyez le tableau des raccourcis en décibels pour les pertes de puissance."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-04",
+    "sectionAnchor": "decibels-as-power-ratios"
+  },
+  "referenceSheetSection": "decibel-power-shortcuts",
+  "licenseClass": "original",
+  "singleLevelReason": "Pure shortcut recall: any second hint would state the loss operation."
+}

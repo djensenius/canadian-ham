@@ -64,10 +64,22 @@ const fixtureCases = [
     expectedInvalidSubstring: "licenseClass: expected const",
   },
   {
+    name: "hint",
+    schema: "hint.schema.json",
+    fixture: "hint.json",
+    expectedInvalidSubstring: "licenseClass: expected const",
+  },
+  {
     name: "progress export v1",
     schema: "progress-export-v1.schema.json",
     fixture: "progress-export-v1.json",
     expectedInvalidSubstring: "expected canonical UTC timestamp",
+  },
+  {
+    name: "progress export v1 sync device rows",
+    schema: "progress-export-v1.schema.json",
+    fixture: "progress-export-v1-sync-device-rows.json",
+    expectedInvalidSubstring: "expected string length >= 1",
   },
   {
     name: "engine fixture",
@@ -81,6 +93,34 @@ test("progress export v1: valid legacy Basic fixture without bankId fields valid
   const data = readJsonFixture("valid", "progress-export-v1-legacy-without-bankid.json");
   assert.deepEqual(validateDataAgainstSchema(data, "progress-export-v1.schema.json"), []);
 });
+
+test("progress export v1: valid Advanced fixture validates", () => {
+  const data = readJsonFixture("valid", "progress-export-v1-advanced.json");
+  assert.deepEqual(validateDataAgainstSchema(data, "progress-export-v1.schema.json"), []);
+});
+
+test("hint schema: valid one-level fixture with reason validates", () => {
+  const data = readJsonFixture("valid", "hint-single-level.json");
+  assert.deepEqual(validateDataAgainstSchema(data, "hint.schema.json"), []);
+});
+
+test("hint schema: one-level fixture without reason rejects", () => {
+  const data = readJsonFixture("invalid", "hint-single-level-missing-reason.json");
+  const errors = validateDataAgainstSchema(data, "hint.schema.json");
+  assert(errors.some((error) => error.includes("expected exactly one oneOf branch to match")), errors.join("\n"));
+});
+
+for (const [fixture, field] of [
+  ["lesson-id-version", "$.lessonIdVersion"],
+  ["lesson-progress-id-version", "$.syncDeviceRows.lessonProgress[0].lessonIdVersion"],
+  ["lesson-quiz-id-version", "$.syncDeviceRows.lessonQuizAttempts[0].lessonIdVersion"],
+]) {
+  test(`progress export v1: rejects unsupported ${fixture}`, () => {
+    const data = readJsonFixture("invalid", `progress-export-v1-${fixture}.json`);
+    const errors = validateDataAgainstSchema(data, "progress-export-v1.schema.json");
+    assert(errors.some((error) => error.includes(`${field}: expected one of`)), errors.join("\n"));
+  });
+}
 
 for (const fixtureCase of fixtureCases) {
   test(`${fixtureCase.name}: valid synthetic fixture validates`, () => {

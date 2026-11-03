@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-001-007",
+  "questionId": "B-006-001-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review what each layer of a coaxial cable is made of and what it does.",
+      "fr": "Revoyez la composition et le rôle de chaque couche d'un câble coaxial."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-01",
+    "sectionAnchor": "inside-the-coax"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Definition item: a second hint would paraphrase the definition or name the correct term; topic pointer and lesson link only."
+}

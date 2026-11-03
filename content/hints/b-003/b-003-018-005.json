@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-018-005",
+  "questionId": "B-003-018-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the shock-current threshold discussed for dangerous current through the body.",
+      "fr": "Revoyez le seuil de courant de choc abordé pour un courant dangereux traversant le corps."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-08",
+    "sectionAnchor": "station-access-and-electrical-shock"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

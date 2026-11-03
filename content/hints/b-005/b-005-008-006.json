@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-005-008-006",
+  "questionId": "B-005-008-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review what the decibel is used for in station work.",
+      "fr": "Revoyez l’usage du décibel dans le travail de station."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-04",
+    "sectionAnchor": "decibels-as-power-ratios"
+  },
+  "singleLevelReason": "Pure concept recall: a second hint would state the comparison type directly.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

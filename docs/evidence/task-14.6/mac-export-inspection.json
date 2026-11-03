@@ -1,0 +1,17 @@
+{
+  "sourceCommit": "e69bfca9caed91b454dbb5223e33a51bb256efdd",
+  "pkgPath": "fastlane/builds/mac/202610251835/CanadianHam.pkg",
+  "pkgSHA256": "4cba4dd28339ea2d12cb10f89a4c58824204d21f217d3d6d912d782f0ea287c0",
+  "pkgSignature": "Package \"CanadianHam.pkg\":\n   Status: signed by a developer certificate issued by Apple (Development)\n   Certificate Chain:\n    1. 3rd Party Mac Developer Installer: david jensenius (9JALHNGRBQ)\n       Expires: 2027-10-10 16:51:10 +0000\n       SHA256 Fingerprint:\n           D7 A6 69 00 0F 9A 2D C4 BC FF 5F 89 FA 1B C6 9B D3 30 CE 59 80 67 \n           41 BB CB EA 4C 83 9E A3 89 83\n       ------------------------------------------------------------------------\n    2. Apple Worldwide Developer Relations Certification Authority\n       Expires: 2030-02-20 00:00:00 +0000\n       SHA256 Fingerprint:\n           DC F2 18 78 C7 7F 41 98 E4 B4 61 4F 03 D6 96 D8 9C 66 C6 60 08 D4 \n           24 4E 1B 99 16 1A AC 91 60 1F\n       ------------------------------------------------------------------------\n    3. Apple Root CA\n       Expires: 2035-02-09 21:40:36 +0000\n       SHA256 Fingerprint:\n           B0 B1 73 0E CB C7 FF 45 05 14 2C 49 F1 29 5E 6E DA 6B CA ED 7E 2C \n           68 C5 BE 91 B5 A1 10 01 F0 24\n\n",
+  "app": {
+    "CFBundleIdentifier": "org.davidjensenius.CanadianHam",
+    "CFBundleVersion": "202610251835",
+    "CFBundleShortVersionString": "1.0.0",
+    "CFBundleSupportedPlatforms": [
+      "MacOSX"
+    ]
+  },
+  "watchPaths": [],
+  "appSignatureVerification": "$EVIDENCE/mac-pkg/org.davidjensenius.CanadianHam.pkg/Payload/CanadianHam.app: valid on disk\n$EVIDENCE/mac-pkg/org.davidjensenius.CanadianHam.pkg/Payload/CanadianHam.app: satisfies its Designated Requirement\n",
+  "result": "PASS"
+}

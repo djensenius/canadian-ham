@@ -1,0 +1,2962 @@
+[
+  {
+    "device": "ipad",
+    "case": "header-portrait-AXXXL-dark-lower",
+    "beforeFile": "before-ipad-header-portrait-AXXXL-dark-lower.png",
+    "afterFile": "after-ipad-header-portrait-AXXXL-dark-lower.png",
+    "nativeImageSize": [
+      2064,
+      2752
+    ],
+    "nativeComparisonBoxXYXY": [
+      0,
+      172,
+      2064,
+      2752
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "8a9fcd8a71621667b5e1432f0883fec591186d7a3076b0213bd25847680368bd",
+    "afterSHA256": "c1d7e36d1faf65d1978d4704cdd07a3be86ab97b24909f62c8499436b7a14a76",
+    "beforeResultBundle": "/tmp/task77-before-ipad.xcresult",
+    "afterResultBundle": "/tmp/task77-after-ipad.xcresult",
+    "beforeRawPixelSize": [
+      2064,
+      2752
+    ],
+    "afterRawPixelSize": [
+      2064,
+      2752
+    ],
+    "beforeEXIFOrientation": 1,
+    "afterEXIFOrientation": 1,
+    "comparisonOrientationNormalized": true,
+    "screenshotAPI": "XCUIApplication.screenshot()",
+    "beforeAppSourceRevision": "3872dc5410517d64172ed1b20c2d7f3d287eb606",
+    "afterAppSourceRevision": "343bbf49853e099d54de45c66c4f1f7577ae9267",
+    "navigationBarFrameXYWH": [
+      0.0,
+      32.0,
+      1032.0,
+      54.0
+    ],
+    "beforeHierarchySHA256": "be081988b3e70c280a7c70e99bec47a82bcea7e3f6972897bb56d7fa3ed510fd",
+    "afterHierarchySHA256": "a3367b0be0bfcac9e56108e2f4f9452aafba075cebb8ba733abbd7adfd4a5742",
+    "beforeControlFramesXYWH": {
+      "mock-flag-button": [
+        76.0,
+        332.0,
+        374.0,
+        87.5
+      ],
+      "mock-next-unanswered-button": [
+        76.0,
+        427.5,
+        446.0,
+        87.5
+      ],
+      "mock-next-flagged-button": [
+        76.0,
+        523.0,
+        335.5,
+        87.5
+      ]
+    },
+    "afterControlFramesXYWH": {
+      "mock-flag-button": [
+        76.0,
+        332.0,
+        374.0,
+        87.5
+      ],
+      "mock-next-unanswered-button": [
+        76.0,
+        427.5,
+        446.0,
+        87.5
+      ],
+      "mock-next-flagged-button": [
+        76.0,
+        523.0,
+        335.5,
+        87.5
+      ]
+    },
+    "flagGroupAxis": "vertical",
+    "quickJumpAxis": "vertical"
+  },
+  {
+    "device": "ipad",
+    "case": "header-portrait-AXXXL-dark",
+    "beforeFile": "before-ipad-header-portrait-AXXXL-dark.png",
+    "afterFile": "after-ipad-header-portrait-AXXXL-dark.png",
+    "nativeImageSize": [
+      2064,
+      2752
+    ],
+    "nativeComparisonBoxXYXY": [
+      0,
+      172,
+      2064,
+      2752
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "8a9fcd8a71621667b5e1432f0883fec591186d7a3076b0213bd25847680368bd",
+    "afterSHA256": "c1d7e36d1faf65d1978d4704cdd07a3be86ab97b24909f62c8499436b7a14a76",
+    "beforeResultBundle": "/tmp/task77-before-ipad.xcresult",
+    "afterResultBundle": "/tmp/task77-after-ipad.xcresult",
+    "beforeRawPixelSize": [
+      2064,
+      2752
+    ],
+    "afterRawPixelSize": [
+      2064,
+      2752
+    ],
+    "beforeEXIFOrientation": 1,
+    "afterEXIFOrientation": 1,
+    "comparisonOrientationNormalized": true,
+    "screenshotAPI": "XCUIApplication.screenshot()",
+    "beforeAppSourceRevision": "3872dc5410517d64172ed1b20c2d7f3d287eb606",
+    "afterAppSourceRevision": "343bbf49853e099d54de45c66c4f1f7577ae9267",
+    "navigationBarFrameXYWH": [
+      0.0,
+      32.0,
+      1032.0,
+      54.0
+    ],
+    "beforeHierarchySHA256": "9e0bcd80014d56ce0e174ad03f092453576ed5186b3a9009012ac8cc5cb8255d",
+    "afterHierarchySHA256": "ed4fd7b301d42cee098bd9fa7bb595c8d29e126a638024bdbf4a1993829581f0",
+    "beforeControlFramesXYWH": {
+      "mock-flag-button": [
+        76.0,
+        332.0,
+        374.0,
+        87.5
+      ],
+      "mock-next-unanswered-button": [
+        76.0,
+        427.5,
+        446.0,
+        87.5
+      ],
+      "mock-next-flagged-button": [
+        76.0,
+        523.0,
+        335.5,
+        87.5
+      ]
+    },
+    "afterControlFramesXYWH": {
+      "mock-flag-button": [
+        76.0,
+        332.0,
+        374.0,
+        87.5
+      ],
+      "mock-next-unanswered-button": [
+        76.0,
+        427.5,
+        446.0,
+        87.5
+      ],
+      "mock-next-flagged-button": [
+        76.0,
+        523.0,
+        335.5,
+        87.5
+      ]
+    },
+    "flagGroupAxis": "vertical",
+    "quickJumpAxis": "vertical"
+  },
+  {
+    "device": "ipad",
+    "case": "header-portrait-AXXXL-light-lower",
+    "beforeFile": "before-ipad-header-portrait-AXXXL-light-lower.png",
+    "afterFile": "after-ipad-header-portrait-AXXXL-light-lower.png",
+    "nativeImageSize": [
+      2064,
+      2752
+    ],
+    "nativeComparisonBoxXYXY": [
+      0,
+      172,
+      2064,
+      2752
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "15444624c3391d7fba6cc57fe813b5697ccd5be06969ba5a32df1a00677f53f5",
+    "afterSHA256": "b0d09d05b209da612a82367012b8f3cc56325b3a9e58a83536b43c8d09ed5d84",
+    "beforeResultBundle": "/tmp/task77-before-ipad.xcresult",
+    "afterResultBundle": "/tmp/task77-after-ipad.xcresult",
+    "beforeRawPixelSize": [
+      2064,
+      2752
+    ],
+    "afterRawPixelSize": [
+      2064,
+      2752
+    ],
+    "beforeEXIFOrientation": 1,
+    "afterEXIFOrientation": 1,
+    "comparisonOrientationNormalized": true,
+    "screenshotAPI": "XCUIApplication.screenshot()",
+    "beforeAppSourceRevision": "3872dc5410517d64172ed1b20c2d7f3d287eb606",
+    "afterAppSourceRevision": "343bbf49853e099d54de45c66c4f1f7577ae9267",
+    "navigationBarFrameXYWH": [
+      0.0,
+      32.0,
+      1032.0,
+      54.0
+    ],
+    "beforeHierarchySHA256": "69355c1f3ebabe0e7d923fe59b3c281e7e208d518c18e689acceaf1660b616a6",
+    "afterHierarchySHA256": "6a05daf3c9ad9c37bca10af96bddfd662d9cf937b48ebd77e1220252ae22417d",
+    "beforeControlFramesXYWH": {
+      "mock-flag-button": [
+        76.0,
+        332.0,
+        374.0,
+        87.5
+      ],
+      "mock-next-unanswered-button": [
+        76.0,
+        427.5,
+        446.0,
+        87.5
+      ],
+      "mock-next-flagged-button": [
+        76.0,
+        523.0,
+        335.5,
+        87.5
+      ]
+    },
+    "afterControlFramesXYWH": {
+      "mock-flag-button": [
+        76.0,
+        332.0,
+        374.0,
+        87.5
+      ],
+      "mock-next-unanswered-button": [
+        76.0,
+        427.5,
+        446.0,
+        87.5
+      ],
+      "mock-next-flagged-button": [
+        76.0,
+        523.0,
+        335.5,
+        87.5
+      ]
+    },
+    "flagGroupAxis": "vertical",
+    "quickJumpAxis": "vertical"
+  },
+  {
+    "device": "ipad",
+    "case": "header-portrait-AXXXL-light",
+    "beforeFile": "before-ipad-header-portrait-AXXXL-light.png",
+    "afterFile": "after-ipad-header-portrait-AXXXL-light.png",
+    "nativeImageSize": [
+      2064,
+      2752
+    ],
+    "nativeComparisonBoxXYXY": [
+      0,
+      172,
+      2064,
+      2752
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "15444624c3391d7fba6cc57fe813b5697ccd5be06969ba5a32df1a00677f53f5",
+    "afterSHA256": "b0d09d05b209da612a82367012b8f3cc56325b3a9e58a83536b43c8d09ed5d84",
+    "beforeResultBundle": "/tmp/task77-before-ipad.xcresult",
+    "afterResultBundle": "/tmp/task77-after-ipad.xcresult",
+    "beforeRawPixelSize": [
+      2064,
+      2752
+    ],
+    "afterRawPixelSize": [
+      2064,
+      2752
+    ],
+    "beforeEXIFOrientation": 1,
+    "afterEXIFOrientation": 1,
+    "comparisonOrientationNormalized": true,
+    "screenshotAPI": "XCUIApplication.screenshot()",
+    "beforeAppSourceRevision": "3872dc5410517d64172ed1b20c2d7f3d287eb606",
+    "afterAppSourceRevision": "343bbf49853e099d54de45c66c4f1f7577ae9267",
+    "navigationBarFrameXYWH": [
+      0.0,
+      32.0,
+      1032.0,
+      54.0
+    ],
+    "beforeHierarchySHA256": "a0b81a7ea8aa9859b1f3b934e166318ed78d59cb5277edbb62b7c0ec6550fbc3",
+    "afterHierarchySHA256": "2f0adfe6acc2271f3bff0eb4ae2d029aeb56fcfa9b2e6b8343f13693c4789bfe",
+    "beforeControlFramesXYWH": {
+      "mock-flag-button": [
+        76.0,
+        332.0,
+        374.0,
+        87.5
+      ],
+      "mock-next-unanswered-button": [
+        76.0,
+        427.5,
+        446.0,
+        87.5
+      ],
+      "mock-next-flagged-button": [
+        76.0,
+        523.0,
+        335.5,
+        87.5
+      ]
+    },
+    "afterControlFramesXYWH": {
+      "mock-flag-button": [
+        76.0,
+        332.0,
+        374.0,
+        87.5
+      ],
+      "mock-next-unanswered-button": [
+        76.0,
+        427.5,
+        446.0,
+        87.5
+      ],
+      "mock-next-flagged-button": [
+        76.0,
+        523.0,
+        335.5,
+        87.5
+      ]
+    },
+    "flagGroupAxis": "vertical",
+    "quickJumpAxis": "vertical"
+  },
+  {
+    "device": "ipad",
+    "case": "header-portrait-default-dark-inspector",
+    "beforeFile": "before-ipad-header-portrait-default-dark-inspector.png",
+    "afterFile": "after-ipad-header-portrait-default-dark-inspector.png",
+    "nativeImageSize": [
+      2064,
+      2752
+    ],
+    "nativeComparisonBoxXYXY": [
+      0,
+      172,
+      2064,
+      2752
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "b1a716cc7c51c462991147cca2b45a80ae929829505957f611743d045d3fbf5e",
+    "afterSHA256": "d8ce771cafc34c009cff7f6b1078d4bcca3d2bfc0fb453381caf9fab3b271207",
+    "beforeResultBundle": "/tmp/task77-before-ipad.xcresult",
+    "afterResultBundle": "/tmp/task77-after-ipad.xcresult",
+    "beforeRawPixelSize": [
+      2064,
+      2752
+    ],
+    "afterRawPixelSize": [
+      2064,
+      2752
+    ],
+    "beforeEXIFOrientation": 1,
+    "afterEXIFOrientation": 1,
+    "comparisonOrientationNormalized": true,
+    "screenshotAPI": "XCUIApplication.screenshot()",
+    "beforeAppSourceRevision": "3872dc5410517d64172ed1b20c2d7f3d287eb606",
+    "afterAppSourceRevision": "343bbf49853e099d54de45c66c4f1f7577ae9267",
+    "navigationBarFrameXYWH": [
+      0.0,
+      32.0,
+      1032.0,
+      54.0
+    ],
+    "beforeHierarchySHA256": "2a0e3521243e125f0bc1af7b5cd4dcec9ceac4db912a7440ce04b19c00898274",
+    "afterHierarchySHA256": "6ee1809bfa61e8a26072cb669dc5701c3006c1e7ca56f4527da59978484f1194",
+    "beforeControlFramesXYWH": {
+      "mock-flag-button": [
+        40.0,
+        211.5,
+        148.5,
+        56.0
+      ],
+      "mock-next-unanswered-button": [
+        196.5,
+        211.5,
+        170.5,
+        56.0
+      ],
+      "mock-next-flagged-button": [
+        375.0,
+        211.5,
+        134.0,
+        56.0
+      ]
+    },
+    "afterControlFramesXYWH": {
+      "mock-flag-button": [
+        40.0,
+        211.5,
+        148.5,
+        56.0
+      ],
+      "mock-next-unanswered-button": [
+        196.5,
+        211.5,
+        170.5,
+        56.0
+      ],
+      "mock-next-flagged-button": [
+        375.0,
+        211.5,
+        134.0,
+        56.0
+      ]
+    },
+    "flagGroupAxis": "horizontal",
+    "quickJumpAxis": "horizontal"
+  },
+  {
+    "device": "ipad",
+    "case": "header-portrait-default-dark",
+    "beforeFile": "before-ipad-header-portrait-default-dark.png",
+    "afterFile": "after-ipad-header-portrait-default-dark.png",
+    "nativeImageSize": [
+      2064,
+      2752
+    ],
+    "nativeComparisonBoxXYXY": [
+      0,
+      172,
+      2064,
+      2752
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "20110f284b087442b082462ec6a14579edff7e88c690e77ceac86a66ce0e0c43",
+    "afterSHA256": "0c5aaed3f24f3c8999d2a20f3ac97c252da80cf29082d7bb0ebff7c2a7d50316",
+    "beforeResultBundle": "/tmp/task77-before-ipad.xcresult",
+    "afterResultBundle": "/tmp/task77-after-ipad.xcresult",
+    "beforeRawPixelSize": [
+      2064,
+      2752
+    ],
+    "afterRawPixelSize": [
+      2064,
+      2752
+    ],
+    "beforeEXIFOrientation": 1,
+    "afterEXIFOrientation": 1,
+    "comparisonOrientationNormalized": true,
+    "screenshotAPI": "XCUIApplication.screenshot()",
+    "beforeAppSourceRevision": "3872dc5410517d64172ed1b20c2d7f3d287eb606",
+    "afterAppSourceRevision": "343bbf49853e099d54de45c66c4f1f7577ae9267",
+    "navigationBarFrameXYWH": [
+      0.0,
+      32.0,
+      1032.0,
+      54.0
+    ],
+    "beforeHierarchySHA256": "bc8edf746cea0f51e29ec376c92658aba805357ba9f760b83f802014345197ea",
+    "afterHierarchySHA256": "e5b9b496fbf58ab763b9c7fc50ecde85435fdc9e78c36f6a6d2eb1312dfd2054",
+    "beforeControlFramesXYWH": {
+      "mock-flag-button": [
+        76.0,
+        211.5,
+        148.5,
+        56.0
+      ],
+      "mock-next-unanswered-button": [
+        232.5,
+        211.5,
+        170.5,
+        56.0
+      ],
+      "mock-next-flagged-button": [
+        411.0,
+        211.5,
+        134.0,
+        56.0
+      ]
+    },
+    "afterControlFramesXYWH": {
+      "mock-flag-button": [
+        76.0,
+        211.5,
+        148.5,
+        56.0
+      ],
+      "mock-next-unanswered-button": [
+        232.5,
+        211.5,
+        170.5,
+        56.0
+      ],
+      "mock-next-flagged-button": [
+        411.0,
+        211.5,
+        134.0,
+        56.0
+      ]
+    },
+    "flagGroupAxis": "horizontal",
+    "quickJumpAxis": "horizontal"
+  },
+  {
+    "device": "ipad",
+    "case": "header-portrait-default-light-inspector",
+    "beforeFile": "before-ipad-header-portrait-default-light-inspector.png",
+    "afterFile": "after-ipad-header-portrait-default-light-inspector.png",
+    "nativeImageSize": [
+      2064,
+      2752
+    ],
+    "nativeComparisonBoxXYXY": [
+      0,
+      172,
+      2064,
+      2752
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "0bf7d29afa274b661ef0e659b057f0c58b19d3df2fcecd776ee81f54724aca64",
+    "afterSHA256": "41b257e94a5fcba41819beedc710f2eb6c5c9e711f28e474b11a00775036f835",
+    "beforeResultBundle": "/tmp/task77-before-ipad.xcresult",
+    "afterResultBundle": "/tmp/task77-after-ipad.xcresult",
+    "beforeRawPixelSize": [
+      2064,
+      2752
+    ],
+    "afterRawPixelSize": [
+      2064,
+      2752
+    ],
+    "beforeEXIFOrientation": 1,
+    "afterEXIFOrientation": 1,
+    "comparisonOrientationNormalized": true,
+    "screenshotAPI": "XCUIApplication.screenshot()",
+    "beforeAppSourceRevision": "3872dc5410517d64172ed1b20c2d7f3d287eb606",
+    "afterAppSourceRevision": "343bbf49853e099d54de45c66c4f1f7577ae9267",
+    "navigationBarFrameXYWH": [
+      0.0,
+      32.0,
+      1032.0,
+      54.0
+    ],
+    "beforeHierarchySHA256": "0a8afa77bf232ee3fa853b753c7b8efd88a0117e790fffbcb2274cd61a34214e",
+    "afterHierarchySHA256": "025775a3cf8cd2c264098775e75d62a5748ebfe40e13de9b9c618bf68ade1d0a",
+    "beforeControlFramesXYWH": {
+      "mock-flag-button": [
+        40.0,
+        211.5,
+        148.5,
+        56.0
+      ],
+      "mock-next-unanswered-button": [
+        196.5,
+        211.5,
+        170.5,
+        56.0
+      ],
+      "mock-next-flagged-button": [
+        375.0,
+        211.5,
+        134.0,
+        56.0
+      ]
+    },
+    "afterControlFramesXYWH": {
+      "mock-flag-button": [
+        40.0,
+        211.5,
+        148.5,
+        56.0
+      ],
+      "mock-next-unanswered-button": [
+        196.5,
+        211.5,
+        170.5,
+        56.0
+      ],
+      "mock-next-flagged-button": [
+        375.0,
+        211.5,
+        134.0,
+        56.0
+      ]
+    },
+    "flagGroupAxis": "horizontal",
+    "quickJumpAxis": "horizontal"
+  },
+  {
+    "device": "ipad",
+    "case": "header-portrait-default-light",
+    "beforeFile": "before-ipad-header-portrait-default-light.png",
+    "afterFile": "after-ipad-header-portrait-default-light.png",
+    "nativeImageSize": [
+      2064,
+      2752
+    ],
+    "nativeComparisonBoxXYXY": [
+      0,
+      172,
+      2064,
+      2752
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "3e721665ed8d681b78bd4fd7a51ac8fe8d57d1f85d3b7ee142f68c6185754059",
+    "afterSHA256": "8118a049a82e5aacbeff9841c7fdf9ba4eecfafb6f94130bff10397bb30f1691",
+    "beforeResultBundle": "/tmp/task77-before-ipad.xcresult",
+    "afterResultBundle": "/tmp/task77-after-ipad.xcresult",
+    "beforeRawPixelSize": [
+      2064,
+      2752
+    ],
+    "afterRawPixelSize": [
+      2064,
+      2752
+    ],
+    "beforeEXIFOrientation": 1,
+    "afterEXIFOrientation": 1,
+    "comparisonOrientationNormalized": true,
+    "screenshotAPI": "XCUIApplication.screenshot()",
+    "beforeAppSourceRevision": "3872dc5410517d64172ed1b20c2d7f3d287eb606",
+    "afterAppSourceRevision": "343bbf49853e099d54de45c66c4f1f7577ae9267",
+    "navigationBarFrameXYWH": [
+      0.0,
+      32.0,
+      1032.0,
+      54.0
+    ],
+    "beforeHierarchySHA256": "662f3df29a274ac34543582d0b9566442f94c59357185f745cfe024a95c37446",
+    "afterHierarchySHA256": "96c2af332584ed4ab5436f0bd840bce89b1a467fc354b49144daf4be43b0abed",
+    "beforeControlFramesXYWH": {
+      "mock-flag-button": [
+        76.0,
+        211.5,
+        148.5,
+        56.0
+      ],
+      "mock-next-unanswered-button": [
+        232.5,
+        211.5,
+        170.5,
+        56.0
+      ],
+      "mock-next-flagged-button": [
+        411.0,
+        211.5,
+        134.0,
+        56.0
+      ]
+    },
+    "afterControlFramesXYWH": {
+      "mock-flag-button": [
+        76.0,
+        211.5,
+        148.5,
+        56.0
+      ],
+      "mock-next-unanswered-button": [
+        232.5,
+        211.5,
+        170.5,
+        56.0
+      ],
+      "mock-next-flagged-button": [
+        411.0,
+        211.5,
+        134.0,
+        56.0
+      ]
+    },
+    "flagGroupAxis": "horizontal",
+    "quickJumpAxis": "horizontal"
+  },
+  {
+    "device": "iphone",
+    "case": "header-landscape-AXXXL-dark-flag",
+    "beforeFile": "before-iphone-header-landscape-AXXXL-dark-flag.png",
+    "afterFile": "after-iphone-header-landscape-AXXXL-dark-flag.png",
+    "nativeImageSize": [
+      2622,
+      1206
+    ],
+    "nativeComparisonBoxXYXY": [
+      0,
+      234,
+      2622,
+      1206
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "b14eb445984d08c72490fb184ced6642b4221c5c57b1732891874715adb73f0b",
+    "afterSHA256": "b14eb445984d08c72490fb184ced6642b4221c5c57b1732891874715adb73f0b",
+    "beforeResultBundle": "/tmp/task77-before-landscape-screen.xcresult",
+    "afterResultBundle": "/tmp/task77-after-landscape-screen.xcresult",
+    "beforeRawPixelSize": [
+      1206,
+      2622
+    ],
+    "afterRawPixelSize": [
+      1206,
+      2622
+    ],
+    "beforeEXIFOrientation": 8,
+    "afterEXIFOrientation": 8,
+    "comparisonOrientationNormalized": true,
+    "screenshotAPI": "XCUIScreen.main.screenshot()",
+    "beforeAppSourceRevision": "3872dc5410517d64172ed1b20c2d7f3d287eb606",
+    "afterAppSourceRevision": "b78985c983d47798d0d4bcd19f17c40ebb694eb5",
+    "navigationBarFrameXYWH": [
+      0.0,
+      24.0,
+      874.0,
+      54.0
+    ],
+    "beforeHierarchySHA256": "8e396eb9efcb09555c2ebec36a3d2066b33f124409be71d2538432d5dd8cde32",
+    "afterHierarchySHA256": "eaa74cb92e889b9cf1d5a11f2e45ead7b2cc487341c44e75d3e3960a5f5a34a0",
+    "beforeControlFramesXYWH": {
+      "mock-flag-button": [
+        102.0,
+        234.7,
+        373.7,
+        87.3
+      ],
+      "mock-next-unanswered-button": [
+        102.0,
+        425.3,
+        446.0,
+        87.3
+      ],
+      "mock-next-flagged-button": [
+        102.0,
+        520.7,
+        335.3,
+        87.3
+      ]
+    },
+    "afterControlFramesXYWH": {
+      "mock-flag-button": [
+        102.0,
+        234.7,
+        373.7,
+        87.3
+      ],
+      "mock-next-unanswered-button": [
+        102.0,
+        425.3,
+        446.0,
+        87.3
+      ],
+      "mock-next-flagged-button": [
+        102.0,
+        520.7,
+        335.3,
+        87.3
+      ]
+    },
+    "flagGroupAxis": "vertical",
+    "quickJumpAxis": "vertical",
+    "positionedControlIdentifier": "mock-flag-button",
+    "positionedControlFullyVisibleBeforeAndAfter": true,
+    "beforeFullScreenBlackGeometry": {
+      "fullHeightBlackColumns": 0,
+      "fullWidthBlackRows": 0
+    },
+    "afterFullScreenBlackGeometry": {
+      "fullHeightBlackColumns": 0,
+      "fullWidthBlackRows": 0
+    }
+  },
+  {
+    "device": "iphone",
+    "case": "header-landscape-AXXXL-dark-lower",
+    "beforeFile": "before-iphone-header-landscape-AXXXL-dark-lower.png",
+    "afterFile": "after-iphone-header-landscape-AXXXL-dark-lower.png",
+    "nativeImageSize": [
+      2622,
+      1206
+    ],
+    "nativeComparisonBoxXYXY": [
+      0,
+      234,
+      2622,
+      1206
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "75b1df126555377c34600dad141f091c2588aac393f2003c96397a2c6ad6fc8b",
+    "afterSHA256": "75b1df126555377c34600dad141f091c2588aac393f2003c96397a2c6ad6fc8b",
+    "beforeResultBundle": "/tmp/task77-before-landscape-screen.xcresult",
+    "afterResultBundle": "/tmp/task77-after-landscape-screen.xcresult",
+    "beforeRawPixelSize": [
+      1206,
+      2622
+    ],
+    "afterRawPixelSize": [
+      1206,
+      2622
+    ],
+    "beforeEXIFOrientation": 8,
+    "afterEXIFOrientation": 8,
+    "comparisonOrientationNormalized": true,
+    "screenshotAPI": "XCUIScreen.main.screenshot()",
+    "beforeAppSourceRevision": "3872dc5410517d64172ed1b20c2d7f3d287eb606",
+    "afterAppSourceRevision": "b78985c983d47798d0d4bcd19f17c40ebb694eb5",
+    "navigationBarFrameXYWH": [
+      0.0,
+      24.0,
+      874.0,
+      54.0
+    ],
+    "beforeHierarchySHA256": "289d5ad9129563784793bc16ac16eeac80a0257a1949cde6f7c0e1dfead7c6b9",
+    "afterHierarchySHA256": "44a88075abe3321c01944a9cfec71a84717b7e21b1e85999be3f80b391804122",
+    "beforeControlFramesXYWH": {
+      "mock-flag-button": [
+        102.0,
+        -162.7,
+        373.7,
+        87.3
+      ],
+      "mock-next-unanswered-button": [
+        102.0,
+        28.0,
+        446.0,
+        87.3
+      ],
+      "mock-next-flagged-button": [
+        102.0,
+        123.3,
+        335.3,
+        87.3
+      ]
+    },
+    "afterControlFramesXYWH": {
+      "mock-flag-button": [
+        102.0,
+        -162.7,
+        373.7,
+        87.3
+      ],
+      "mock-next-unanswered-button": [
+        102.0,
+        28.0,
+        446.0,
+        87.3
+      ],
+      "mock-next-flagged-button": [
+        102.0,
+        123.3,
+        335.3,
+        87.3
+      ]
+    },
+    "flagGroupAxis": "vertical",
+    "quickJumpAxis": "vertical",
+    "beforeFullScreenBlackGeometry": {
+      "fullHeightBlackColumns": 0,
+      "fullWidthBlackRows": 0
+    },
+    "afterFullScreenBlackGeometry": {
+      "fullHeightBlackColumns": 0,
+      "fullWidthBlackRows": 0
+    }
+  },
+  {
+    "device": "iphone",
+    "case": "header-landscape-AXXXL-dark-questions",
+    "beforeFile": "before-iphone-header-landscape-AXXXL-dark-questions.png",
+    "afterFile": "after-iphone-header-landscape-AXXXL-dark-questions.png",
+    "nativeImageSize": [
+      2622,
+      1206
+    ],
+    "nativeComparisonBoxXYXY": [
+      0,
+      234,
+      2622,
+      1206
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "277f9d7c2842cdf4ab5b6b12b62809a0521519fd645a47005367e915ac2ee338",
+    "afterSHA256": "277f9d7c2842cdf4ab5b6b12b62809a0521519fd645a47005367e915ac2ee338",
+    "beforeResultBundle": "/tmp/task77-before-landscape-screen.xcresult",
+    "afterResultBundle": "/tmp/task77-after-landscape-screen.xcresult",
+    "beforeRawPixelSize": [
+      1206,
+      2622
+    ],
+    "afterRawPixelSize": [
+      1206,
+      2622
+    ],
+    "beforeEXIFOrientation": 8,
+    "afterEXIFOrientation": 8,
+    "comparisonOrientationNormalized": true,
+    "screenshotAPI": "XCUIScreen.main.screenshot()",
+    "beforeAppSourceRevision": "3872dc5410517d64172ed1b20c2d7f3d287eb606",
+    "afterAppSourceRevision": "b78985c983d47798d0d4bcd19f17c40ebb694eb5",
+    "navigationBarFrameXYWH": [
+      0.0,
+      24.0,
+      874.0,
+      54.0
+    ],
+    "beforeHierarchySHA256": "8209fcdbf741a5fdec526c8413ae6f1cfdb5960fcb527780ffacb3459ea50a8f",
+    "afterHierarchySHA256": "32d77366255065b2dacc09a906fd0fa2395f4afae3754c2cdf9f78066515ec25",
+    "beforeControlFramesXYWH": {
+      "mock-flag-button": [
+        102.0,
+        164.7,
+        373.7,
+        87.3
+      ],
+      "mock-next-unanswered-button": [
+        102.0,
+        355.3,
+        446.0,
+        87.3
+      ],
+      "mock-next-flagged-button": [
+        102.0,
+        450.7,
+        335.3,
+        87.3
+      ]
+    },
+    "afterControlFramesXYWH": {
+      "mock-flag-button": [
+        102.0,
+        164.7,
+        373.7,
+        87.3
+      ],
+      "mock-next-unanswered-button": [
+        102.0,
+        355.3,
+        446.0,
+        87.3
+      ],
+      "mock-next-flagged-button": [
+        102.0,
+        450.7,
+        335.3,
+        87.3
+      ]
+    },
+    "flagGroupAxis": "vertical",
+    "quickJumpAxis": "vertical",
+    "positionedControlIdentifier": "mock-questions-button",
+    "positionedControlFullyVisibleBeforeAndAfter": true,
+    "beforeFullScreenBlackGeometry": {
+      "fullHeightBlackColumns": 0,
+      "fullWidthBlackRows": 0
+    },
+    "afterFullScreenBlackGeometry": {
+      "fullHeightBlackColumns": 0,
+      "fullWidthBlackRows": 0
+    }
+  },
+  {
+    "device": "iphone",
+    "case": "header-landscape-AXXXL-dark-unanswered",
+    "beforeFile": "before-iphone-header-landscape-AXXXL-dark-unanswered.png",
+    "afterFile": "after-iphone-header-landscape-AXXXL-dark-unanswered.png",
+    "nativeImageSize": [
+      2622,
+      1206
+    ],
+    "nativeComparisonBoxXYXY": [
+      0,
+      234,
+      2622,
+      1206
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "16ca949be1541154dc9a598b691b894d9c352203e8df8ef06dd498ab4cae5349",
+    "afterSHA256": "16ca949be1541154dc9a598b691b894d9c352203e8df8ef06dd498ab4cae5349",
+    "beforeResultBundle": "/tmp/task77-before-landscape-screen.xcresult",
+    "afterResultBundle": "/tmp/task77-after-landscape-screen.xcresult",
+    "beforeRawPixelSize": [
+      1206,
+      2622
+    ],
+    "afterRawPixelSize": [
+      1206,
+      2622
+    ],
+    "beforeEXIFOrientation": 8,
+    "afterEXIFOrientation": 8,
+    "comparisonOrientationNormalized": true,
+    "screenshotAPI": "XCUIScreen.main.screenshot()",
+    "beforeAppSourceRevision": "3872dc5410517d64172ed1b20c2d7f3d287eb606",
+    "afterAppSourceRevision": "b78985c983d47798d0d4bcd19f17c40ebb694eb5",
+    "navigationBarFrameXYWH": [
+      0.0,
+      24.0,
+      874.0,
+      54.0
+    ],
+    "beforeHierarchySHA256": "c05604f6a92f93816c7437bf3b26ce01b2718c8a19471bb53dd96674f2832659",
+    "afterHierarchySHA256": "c09ebd648335a4f11059fad1b4bae5f0e1b994480f5fc1160c6fb2b4c79d3917",
+    "beforeControlFramesXYWH": {
+      "mock-flag-button": [
+        102.0,
+        94.7,
+        373.7,
+        87.3
+      ],
+      "mock-next-unanswered-button": [
+        102.0,
+        285.3,
+        446.0,
+        87.3
+      ],
+      "mock-next-flagged-button": [
+        102.0,
+        380.7,
+        335.3,
+        87.3
+      ]
+    },
+    "afterControlFramesXYWH": {
+      "mock-flag-button": [
+        102.0,
+        94.7,
+        373.7,
+        87.3
+      ],
+      "mock-next-unanswered-button": [
+        102.0,
+        285.3,
+        446.0,
+        87.3
+      ],
+      "mock-next-flagged-button": [
+        102.0,
+        380.7,
+        335.3,
+        87.3
+      ]
+    },
+    "flagGroupAxis": "vertical",
+    "quickJumpAxis": "vertical",
+    "positionedControlIdentifier": "mock-next-unanswered-button",
+    "positionedControlFullyVisibleBeforeAndAfter": true,
+    "beforeFullScreenBlackGeometry": {
+      "fullHeightBlackColumns": 0,
+      "fullWidthBlackRows": 0
+    },
+    "afterFullScreenBlackGeometry": {
+      "fullHeightBlackColumns": 0,
+      "fullWidthBlackRows": 0
+    }
+  },
+  {
+    "device": "iphone",
+    "case": "header-landscape-AXXXL-dark",
+    "beforeFile": "before-iphone-header-landscape-AXXXL-dark.png",
+    "afterFile": "after-iphone-header-landscape-AXXXL-dark.png",
+    "nativeImageSize": [
+      2622,
+      1206
+    ],
+    "nativeComparisonBoxXYXY": [
+      0,
+      234,
+      2622,
+      1206
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "75b1df126555377c34600dad141f091c2588aac393f2003c96397a2c6ad6fc8b",
+    "afterSHA256": "75b1df126555377c34600dad141f091c2588aac393f2003c96397a2c6ad6fc8b",
+    "beforeResultBundle": "/tmp/task77-before-landscape-screen.xcresult",
+    "afterResultBundle": "/tmp/task77-after-landscape-screen.xcresult",
+    "beforeRawPixelSize": [
+      1206,
+      2622
+    ],
+    "afterRawPixelSize": [
+      1206,
+      2622
+    ],
+    "beforeEXIFOrientation": 8,
+    "afterEXIFOrientation": 8,
+    "comparisonOrientationNormalized": true,
+    "screenshotAPI": "XCUIScreen.main.screenshot()",
+    "beforeAppSourceRevision": "3872dc5410517d64172ed1b20c2d7f3d287eb606",
+    "afterAppSourceRevision": "b78985c983d47798d0d4bcd19f17c40ebb694eb5",
+    "navigationBarFrameXYWH": [
+      0.0,
+      24.0,
+      874.0,
+      54.0
+    ],
+    "beforeHierarchySHA256": "6581628caae8580d2683622502627c29661a10e1a92f2723524be31b9923c2f0",
+    "afterHierarchySHA256": "16addd8a20a1d9ef03cd3340f5ef5fa23587a0ffd953068a298918479753e8c6",
+    "beforeControlFramesXYWH": {
+      "mock-flag-button": [
+        102.0,
+        -162.7,
+        373.7,
+        87.3
+      ],
+      "mock-next-unanswered-button": [
+        102.0,
+        28.0,
+        446.0,
+        87.3
+      ],
+      "mock-next-flagged-button": [
+        102.0,
+        123.3,
+        335.3,
+        87.3
+      ]
+    },
+    "afterControlFramesXYWH": {
+      "mock-flag-button": [
+        102.0,
+        -162.7,
+        373.7,
+        87.3
+      ],
+      "mock-next-unanswered-button": [
+        102.0,
+        28.0,
+        446.0,
+        87.3
+      ],
+      "mock-next-flagged-button": [
+        102.0,
+        123.3,
+        335.3,
+        87.3
+      ]
+    },
+    "flagGroupAxis": "vertical",
+    "quickJumpAxis": "vertical",
+    "beforeFullScreenBlackGeometry": {
+      "fullHeightBlackColumns": 0,
+      "fullWidthBlackRows": 0
+    },
+    "afterFullScreenBlackGeometry": {
+      "fullHeightBlackColumns": 0,
+      "fullWidthBlackRows": 0
+    }
+  },
+  {
+    "device": "iphone",
+    "case": "header-landscape-AXXXL-light-flag",
+    "beforeFile": "before-iphone-header-landscape-AXXXL-light-flag.png",
+    "afterFile": "after-iphone-header-landscape-AXXXL-light-flag.png",
+    "nativeImageSize": [
+      2622,
+      1206
+    ],
+    "nativeComparisonBoxXYXY": [
+      0,
+      234,
+      2622,
+      1206
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "f020584fa016e684db9849c3d2b3a0c0542d9b96c9f3588bb5c608f8c0587f7a",
+    "afterSHA256": "f020584fa016e684db9849c3d2b3a0c0542d9b96c9f3588bb5c608f8c0587f7a",
+    "beforeResultBundle": "/tmp/task77-before-landscape-screen.xcresult",
+    "afterResultBundle": "/tmp/task77-after-landscape-screen.xcresult",
+    "beforeRawPixelSize": [
+      1206,
+      2622
+    ],
+    "afterRawPixelSize": [
+      1206,
+      2622
+    ],
+    "beforeEXIFOrientation": 8,
+    "afterEXIFOrientation": 8,
+    "comparisonOrientationNormalized": true,
+    "screenshotAPI": "XCUIScreen.main.screenshot()",
+    "beforeAppSourceRevision": "3872dc5410517d64172ed1b20c2d7f3d287eb606",
+    "afterAppSourceRevision": "b78985c983d47798d0d4bcd19f17c40ebb694eb5",
+    "navigationBarFrameXYWH": [
+      0.0,
+      24.0,
+      874.0,
+      54.0
+    ],
+    "beforeHierarchySHA256": "d5ca719551b6eba7d654a90091150d11e49b712e2867724b25b96073bb7f3ebe",
+    "afterHierarchySHA256": "2b1590f27febb572a994ec30e4b52691ab18424c9bed318d299eb568c87a00f0",
+    "beforeControlFramesXYWH": {
+      "mock-flag-button": [
+        102.0,
+        234.7,
+        373.7,
+        87.3
+      ],
+      "mock-next-unanswered-button": [
+        102.0,
+        425.3,
+        446.0,
+        87.3
+      ],
+      "mock-next-flagged-button": [
+        102.0,
+        520.7,
+        335.3,
+        87.3
+      ]
+    },
+    "afterControlFramesXYWH": {
+      "mock-flag-button": [
+        102.0,
+        234.7,
+        373.7,
+        87.3
+      ],
+      "mock-next-unanswered-button": [
+        102.0,
+        425.3,
+        446.0,
+        87.3
+      ],
+      "mock-next-flagged-button": [
+        102.0,
+        520.7,
+        335.3,
+        87.3
+      ]
+    },
+    "flagGroupAxis": "vertical",
+    "quickJumpAxis": "vertical",
+    "positionedControlIdentifier": "mock-flag-button",
+    "positionedControlFullyVisibleBeforeAndAfter": true,
+    "beforeFullScreenBlackGeometry": {
+      "fullHeightBlackColumns": 0,
+      "fullWidthBlackRows": 0
+    },
+    "afterFullScreenBlackGeometry": {
+      "fullHeightBlackColumns": 0,
+      "fullWidthBlackRows": 0
+    }
+  },
+  {
+    "device": "iphone",
+    "case": "header-landscape-AXXXL-light-lower",
+    "beforeFile": "before-iphone-header-landscape-AXXXL-light-lower.png",
+    "afterFile": "after-iphone-header-landscape-AXXXL-light-lower.png",
+    "nativeImageSize": [
+      2622,
+      1206
+    ],
+    "nativeComparisonBoxXYXY": [
+      0,
+      234,
+      2622,
+      1206
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "fd6aa354adaa4c40e60e5c3fd5c4a5140a5173fb11f57a215088c8a047119197",
+    "afterSHA256": "fd6aa354adaa4c40e60e5c3fd5c4a5140a5173fb11f57a215088c8a047119197",
+    "beforeResultBundle": "/tmp/task77-before-landscape-screen.xcresult",
+    "afterResultBundle": "/tmp/task77-after-landscape-screen.xcresult",
+    "beforeRawPixelSize": [
+      1206,
+      2622
+    ],
+    "afterRawPixelSize": [
+      1206,
+      2622
+    ],
+    "beforeEXIFOrientation": 8,
+    "afterEXIFOrientation": 8,
+    "comparisonOrientationNormalized": true,
+    "screenshotAPI": "XCUIScreen.main.screenshot()",
+    "beforeAppSourceRevision": "3872dc5410517d64172ed1b20c2d7f3d287eb606",
+    "afterAppSourceRevision": "b78985c983d47798d0d4bcd19f17c40ebb694eb5",
+    "navigationBarFrameXYWH": [
+      0.0,
+      24.0,
+      874.0,
+      54.0
+    ],
+    "beforeHierarchySHA256": "3d06264d33b7a990dae72da276c5ff117e329006dcbb797b9ead5076f586338b",
+    "afterHierarchySHA256": "421200e3b037d663acf25833c18922425c6da5f3f0974118a130a31ab32288ba",
+    "beforeControlFramesXYWH": {
+      "mock-flag-button": [
+        102.0,
+        -162.7,
+        373.7,
+        87.3
+      ],
+      "mock-next-unanswered-button": [
+        102.0,
+        28.0,
+        446.0,
+        87.3
+      ],
+      "mock-next-flagged-button": [
+        102.0,
+        123.3,
+        335.3,
+        87.3
+      ]
+    },
+    "afterControlFramesXYWH": {
+      "mock-flag-button": [
+        102.0,
+        -162.7,
+        373.7,
+        87.3
+      ],
+      "mock-next-unanswered-button": [
+        102.0,
+        28.0,
+        446.0,
+        87.3
+      ],
+      "mock-next-flagged-button": [
+        102.0,
+        123.3,
+        335.3,
+        87.3
+      ]
+    },
+    "flagGroupAxis": "vertical",
+    "quickJumpAxis": "vertical",
+    "beforeFullScreenBlackGeometry": {
+      "fullHeightBlackColumns": 0,
+      "fullWidthBlackRows": 0
+    },
+    "afterFullScreenBlackGeometry": {
+      "fullHeightBlackColumns": 0,
+      "fullWidthBlackRows": 0
+    }
+  },
+  {
+    "device": "iphone",
+    "case": "header-landscape-AXXXL-light-questions",
+    "beforeFile": "before-iphone-header-landscape-AXXXL-light-questions.png",
+    "afterFile": "after-iphone-header-landscape-AXXXL-light-questions.png",
+    "nativeImageSize": [
+      2622,
+      1206
+    ],
+    "nativeComparisonBoxXYXY": [
+      0,
+      234,
+      2622,
+      1206
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "42375b48db2aa6775ef469bed56eb77c9f3e1a28dbb6d480010f85dbbd4dfee4",
+    "afterSHA256": "42375b48db2aa6775ef469bed56eb77c9f3e1a28dbb6d480010f85dbbd4dfee4",
+    "beforeResultBundle": "/tmp/task77-before-landscape-screen.xcresult",
+    "afterResultBundle": "/tmp/task77-after-landscape-screen.xcresult",
+    "beforeRawPixelSize": [
+      1206,
+      2622
+    ],
+    "afterRawPixelSize": [
+      1206,
+      2622
+    ],
+    "beforeEXIFOrientation": 8,
+    "afterEXIFOrientation": 8,
+    "comparisonOrientationNormalized": true,
+    "screenshotAPI": "XCUIScreen.main.screenshot()",
+    "beforeAppSourceRevision": "3872dc5410517d64172ed1b20c2d7f3d287eb606",
+    "afterAppSourceRevision": "b78985c983d47798d0d4bcd19f17c40ebb694eb5",
+    "navigationBarFrameXYWH": [
+      0.0,
+      24.0,
+      874.0,
+      54.0
+    ],
+    "beforeHierarchySHA256": "b6e8f20125a5a84905f1f41e99c58e6df3cbdf20b561c6d4fcbf13a65b3ab2c6",
+    "afterHierarchySHA256": "337682f143930dba4684bbb36006a23648d43bb4d06b0879de522617a8b6ee29",
+    "beforeControlFramesXYWH": {
+      "mock-flag-button": [
+        102.0,
+        164.7,
+        373.7,
+        87.3
+      ],
+      "mock-next-unanswered-button": [
+        102.0,
+        355.3,
+        446.0,
+        87.3
+      ],
+      "mock-next-flagged-button": [
+        102.0,
+        450.7,
+        335.3,
+        87.3
+      ]
+    },
+    "afterControlFramesXYWH": {
+      "mock-flag-button": [
+        102.0,
+        164.7,
+        373.7,
+        87.3
+      ],
+      "mock-next-unanswered-button": [
+        102.0,
+        355.3,
+        446.0,
+        87.3
+      ],
+      "mock-next-flagged-button": [
+        102.0,
+        450.7,
+        335.3,
+        87.3
+      ]
+    },
+    "flagGroupAxis": "vertical",
+    "quickJumpAxis": "vertical",
+    "positionedControlIdentifier": "mock-questions-button",
+    "positionedControlFullyVisibleBeforeAndAfter": true,
+    "beforeFullScreenBlackGeometry": {
+      "fullHeightBlackColumns": 0,
+      "fullWidthBlackRows": 0
+    },
+    "afterFullScreenBlackGeometry": {
+      "fullHeightBlackColumns": 0,
+      "fullWidthBlackRows": 0
+    }
+  },
+  {
+    "device": "iphone",
+    "case": "header-landscape-AXXXL-light-unanswered",
+    "beforeFile": "before-iphone-header-landscape-AXXXL-light-unanswered.png",
+    "afterFile": "after-iphone-header-landscape-AXXXL-light-unanswered.png",
+    "nativeImageSize": [
+      2622,
+      1206
+    ],
+    "nativeComparisonBoxXYXY": [
+      0,
+      234,
+      2622,
+      1206
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "bb3e30c4bb4678bcdf3f577d373fed2ca5a3c5a9c0e15e8436d35a1d44afca8d",
+    "afterSHA256": "bb3e30c4bb4678bcdf3f577d373fed2ca5a3c5a9c0e15e8436d35a1d44afca8d",
+    "beforeResultBundle": "/tmp/task77-before-landscape-screen.xcresult",
+    "afterResultBundle": "/tmp/task77-after-landscape-screen.xcresult",
+    "beforeRawPixelSize": [
+      1206,
+      2622
+    ],
+    "afterRawPixelSize": [
+      1206,
+      2622
+    ],
+    "beforeEXIFOrientation": 8,
+    "afterEXIFOrientation": 8,
+    "comparisonOrientationNormalized": true,
+    "screenshotAPI": "XCUIScreen.main.screenshot()",
+    "beforeAppSourceRevision": "3872dc5410517d64172ed1b20c2d7f3d287eb606",
+    "afterAppSourceRevision": "b78985c983d47798d0d4bcd19f17c40ebb694eb5",
+    "navigationBarFrameXYWH": [
+      0.0,
+      24.0,
+      874.0,
+      54.0
+    ],
+    "beforeHierarchySHA256": "4430596466b3512dd49cb0824bcc16f9a930ab8bc2225db951b9fc2d8e3b6e61",
+    "afterHierarchySHA256": "7f59377cd6345eaab1c8111384f38ebf94458952ccac58520e485f85da75ca09",
+    "beforeControlFramesXYWH": {
+      "mock-flag-button": [
+        102.0,
+        94.7,
+        373.7,
+        87.3
+      ],
+      "mock-next-unanswered-button": [
+        102.0,
+        285.3,
+        446.0,
+        87.3
+      ],
+      "mock-next-flagged-button": [
+        102.0,
+        380.7,
+        335.3,
+        87.3
+      ]
+    },
+    "afterControlFramesXYWH": {
+      "mock-flag-button": [
+        102.0,
+        94.7,
+        373.7,
+        87.3
+      ],
+      "mock-next-unanswered-button": [
+        102.0,
+        285.3,
+        446.0,
+        87.3
+      ],
+      "mock-next-flagged-button": [
+        102.0,
+        380.7,
+        335.3,
+        87.3
+      ]
+    },
+    "flagGroupAxis": "vertical",
+    "quickJumpAxis": "vertical",
+    "positionedControlIdentifier": "mock-next-unanswered-button",
+    "positionedControlFullyVisibleBeforeAndAfter": true,
+    "beforeFullScreenBlackGeometry": {
+      "fullHeightBlackColumns": 0,
+      "fullWidthBlackRows": 0
+    },
+    "afterFullScreenBlackGeometry": {
+      "fullHeightBlackColumns": 0,
+      "fullWidthBlackRows": 0
+    }
+  },
+  {
+    "device": "iphone",
+    "case": "header-landscape-AXXXL-light",
+    "beforeFile": "before-iphone-header-landscape-AXXXL-light.png",
+    "afterFile": "after-iphone-header-landscape-AXXXL-light.png",
+    "nativeImageSize": [
+      2622,
+      1206
+    ],
+    "nativeComparisonBoxXYXY": [
+      0,
+      234,
+      2622,
+      1206
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "fd6aa354adaa4c40e60e5c3fd5c4a5140a5173fb11f57a215088c8a047119197",
+    "afterSHA256": "fd6aa354adaa4c40e60e5c3fd5c4a5140a5173fb11f57a215088c8a047119197",
+    "beforeResultBundle": "/tmp/task77-before-landscape-screen.xcresult",
+    "afterResultBundle": "/tmp/task77-after-landscape-screen.xcresult",
+    "beforeRawPixelSize": [
+      1206,
+      2622
+    ],
+    "afterRawPixelSize": [
+      1206,
+      2622
+    ],
+    "beforeEXIFOrientation": 8,
+    "afterEXIFOrientation": 8,
+    "comparisonOrientationNormalized": true,
+    "screenshotAPI": "XCUIScreen.main.screenshot()",
+    "beforeAppSourceRevision": "3872dc5410517d64172ed1b20c2d7f3d287eb606",
+    "afterAppSourceRevision": "b78985c983d47798d0d4bcd19f17c40ebb694eb5",
+    "navigationBarFrameXYWH": [
+      0.0,
+      24.0,
+      874.0,
+      54.0
+    ],
+    "beforeHierarchySHA256": "453c04c5f084874660db9dcb87169abd678f15646b1da9fd3fd7a950d6797d00",
+    "afterHierarchySHA256": "61547d7ce52dae1035464bf3ee1d81aada92089446a4e3ff2ad3a1658920a456",
+    "beforeControlFramesXYWH": {
+      "mock-flag-button": [
+        102.0,
+        -162.7,
+        373.7,
+        87.3
+      ],
+      "mock-next-unanswered-button": [
+        102.0,
+        28.0,
+        446.0,
+        87.3
+      ],
+      "mock-next-flagged-button": [
+        102.0,
+        123.3,
+        335.3,
+        87.3
+      ]
+    },
+    "afterControlFramesXYWH": {
+      "mock-flag-button": [
+        102.0,
+        -162.7,
+        373.7,
+        87.3
+      ],
+      "mock-next-unanswered-button": [
+        102.0,
+        28.0,
+        446.0,
+        87.3
+      ],
+      "mock-next-flagged-button": [
+        102.0,
+        123.3,
+        335.3,
+        87.3
+      ]
+    },
+    "flagGroupAxis": "vertical",
+    "quickJumpAxis": "vertical",
+    "beforeFullScreenBlackGeometry": {
+      "fullHeightBlackColumns": 0,
+      "fullWidthBlackRows": 0
+    },
+    "afterFullScreenBlackGeometry": {
+      "fullHeightBlackColumns": 0,
+      "fullWidthBlackRows": 0
+    }
+  },
+  {
+    "device": "iphone",
+    "case": "header-landscape-default-dark",
+    "beforeFile": "before-iphone-header-landscape-default-dark.png",
+    "afterFile": "after-iphone-header-landscape-default-dark.png",
+    "nativeImageSize": [
+      2622,
+      1206
+    ],
+    "nativeComparisonBoxXYXY": [
+      0,
+      234,
+      2622,
+      1206
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "edc8d1522627aa9e7f7ba961c88e3335c65e19970282c1e2f76a175f39452322",
+    "afterSHA256": "edc8d1522627aa9e7f7ba961c88e3335c65e19970282c1e2f76a175f39452322",
+    "beforeResultBundle": "/tmp/task77-before-landscape-screen.xcresult",
+    "afterResultBundle": "/tmp/task77-after-landscape-screen.xcresult",
+    "beforeRawPixelSize": [
+      1206,
+      2622
+    ],
+    "afterRawPixelSize": [
+      1206,
+      2622
+    ],
+    "beforeEXIFOrientation": 8,
+    "afterEXIFOrientation": 8,
+    "comparisonOrientationNormalized": true,
+    "screenshotAPI": "XCUIScreen.main.screenshot()",
+    "beforeAppSourceRevision": "3872dc5410517d64172ed1b20c2d7f3d287eb606",
+    "afterAppSourceRevision": "b78985c983d47798d0d4bcd19f17c40ebb694eb5",
+    "navigationBarFrameXYWH": [
+      0.0,
+      24.0,
+      874.0,
+      54.0
+    ],
+    "beforeHierarchySHA256": "695cbf39da07b10051c74eb8ab552d8d70769e471268d224eb4e55fda8f862a0",
+    "afterHierarchySHA256": "9570e261b8f7daa0e2d91382cc22f1bb0bf87d6d2f057dae487db13d4b971d5e",
+    "beforeControlFramesXYWH": {
+      "mock-flag-button": [
+        102.0,
+        203.0,
+        148.7,
+        56.0
+      ],
+      "mock-next-unanswered-button": [
+        379.3,
+        203.0,
+        170.3,
+        56.0
+      ],
+      "mock-next-flagged-button": [
+        557.7,
+        203.0,
+        134.0,
+        56.0
+      ]
+    },
+    "afterControlFramesXYWH": {
+      "mock-flag-button": [
+        102.0,
+        203.0,
+        148.7,
+        56.0
+      ],
+      "mock-next-unanswered-button": [
+        379.3,
+        203.0,
+        170.3,
+        56.0
+      ],
+      "mock-next-flagged-button": [
+        557.7,
+        203.0,
+        134.0,
+        56.0
+      ]
+    },
+    "flagGroupAxis": "horizontal",
+    "quickJumpAxis": "horizontal",
+    "beforeFullScreenBlackGeometry": {
+      "fullHeightBlackColumns": 0,
+      "fullWidthBlackRows": 0
+    },
+    "afterFullScreenBlackGeometry": {
+      "fullHeightBlackColumns": 0,
+      "fullWidthBlackRows": 0
+    }
+  },
+  {
+    "device": "iphone",
+    "case": "header-landscape-default-light",
+    "beforeFile": "before-iphone-header-landscape-default-light.png",
+    "afterFile": "after-iphone-header-landscape-default-light.png",
+    "nativeImageSize": [
+      2622,
+      1206
+    ],
+    "nativeComparisonBoxXYXY": [
+      0,
+      234,
+      2622,
+      1206
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "e09c66fa0f942d4027e9b4288d754f3b8f2f89f97258c6ee88f1818ee3e9c59d",
+    "afterSHA256": "e09c66fa0f942d4027e9b4288d754f3b8f2f89f97258c6ee88f1818ee3e9c59d",
+    "beforeResultBundle": "/tmp/task77-before-landscape-screen.xcresult",
+    "afterResultBundle": "/tmp/task77-after-landscape-screen.xcresult",
+    "beforeRawPixelSize": [
+      1206,
+      2622
+    ],
+    "afterRawPixelSize": [
+      1206,
+      2622
+    ],
+    "beforeEXIFOrientation": 8,
+    "afterEXIFOrientation": 8,
+    "comparisonOrientationNormalized": true,
+    "screenshotAPI": "XCUIScreen.main.screenshot()",
+    "beforeAppSourceRevision": "3872dc5410517d64172ed1b20c2d7f3d287eb606",
+    "afterAppSourceRevision": "b78985c983d47798d0d4bcd19f17c40ebb694eb5",
+    "navigationBarFrameXYWH": [
+      0.0,
+      24.0,
+      874.0,
+      54.0
+    ],
+    "beforeHierarchySHA256": "42999357ea91e3f92a49f6b1649c5db638909eee3288ab06816b88c01671232f",
+    "afterHierarchySHA256": "cf7e2e0b08574ad3483c9d517a57332e9c0add1ffccd8d114b81fcc3e6dad471",
+    "beforeControlFramesXYWH": {
+      "mock-flag-button": [
+        102.0,
+        203.0,
+        148.7,
+        56.0
+      ],
+      "mock-next-unanswered-button": [
+        379.3,
+        203.0,
+        170.3,
+        56.0
+      ],
+      "mock-next-flagged-button": [
+        557.7,
+        203.0,
+        134.0,
+        56.0
+      ]
+    },
+    "afterControlFramesXYWH": {
+      "mock-flag-button": [
+        102.0,
+        203.0,
+        148.7,
+        56.0
+      ],
+      "mock-next-unanswered-button": [
+        379.3,
+        203.0,
+        170.3,
+        56.0
+      ],
+      "mock-next-flagged-button": [
+        557.7,
+        203.0,
+        134.0,
+        56.0
+      ]
+    },
+    "flagGroupAxis": "horizontal",
+    "quickJumpAxis": "horizontal",
+    "beforeFullScreenBlackGeometry": {
+      "fullHeightBlackColumns": 0,
+      "fullWidthBlackRows": 0
+    },
+    "afterFullScreenBlackGeometry": {
+      "fullHeightBlackColumns": 0,
+      "fullWidthBlackRows": 0
+    }
+  },
+  {
+    "device": "iphone",
+    "case": "header-portrait-AXXXL-dark-flag",
+    "beforeFile": "before-iphone-header-portrait-AXXXL-dark-flag.png",
+    "afterFile": "after-iphone-header-portrait-AXXXL-dark-flag.png",
+    "nativeImageSize": [
+      1206,
+      2622
+    ],
+    "nativeComparisonBoxXYXY": [
+      0,
+      567,
+      1206,
+      2622
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "9b9a9ec8f4ad3aa9ef4f8ba538eb8476b35312e8e87a4c2bab90aa6363f4269c",
+    "afterSHA256": "50b66f608f98c6b16f193056397b66d8b30a7abfd94481ebf909cd2add3e12fd",
+    "beforeResultBundle": "/tmp/task77-before-ax-iphone.xcresult",
+    "afterResultBundle": "/tmp/task77-after-ax-fixed-iphone.xcresult",
+    "beforeRawPixelSize": [
+      1206,
+      2622
+    ],
+    "afterRawPixelSize": [
+      1206,
+      2622
+    ],
+    "beforeEXIFOrientation": 1,
+    "afterEXIFOrientation": 1,
+    "comparisonOrientationNormalized": true,
+    "screenshotAPI": "XCUIApplication.screenshot()",
+    "beforeAppSourceRevision": "3872dc5410517d64172ed1b20c2d7f3d287eb606",
+    "afterAppSourceRevision": "b78985c983d47798d0d4bcd19f17c40ebb694eb5",
+    "navigationBarFrameXYWH": [
+      0.0,
+      62.0,
+      402.0,
+      127.0
+    ],
+    "beforeHierarchySHA256": "03f1692306730a81f0d11287e57d6ca82136f7679dbbf9a65db400b433ff9826",
+    "afterHierarchySHA256": "b3e83f9b758e2ee402ec9be5674c8420c02b342bd4a8c139cc9d729b62133da5",
+    "beforeControlFramesXYWH": {
+      "mock-flag-button": [
+        40.0,
+        664.7,
+        219.0,
+        149.3
+      ],
+      "mock-next-unanswered-button": [
+        40.0,
+        917.3,
+        205.7,
+        211.3
+      ],
+      "mock-next-flagged-button": [
+        40.0,
+        1136.7,
+        213.0,
+        149.3
+      ]
+    },
+    "afterControlFramesXYWH": {
+      "mock-flag-button": [
+        40.0,
+        664.7,
+        219.0,
+        149.3
+      ],
+      "mock-next-unanswered-button": [
+        40.0,
+        917.3,
+        205.7,
+        211.3
+      ],
+      "mock-next-flagged-button": [
+        40.0,
+        1136.7,
+        213.0,
+        149.3
+      ]
+    },
+    "flagGroupAxis": "vertical",
+    "quickJumpAxis": "vertical",
+    "positionedControlIdentifier": "mock-flag-button",
+    "positionedControlFullyVisibleBeforeAndAfter": true
+  },
+  {
+    "device": "iphone",
+    "case": "header-portrait-AXXXL-dark-lower",
+    "beforeFile": "before-iphone-header-portrait-AXXXL-dark-lower.png",
+    "afterFile": "after-iphone-header-portrait-AXXXL-dark-lower.png",
+    "nativeImageSize": [
+      1206,
+      2622
+    ],
+    "nativeComparisonBoxXYXY": [
+      0,
+      348,
+      1206,
+      2622
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "3acb11a9f16ff2cfc4a84f5c21bc121f4e977e779daed5d698acbb8138e2ded1",
+    "afterSHA256": "5bbc371bd1f0a195b533c0210c3d40d8e008ad9b6fab3dfe19493a7d93c4ffaf",
+    "beforeResultBundle": "/tmp/task77-before-iphone.xcresult",
+    "afterResultBundle": "/tmp/task77-after-iphone.xcresult",
+    "beforeRawPixelSize": [
+      1206,
+      2622
+    ],
+    "afterRawPixelSize": [
+      1206,
+      2622
+    ],
+    "beforeEXIFOrientation": 1,
+    "afterEXIFOrientation": 1,
+    "comparisonOrientationNormalized": true,
+    "screenshotAPI": "XCUIApplication.screenshot()",
+    "beforeAppSourceRevision": "3872dc5410517d64172ed1b20c2d7f3d287eb606",
+    "afterAppSourceRevision": "343bbf49853e099d54de45c66c4f1f7577ae9267",
+    "navigationBarFrameXYWH": [
+      0.0,
+      62.0,
+      402.0,
+      54.0
+    ],
+    "beforeHierarchySHA256": "344d5daa765a182642a34bd64d89b3f626096a7fd8cbdcf9fc34bf6b50ba1706",
+    "afterHierarchySHA256": "764b66e4699085bc927e8f2e2f805d76ed48615ce2d2d8783044a00b57eaafad",
+    "beforeControlFramesXYWH": {
+      "mock-flag-button": [
+        40.0,
+        -331.7,
+        219.0,
+        149.3
+      ],
+      "mock-next-unanswered-button": [
+        40.0,
+        -79.0,
+        205.7,
+        211.3
+      ],
+      "mock-next-flagged-button": [
+        40.0,
+        140.3,
+        213.0,
+        149.3
+      ]
+    },
+    "afterControlFramesXYWH": {
+      "mock-flag-button": [
+        40.0,
+        -331.7,
+        219.0,
+        149.3
+      ],
+      "mock-next-unanswered-button": [
+        40.0,
+        -79.0,
+        205.7,
+        211.3
+      ],
+      "mock-next-flagged-button": [
+        40.0,
+        140.3,
+        213.0,
+        149.3
+      ]
+    },
+    "flagGroupAxis": "vertical",
+    "quickJumpAxis": "vertical"
+  },
+  {
+    "device": "iphone",
+    "case": "header-portrait-AXXXL-dark-questions",
+    "beforeFile": "before-iphone-header-portrait-AXXXL-dark-questions.png",
+    "afterFile": "after-iphone-header-portrait-AXXXL-dark-questions.png",
+    "nativeImageSize": [
+      1206,
+      2622
+    ],
+    "nativeComparisonBoxXYXY": [
+      0,
+      348,
+      1206,
+      2622
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "2a3bfa665f547dcd26300bc289299e670ac885f8b5cbce1cce221f1639e16136",
+    "afterSHA256": "a7e62e9c610b883d08952532097aba9c4c5d459ef47de1152e0f13d077931689",
+    "beforeResultBundle": "/tmp/task77-before-ax-iphone.xcresult",
+    "afterResultBundle": "/tmp/task77-after-ax-fixed-iphone.xcresult",
+    "beforeRawPixelSize": [
+      1206,
+      2622
+    ],
+    "afterRawPixelSize": [
+      1206,
+      2622
+    ],
+    "beforeEXIFOrientation": 1,
+    "afterEXIFOrientation": 1,
+    "comparisonOrientationNormalized": true,
+    "screenshotAPI": "XCUIApplication.screenshot()",
+    "beforeAppSourceRevision": "3872dc5410517d64172ed1b20c2d7f3d287eb606",
+    "afterAppSourceRevision": "b78985c983d47798d0d4bcd19f17c40ebb694eb5",
+    "navigationBarFrameXYWH": [
+      0.0,
+      62.0,
+      402.0,
+      54.0
+    ],
+    "beforeHierarchySHA256": "9f9a5871402f5bb030df9cc9c416130de6b7508d206f168edddb8b21b291ae9f",
+    "afterHierarchySHA256": "36010522201ecc11ad56c42dba506a12c5938214cb99d551ca28eb28287d0266",
+    "beforeControlFramesXYWH": {
+      "mock-flag-button": [
+        40.0,
+        591.7,
+        219.0,
+        149.3
+      ],
+      "mock-next-unanswered-button": [
+        40.0,
+        844.3,
+        205.7,
+        211.3
+      ],
+      "mock-next-flagged-button": [
+        40.0,
+        1063.7,
+        213.0,
+        149.3
+      ]
+    },
+    "afterControlFramesXYWH": {
+      "mock-flag-button": [
+        40.0,
+        591.7,
+        219.0,
+        149.3
+      ],
+      "mock-next-unanswered-button": [
+        40.0,
+        844.3,
+        205.7,
+        211.3
+      ],
+      "mock-next-flagged-button": [
+        40.0,
+        1063.7,
+        213.0,
+        149.3
+      ]
+    },
+    "flagGroupAxis": "vertical",
+    "quickJumpAxis": "vertical",
+    "positionedControlIdentifier": "mock-questions-button",
+    "positionedControlFullyVisibleBeforeAndAfter": true
+  },
+  {
+    "device": "iphone",
+    "case": "header-portrait-AXXXL-dark-unanswered",
+    "beforeFile": "before-iphone-header-portrait-AXXXL-dark-unanswered.png",
+    "afterFile": "after-iphone-header-portrait-AXXXL-dark-unanswered.png",
+    "nativeImageSize": [
+      1206,
+      2622
+    ],
+    "nativeComparisonBoxXYXY": [
+      0,
+      348,
+      1206,
+      2622
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "53e3f4515cc456c53f043bb4f79eb90a42b1884b4bf4549f340bd2046379e308",
+    "afterSHA256": "b95aca0763cbdd4dbe9adf710841b0725af079c09cc9129e003b986d7adefcc3",
+    "beforeResultBundle": "/tmp/task77-before-ax-iphone.xcresult",
+    "afterResultBundle": "/tmp/task77-after-ax-fixed-iphone.xcresult",
+    "beforeRawPixelSize": [
+      1206,
+      2622
+    ],
+    "afterRawPixelSize": [
+      1206,
+      2622
+    ],
+    "beforeEXIFOrientation": 1,
+    "afterEXIFOrientation": 1,
+    "comparisonOrientationNormalized": true,
+    "screenshotAPI": "XCUIApplication.screenshot()",
+    "beforeAppSourceRevision": "3872dc5410517d64172ed1b20c2d7f3d287eb606",
+    "afterAppSourceRevision": "b78985c983d47798d0d4bcd19f17c40ebb694eb5",
+    "navigationBarFrameXYWH": [
+      0.0,
+      62.0,
+      402.0,
+      54.0
+    ],
+    "beforeHierarchySHA256": "479f62cbced79f40fcbf19cee3ce1225a5ab43bd99c93900ae942097f6a3a2a5",
+    "afterHierarchySHA256": "dfeca303499b92ca1f1d93486fdd163c2ff8f24153d8a227f7b65a7ed7b264d7",
+    "beforeControlFramesXYWH": {
+      "mock-flag-button": [
+        40.0,
+        381.7,
+        219.0,
+        149.3
+      ],
+      "mock-next-unanswered-button": [
+        40.0,
+        634.3,
+        205.7,
+        211.3
+      ],
+      "mock-next-flagged-button": [
+        40.0,
+        853.7,
+        213.0,
+        149.3
+      ]
+    },
+    "afterControlFramesXYWH": {
+      "mock-flag-button": [
+        40.0,
+        381.7,
+        219.0,
+        149.3
+      ],
+      "mock-next-unanswered-button": [
+        40.0,
+        634.3,
+        205.7,
+        211.3
+      ],
+      "mock-next-flagged-button": [
+        40.0,
+        853.7,
+        213.0,
+        149.3
+      ]
+    },
+    "flagGroupAxis": "vertical",
+    "quickJumpAxis": "vertical",
+    "positionedControlIdentifier": "mock-next-unanswered-button",
+    "positionedControlFullyVisibleBeforeAndAfter": true
+  },
+  {
+    "device": "iphone",
+    "case": "header-portrait-AXXXL-dark",
+    "beforeFile": "before-iphone-header-portrait-AXXXL-dark.png",
+    "afterFile": "after-iphone-header-portrait-AXXXL-dark.png",
+    "nativeImageSize": [
+      1206,
+      2622
+    ],
+    "nativeComparisonBoxXYXY": [
+      0,
+      348,
+      1206,
+      2622
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "3acb11a9f16ff2cfc4a84f5c21bc121f4e977e779daed5d698acbb8138e2ded1",
+    "afterSHA256": "5bbc371bd1f0a195b533c0210c3d40d8e008ad9b6fab3dfe19493a7d93c4ffaf",
+    "beforeResultBundle": "/tmp/task77-before-iphone.xcresult",
+    "afterResultBundle": "/tmp/task77-after-iphone.xcresult",
+    "beforeRawPixelSize": [
+      1206,
+      2622
+    ],
+    "afterRawPixelSize": [
+      1206,
+      2622
+    ],
+    "beforeEXIFOrientation": 1,
+    "afterEXIFOrientation": 1,
+    "comparisonOrientationNormalized": true,
+    "screenshotAPI": "XCUIApplication.screenshot()",
+    "beforeAppSourceRevision": "3872dc5410517d64172ed1b20c2d7f3d287eb606",
+    "afterAppSourceRevision": "343bbf49853e099d54de45c66c4f1f7577ae9267",
+    "navigationBarFrameXYWH": [
+      0.0,
+      62.0,
+      402.0,
+      54.0
+    ],
+    "beforeHierarchySHA256": "66f8930897092c78f932720280f5630b6c239f36ce3af171bfde9174f0dfcdab",
+    "afterHierarchySHA256": "69eafe18b5f5913e763470a0483bc622b3a3f804324e2b5a94f942fb4d48c1d2",
+    "beforeControlFramesXYWH": {
+      "mock-flag-button": [
+        40.0,
+        -331.7,
+        219.0,
+        149.3
+      ],
+      "mock-next-unanswered-button": [
+        40.0,
+        -79.0,
+        205.7,
+        211.3
+      ],
+      "mock-next-flagged-button": [
+        40.0,
+        140.3,
+        213.0,
+        149.3
+      ]
+    },
+    "afterControlFramesXYWH": {
+      "mock-flag-button": [
+        40.0,
+        -331.7,
+        219.0,
+        149.3
+      ],
+      "mock-next-unanswered-button": [
+        40.0,
+        -79.0,
+        205.7,
+        211.3
+      ],
+      "mock-next-flagged-button": [
+        40.0,
+        140.3,
+        213.0,
+        149.3
+      ]
+    },
+    "flagGroupAxis": "vertical",
+    "quickJumpAxis": "vertical"
+  },
+  {
+    "device": "iphone",
+    "case": "header-portrait-AXXXL-light-flag",
+    "beforeFile": "before-iphone-header-portrait-AXXXL-light-flag.png",
+    "afterFile": "after-iphone-header-portrait-AXXXL-light-flag.png",
+    "nativeImageSize": [
+      1206,
+      2622
+    ],
+    "nativeComparisonBoxXYXY": [
+      0,
+      567,
+      1206,
+      2622
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "106ea16760934ec203ae074267c0c364095471c6662b7d0528bf09c60d352f30",
+    "afterSHA256": "e232168900f178dffda401c22c8cfd808f9deb2f95b61810c33278ec7edf7351",
+    "beforeResultBundle": "/tmp/task77-before-ax-iphone.xcresult",
+    "afterResultBundle": "/tmp/task77-after-ax-fixed-iphone.xcresult",
+    "beforeRawPixelSize": [
+      1206,
+      2622
+    ],
+    "afterRawPixelSize": [
+      1206,
+      2622
+    ],
+    "beforeEXIFOrientation": 1,
+    "afterEXIFOrientation": 1,
+    "comparisonOrientationNormalized": true,
+    "screenshotAPI": "XCUIApplication.screenshot()",
+    "beforeAppSourceRevision": "3872dc5410517d64172ed1b20c2d7f3d287eb606",
+    "afterAppSourceRevision": "b78985c983d47798d0d4bcd19f17c40ebb694eb5",
+    "navigationBarFrameXYWH": [
+      0.0,
+      62.0,
+      402.0,
+      127.0
+    ],
+    "beforeHierarchySHA256": "c9fab3ba7974ef93d3cabc71359e6db87aed621d496e959ce04f3ee30c2d574a",
+    "afterHierarchySHA256": "967ab65a965c11c03760e2ac12a83d612cd642650f767c74ad0b21d11fec7113",
+    "beforeControlFramesXYWH": {
+      "mock-flag-button": [
+        40.0,
+        664.7,
+        219.0,
+        149.3
+      ],
+      "mock-next-unanswered-button": [
+        40.0,
+        917.3,
+        205.7,
+        211.3
+      ],
+      "mock-next-flagged-button": [
+        40.0,
+        1136.7,
+        213.0,
+        149.3
+      ]
+    },
+    "afterControlFramesXYWH": {
+      "mock-flag-button": [
+        40.0,
+        664.7,
+        219.0,
+        149.3
+      ],
+      "mock-next-unanswered-button": [
+        40.0,
+        917.3,
+        205.7,
+        211.3
+      ],
+      "mock-next-flagged-button": [
+        40.0,
+        1136.7,
+        213.0,
+        149.3
+      ]
+    },
+    "flagGroupAxis": "vertical",
+    "quickJumpAxis": "vertical",
+    "positionedControlIdentifier": "mock-flag-button",
+    "positionedControlFullyVisibleBeforeAndAfter": true
+  },
+  {
+    "device": "iphone",
+    "case": "header-portrait-AXXXL-light-lower",
+    "beforeFile": "before-iphone-header-portrait-AXXXL-light-lower.png",
+    "afterFile": "after-iphone-header-portrait-AXXXL-light-lower.png",
+    "nativeImageSize": [
+      1206,
+      2622
+    ],
+    "nativeComparisonBoxXYXY": [
+      0,
+      348,
+      1206,
+      2622
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "d1df79c63b4e1fb87bb6499cb94b70b9ada3ee9a1ab55f8819b28eb53ff6c247",
+    "afterSHA256": "77f420ef1c12df1d0e8f5549be0322ffc76cab8947abf523759fc1934ba14cff",
+    "beforeResultBundle": "/tmp/task77-before-iphone.xcresult",
+    "afterResultBundle": "/tmp/task77-after-iphone.xcresult",
+    "beforeRawPixelSize": [
+      1206,
+      2622
+    ],
+    "afterRawPixelSize": [
+      1206,
+      2622
+    ],
+    "beforeEXIFOrientation": 1,
+    "afterEXIFOrientation": 1,
+    "comparisonOrientationNormalized": true,
+    "screenshotAPI": "XCUIApplication.screenshot()",
+    "beforeAppSourceRevision": "3872dc5410517d64172ed1b20c2d7f3d287eb606",
+    "afterAppSourceRevision": "343bbf49853e099d54de45c66c4f1f7577ae9267",
+    "navigationBarFrameXYWH": [
+      0.0,
+      62.0,
+      402.0,
+      54.0
+    ],
+    "beforeHierarchySHA256": "261e2f69d82f5b94fb129d60de368e3e1b16cbaa5eaf38369a42d1d06c7bac36",
+    "afterHierarchySHA256": "32e86c91ce40bdbb61cb49c95b327aa20c56e638b512142b90816b01d91636ae",
+    "beforeControlFramesXYWH": {
+      "mock-flag-button": [
+        40.0,
+        -331.7,
+        219.0,
+        149.3
+      ],
+      "mock-next-unanswered-button": [
+        40.0,
+        -79.0,
+        205.7,
+        211.3
+      ],
+      "mock-next-flagged-button": [
+        40.0,
+        140.3,
+        213.0,
+        149.3
+      ]
+    },
+    "afterControlFramesXYWH": {
+      "mock-flag-button": [
+        40.0,
+        -331.7,
+        219.0,
+        149.3
+      ],
+      "mock-next-unanswered-button": [
+        40.0,
+        -79.0,
+        205.7,
+        211.3
+      ],
+      "mock-next-flagged-button": [
+        40.0,
+        140.3,
+        213.0,
+        149.3
+      ]
+    },
+    "flagGroupAxis": "vertical",
+    "quickJumpAxis": "vertical"
+  },
+  {
+    "device": "iphone",
+    "case": "header-portrait-AXXXL-light-questions",
+    "beforeFile": "before-iphone-header-portrait-AXXXL-light-questions.png",
+    "afterFile": "after-iphone-header-portrait-AXXXL-light-questions.png",
+    "nativeImageSize": [
+      1206,
+      2622
+    ],
+    "nativeComparisonBoxXYXY": [
+      0,
+      348,
+      1206,
+      2622
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "07678aeeb6a8836d21b85720e61722e12cd3515f14aa401f49f40d691014827f",
+    "afterSHA256": "6bb30d589aee6807c34260474dc486b9853e5e49e8ffd0fd9678748705b92329",
+    "beforeResultBundle": "/tmp/task77-before-ax-iphone.xcresult",
+    "afterResultBundle": "/tmp/task77-after-ax-fixed-iphone.xcresult",
+    "beforeRawPixelSize": [
+      1206,
+      2622
+    ],
+    "afterRawPixelSize": [
+      1206,
+      2622
+    ],
+    "beforeEXIFOrientation": 1,
+    "afterEXIFOrientation": 1,
+    "comparisonOrientationNormalized": true,
+    "screenshotAPI": "XCUIApplication.screenshot()",
+    "beforeAppSourceRevision": "3872dc5410517d64172ed1b20c2d7f3d287eb606",
+    "afterAppSourceRevision": "b78985c983d47798d0d4bcd19f17c40ebb694eb5",
+    "navigationBarFrameXYWH": [
+      0.0,
+      62.0,
+      402.0,
+      54.0
+    ],
+    "beforeHierarchySHA256": "e355590cb0ff8ea628b56b63828b2321ea0a362e2e26d7f2ee295da896610e7d",
+    "afterHierarchySHA256": "88f3cc27435bcf8383e3d680f82d364e686d7ad65d6ab28d0dcf3fe583409d53",
+    "beforeControlFramesXYWH": {
+      "mock-flag-button": [
+        40.0,
+        591.7,
+        219.0,
+        149.3
+      ],
+      "mock-next-unanswered-button": [
+        40.0,
+        844.3,
+        205.7,
+        211.3
+      ],
+      "mock-next-flagged-button": [
+        40.0,
+        1063.7,
+        213.0,
+        149.3
+      ]
+    },
+    "afterControlFramesXYWH": {
+      "mock-flag-button": [
+        40.0,
+        591.7,
+        219.0,
+        149.3
+      ],
+      "mock-next-unanswered-button": [
+        40.0,
+        844.3,
+        205.7,
+        211.3
+      ],
+      "mock-next-flagged-button": [
+        40.0,
+        1063.7,
+        213.0,
+        149.3
+      ]
+    },
+    "flagGroupAxis": "vertical",
+    "quickJumpAxis": "vertical",
+    "positionedControlIdentifier": "mock-questions-button",
+    "positionedControlFullyVisibleBeforeAndAfter": true
+  },
+  {
+    "device": "iphone",
+    "case": "header-portrait-AXXXL-light-unanswered",
+    "beforeFile": "before-iphone-header-portrait-AXXXL-light-unanswered.png",
+    "afterFile": "after-iphone-header-portrait-AXXXL-light-unanswered.png",
+    "nativeImageSize": [
+      1206,
+      2622
+    ],
+    "nativeComparisonBoxXYXY": [
+      0,
+      348,
+      1206,
+      2622
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "e4932ce244ab19b68c0d3100b05b350abfd0e4b490fb36132a57101f1b93bcab",
+    "afterSHA256": "ce6466086abdeaeae3bc07d96b15e677985c53ecd5cde7ce9e91d61db29eda3e",
+    "beforeResultBundle": "/tmp/task77-before-ax-iphone.xcresult",
+    "afterResultBundle": "/tmp/task77-after-ax-fixed-iphone.xcresult",
+    "beforeRawPixelSize": [
+      1206,
+      2622
+    ],
+    "afterRawPixelSize": [
+      1206,
+      2622
+    ],
+    "beforeEXIFOrientation": 1,
+    "afterEXIFOrientation": 1,
+    "comparisonOrientationNormalized": true,
+    "screenshotAPI": "XCUIApplication.screenshot()",
+    "beforeAppSourceRevision": "3872dc5410517d64172ed1b20c2d7f3d287eb606",
+    "afterAppSourceRevision": "b78985c983d47798d0d4bcd19f17c40ebb694eb5",
+    "navigationBarFrameXYWH": [
+      0.0,
+      62.0,
+      402.0,
+      54.0
+    ],
+    "beforeHierarchySHA256": "c95b305f75bb3c304334aa380013a4b5c090101470781979a3ca299fc2bac9b3",
+    "afterHierarchySHA256": "ccd7ddfb682ff43857961093762cc78a522e30c596a46d9cbcaa9b9cda588d20",
+    "beforeControlFramesXYWH": {
+      "mock-flag-button": [
+        40.0,
+        381.7,
+        219.0,
+        149.3
+      ],
+      "mock-next-unanswered-button": [
+        40.0,
+        634.3,
+        205.7,
+        211.3
+      ],
+      "mock-next-flagged-button": [
+        40.0,
+        853.7,
+        213.0,
+        149.3
+      ]
+    },
+    "afterControlFramesXYWH": {
+      "mock-flag-button": [
+        40.0,
+        381.7,
+        219.0,
+        149.3
+      ],
+      "mock-next-unanswered-button": [
+        40.0,
+        634.3,
+        205.7,
+        211.3
+      ],
+      "mock-next-flagged-button": [
+        40.0,
+        853.7,
+        213.0,
+        149.3
+      ]
+    },
+    "flagGroupAxis": "vertical",
+    "quickJumpAxis": "vertical",
+    "positionedControlIdentifier": "mock-next-unanswered-button",
+    "positionedControlFullyVisibleBeforeAndAfter": true
+  },
+  {
+    "device": "iphone",
+    "case": "header-portrait-AXXXL-light",
+    "beforeFile": "before-iphone-header-portrait-AXXXL-light.png",
+    "afterFile": "after-iphone-header-portrait-AXXXL-light.png",
+    "nativeImageSize": [
+      1206,
+      2622
+    ],
+    "nativeComparisonBoxXYXY": [
+      0,
+      348,
+      1206,
+      2622
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "d1df79c63b4e1fb87bb6499cb94b70b9ada3ee9a1ab55f8819b28eb53ff6c247",
+    "afterSHA256": "4667c8cca52ac627c5403f3e2059031732dc64df04a128234c2cba61e7c3c000",
+    "beforeResultBundle": "/tmp/task77-before-iphone.xcresult",
+    "afterResultBundle": "/tmp/task77-after-iphone.xcresult",
+    "beforeRawPixelSize": [
+      1206,
+      2622
+    ],
+    "afterRawPixelSize": [
+      1206,
+      2622
+    ],
+    "beforeEXIFOrientation": 1,
+    "afterEXIFOrientation": 1,
+    "comparisonOrientationNormalized": true,
+    "screenshotAPI": "XCUIApplication.screenshot()",
+    "beforeAppSourceRevision": "3872dc5410517d64172ed1b20c2d7f3d287eb606",
+    "afterAppSourceRevision": "343bbf49853e099d54de45c66c4f1f7577ae9267",
+    "navigationBarFrameXYWH": [
+      0.0,
+      62.0,
+      402.0,
+      54.0
+    ],
+    "beforeHierarchySHA256": "c5ab6c0f3dd2e8caee8338c42f8b4d65e1e2b4d726bf723e2cc035ee54689b4b",
+    "afterHierarchySHA256": "f0ad082ddcb17c0c5f823853c7ecbd8552c4d6216ee509bc21801f5ad30a1a20",
+    "beforeControlFramesXYWH": {
+      "mock-flag-button": [
+        40.0,
+        -331.7,
+        219.0,
+        149.3
+      ],
+      "mock-next-unanswered-button": [
+        40.0,
+        -79.0,
+        205.7,
+        211.3
+      ],
+      "mock-next-flagged-button": [
+        40.0,
+        140.3,
+        213.0,
+        149.3
+      ]
+    },
+    "afterControlFramesXYWH": {
+      "mock-flag-button": [
+        40.0,
+        -331.7,
+        219.0,
+        149.3
+      ],
+      "mock-next-unanswered-button": [
+        40.0,
+        -79.0,
+        205.7,
+        211.3
+      ],
+      "mock-next-flagged-button": [
+        40.0,
+        140.3,
+        213.0,
+        149.3
+      ]
+    },
+    "flagGroupAxis": "vertical",
+    "quickJumpAxis": "vertical"
+  },
+  {
+    "device": "iphone",
+    "case": "header-portrait-default-dark",
+    "beforeFile": "before-iphone-header-portrait-default-dark.png",
+    "afterFile": "after-iphone-header-portrait-default-dark.png",
+    "nativeImageSize": [
+      1206,
+      2622
+    ],
+    "nativeComparisonBoxXYXY": [
+      0,
+      504,
+      1206,
+      2622
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "da5b23906c091f2c8ca25b035e3924c38604e317a2a119286e5a32cbc94b158e",
+    "afterSHA256": "379cbade4c8095c1ac67dadf46bebf2989976973c3bc76374adca39e772954a7",
+    "beforeResultBundle": "/tmp/task77-before-iphone.xcresult",
+    "afterResultBundle": "/tmp/task77-after-iphone.xcresult",
+    "beforeRawPixelSize": [
+      1206,
+      2622
+    ],
+    "afterRawPixelSize": [
+      1206,
+      2622
+    ],
+    "beforeEXIFOrientation": 1,
+    "afterEXIFOrientation": 1,
+    "comparisonOrientationNormalized": true,
+    "screenshotAPI": "XCUIApplication.screenshot()",
+    "beforeAppSourceRevision": "3872dc5410517d64172ed1b20c2d7f3d287eb606",
+    "afterAppSourceRevision": "343bbf49853e099d54de45c66c4f1f7577ae9267",
+    "navigationBarFrameXYWH": [
+      0.0,
+      62.0,
+      402.0,
+      106.0
+    ],
+    "beforeHierarchySHA256": "83667dcf4f069f0318c265a615005b9ee24a5d5ab49d6bc3a9a2bd80dedf0569",
+    "afterHierarchySHA256": "94271305a648e9f973ea014bacda04c3f52268dc3c06177fe20dfefbcd9afed9",
+    "beforeControlFramesXYWH": {
+      "mock-flag-button": [
+        40.0,
+        293.0,
+        148.7,
+        56.0
+      ],
+      "mock-next-unanswered-button": [
+        40.0,
+        421.0,
+        170.3,
+        56.0
+      ],
+      "mock-next-flagged-button": [
+        218.3,
+        421.0,
+        134.0,
+        56.0
+      ]
+    },
+    "afterControlFramesXYWH": {
+      "mock-flag-button": [
+        40.0,
+        293.0,
+        148.7,
+        56.0
+      ],
+      "mock-next-unanswered-button": [
+        40.0,
+        421.0,
+        170.3,
+        56.0
+      ],
+      "mock-next-flagged-button": [
+        218.3,
+        421.0,
+        134.0,
+        56.0
+      ]
+    },
+    "flagGroupAxis": "vertical",
+    "quickJumpAxis": "horizontal"
+  },
+  {
+    "device": "iphone",
+    "case": "header-portrait-default-light",
+    "beforeFile": "before-iphone-header-portrait-default-light.png",
+    "afterFile": "after-iphone-header-portrait-default-light.png",
+    "nativeImageSize": [
+      1206,
+      2622
+    ],
+    "nativeComparisonBoxXYXY": [
+      0,
+      504,
+      1206,
+      2622
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "cba2728e1016af81479772bbcd51472439860f9ce316dc9a0ebdf841ec5a8a7d",
+    "afterSHA256": "2837368aacd098ef8ab965dc83c5b8e142c46ee058ca965f3aa0c202f923033d",
+    "beforeResultBundle": "/tmp/task77-before-iphone.xcresult",
+    "afterResultBundle": "/tmp/task77-after-iphone.xcresult",
+    "beforeRawPixelSize": [
+      1206,
+      2622
+    ],
+    "afterRawPixelSize": [
+      1206,
+      2622
+    ],
+    "beforeEXIFOrientation": 1,
+    "afterEXIFOrientation": 1,
+    "comparisonOrientationNormalized": true,
+    "screenshotAPI": "XCUIApplication.screenshot()",
+    "beforeAppSourceRevision": "3872dc5410517d64172ed1b20c2d7f3d287eb606",
+    "afterAppSourceRevision": "343bbf49853e099d54de45c66c4f1f7577ae9267",
+    "navigationBarFrameXYWH": [
+      0.0,
+      62.0,
+      402.0,
+      106.0
+    ],
+    "beforeHierarchySHA256": "befc98954a092a2b5b67737711d7b8f2e54fa32fe7140482e9ac20565a18acfd",
+    "afterHierarchySHA256": "08bbc297cb8f2cd531a95a491661df8d3a3ef72269551e5250cfbe051f961e3e",
+    "beforeControlFramesXYWH": {
+      "mock-flag-button": [
+        40.0,
+        293.0,
+        148.7,
+        56.0
+      ],
+      "mock-next-unanswered-button": [
+        40.0,
+        421.0,
+        170.3,
+        56.0
+      ],
+      "mock-next-flagged-button": [
+        218.3,
+        421.0,
+        134.0,
+        56.0
+      ]
+    },
+    "afterControlFramesXYWH": {
+      "mock-flag-button": [
+        40.0,
+        293.0,
+        148.7,
+        56.0
+      ],
+      "mock-next-unanswered-button": [
+        40.0,
+        421.0,
+        170.3,
+        56.0
+      ],
+      "mock-next-flagged-button": [
+        218.3,
+        421.0,
+        134.0,
+        56.0
+      ]
+    },
+    "flagGroupAxis": "vertical",
+    "quickJumpAxis": "horizontal"
+  },
+  {
+    "device": "iphone",
+    "case": "navigator-fitting-dark",
+    "beforeFile": "before-iphone-navigator-fitting-dark.png",
+    "afterFile": "after-iphone-navigator-fitting-dark.png",
+    "nativeImageSize": [
+      1206,
+      2622
+    ],
+    "nativeComparisonBoxXYXY": [
+      0,
+      186,
+      1206,
+      2622
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "2a7382b1d55bbb7eaafab472c283ca5b7c7e4e8cdefd5940d3d5a057a000978c",
+    "afterSHA256": "b5d5769dc118c3bfb1ffabe6d10f8713739d6dbc81b99b4c7682d9569087c7ee",
+    "beforeResultBundle": "/tmp/task77-before-iphone.xcresult",
+    "afterResultBundle": "/tmp/task77-sheet-fix-iphone.xcresult",
+    "beforeRawPixelSize": [
+      1206,
+      2622
+    ],
+    "afterRawPixelSize": [
+      1206,
+      2622
+    ],
+    "beforeEXIFOrientation": 1,
+    "afterEXIFOrientation": 1,
+    "comparisonOrientationNormalized": true,
+    "screenshotAPI": "XCUIApplication.screenshot()",
+    "beforeAppSourceRevision": "3872dc5410517d64172ed1b20c2d7f3d287eb606",
+    "afterAppSourceRevision": "b78985c983d47798d0d4bcd19f17c40ebb694eb5",
+    "navigationBarFrameXYWH": [
+      0.0,
+      62.0,
+      402.0,
+      106.0
+    ],
+    "beforeHierarchySHA256": "7c6e607cce779c0f1d5e66e9013688427faebd4424012c1a2968b3cf0bd7161c",
+    "afterHierarchySHA256": "a95e08b6a7bd4ab2f79cbdddc59a808a723a3ebe4d3ee1ef3bf9e60f3be905b2"
+  },
+  {
+    "device": "iphone",
+    "case": "navigator-fitting-light",
+    "beforeFile": "before-iphone-navigator-fitting-light.png",
+    "afterFile": "after-iphone-navigator-fitting-light.png",
+    "nativeImageSize": [
+      1206,
+      2622
+    ],
+    "nativeComparisonBoxXYXY": [
+      0,
+      186,
+      1206,
+      2622
+    ],
+    "differentPixels": 0,
+    "maximumChannelDifference": 0,
+    "beforeSHA256": "fc5f2da364a1c0f18952e771a20c3712f7465504d46a005f30a5f265c99438fb",
+    "afterSHA256": "9cdc9497a2835df735c3b77e39cddf5a195485626fa24f852ca1b005b73b98c5",
+    "beforeResultBundle": "/tmp/task77-before-iphone.xcresult",
+    "afterResultBundle": "/tmp/task77-sheet-fix-iphone.xcresult",
+    "beforeRawPixelSize": [
+      1206,
+      2622
+    ],
+    "afterRawPixelSize": [
+      1206,
+      2622
+    ],
+    "beforeEXIFOrientation": 1,
+    "afterEXIFOrientation": 1,
+    "comparisonOrientationNormalized": true,
+    "screenshotAPI": "XCUIApplication.screenshot()",
+    "beforeAppSourceRevision": "3872dc5410517d64172ed1b20c2d7f3d287eb606",
+    "afterAppSourceRevision": "b78985c983d47798d0d4bcd19f17c40ebb694eb5",
+    "navigationBarFrameXYWH": [
+      0.0,
+      62.0,
+      402.0,
+      106.0
+    ],
+    "beforeHierarchySHA256": "eac64cd3435f049905e6529ed5f2326f3fcc197e1fee689003496ffb62f7b2f4",
+    "afterHierarchySHA256": "5beafd55a94c2218c0d8729050bcdbc91bc7549c2267780be382a7ca618f0b5c"
+  }
+]

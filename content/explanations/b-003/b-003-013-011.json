@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-013-011.\n\nWhy the correct answer is right: The capture effect is the FM receiver tendency to lock onto and demodulate the strongest of two signals on the same channel.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Overpower effect\": That is not the standard receiver term; it sounds like transmitter power rather than FM demodulator capture.\n- sourceIndex 2: \"Interference effect\": Interference is a broad condition, but it does not name the specific FM behaviour of favouring the stronger signal.\n- sourceIndex 3: \"Surrender effect\": This is not a radio term for FM reception; the receiver is capturing the stronger signal, not surrendering to it.",
+    "en": "Question B-003-013-011.\n\nWhy the correct answer is right: The capture effect is the frequency modulation (FM) receiver tendency to lock onto and demodulate the strongest of two signals on the same channel.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Overpower effect\": That is not the standard receiver term. It sounds like transmitter power rather than FM demodulator capture.\n- sourceIndex 2: \"Interference effect\": Interference is a broad condition, but it does not name the specific FM behaviour of favouring the stronger signal.\n- sourceIndex 3: \"Surrender effect\": This is not a radio term for FM reception. The receiver is capturing the stronger signal, not surrendering to it.",
     "fr": null
   },
   "citations": [

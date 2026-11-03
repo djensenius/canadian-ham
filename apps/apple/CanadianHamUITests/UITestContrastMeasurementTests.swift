@@ -1,0 +1,649 @@
+import CoreGraphics
+import CoreText
+import ImageIO
+import XCTest
+
+@MainActor
+final class UITestContrastMeasurementTests: XCTestCase {
+    private let cream = CGColor(srgbRed: 1, green: 248.0 / 255, blue: 232.0 / 255, alpha: 1)
+    private let nearBlack = CGColor(srgbRed: 32.0 / 255, green: 28.0 / 255, blue: 24.0 / 255, alpha: 1)
+    private let midGrey = CGColor(srgbRed: 154.0 / 255, green: 154.0 / 255, blue: 154.0 / 255, alpha: 1)
+
+    func testNearBlackOnCreamPasses() throws {
+        let ratio = try XCTUnwrap(measuredTextContrast(in: panel(background: cream, foreground: nearBlack)))
+        XCTAssertGreaterThanOrEqual(ratio, 4.5)
+        XCTAssertEqual(ratio, 15.9943, accuracy: 0.01)
+    }
+
+    func testMidGreyOnCreamFails() throws {
+        let ratio = try XCTUnwrap(measuredTextContrast(in: panel(background: cream, foreground: midGrey)))
+        XCTAssertLessThan(ratio, 4.5)
+        XCTAssertEqual(ratio, 2.6591, accuracy: 0.01)
+    }
+
+    func testPaleOnDarkGreenPasses() throws {
+        let background = CGColor(srgbRed: 28.0 / 255, green: 55.0 / 255, blue: 36.0 / 255, alpha: 1)
+        let foreground = CGColor(srgbRed: 219.0 / 255, green: 238.0 / 255, blue: 211.0 / 255, alpha: 1)
+        let ratio = try XCTUnwrap(measuredTextContrast(in: panel(background: background, foreground: foreground)))
+        XCTAssertGreaterThanOrEqual(ratio, 4.5)
+        XCTAssertEqual(ratio, 10.5978, accuracy: 0.01)
+    }
+
+    func testAntialiased15PointTextMeasuresExpectedContrast() throws {
+        let image = try renderedText(foreground: nearBlack)
+        let ratio = try XCTUnwrap(measuredTextContrast(in: image))
+        // Expected WCAG ratio for #201C18 / #FFF8E8, allowing edge pixels in the quantized clusters.
+        XCTAssertEqual(ratio, 15.9943, accuracy: 0.2)
+        XCTAssertGreaterThanOrEqual(ratio, 4.5)
+    }
+
+    func testAntialiased15PointLowContrastTextStillFails() throws {
+        let ratio = try XCTUnwrap(measuredTextContrast(in: renderedText(foreground: midGrey)))
+        XCTAssertEqual(ratio, 2.6591, accuracy: 0.1)
+        XCTAssertLessThan(ratio, 4.5)
+    }
+
+    func testTinyHighContrastTailDoesNotRescueLowContrastText() throws {
+        let context = try bitmapContext()
+        context.setFillColor(cream)
+        context.fill(CGRect(x: 0, y: 0, width: 100, height: 100))
+        context.setFillColor(midGrey)
+        context.fill(CGRect(x: 10, y: 10, width: 80, height: 20))
+        context.setFillColor(nearBlack)
+        context.fill(CGRect(x: 0, y: 0, width: 10, height: 10)) // 1%, below the 2% text threshold.
+        let ratio = try XCTUnwrap(measuredTextContrast(in: XCTUnwrap(context.makeImage())))
+        XCTAssertEqual(ratio, 2.6591, accuracy: 0.01)
+        XCTAssertLessThan(ratio, 4.5)
+    }
+
+    func testSignificantNearBlackAndMidGreyBlocksDoNotPass() throws {
+        let context = try bitmapContext()
+        context.setFillColor(cream)
+        context.fill(CGRect(x: 0, y: 0, width: 100, height: 100))
+        context.setFillColor(nearBlack)
+        context.fill(CGRect(x: 10, y: 10, width: 10, height: 30)) // 3%.
+        context.setFillColor(midGrey)
+        context.fill(CGRect(x: 50, y: 10, width: 10, height: 30)) // 3%.
+        let ratio = try XCTUnwrap(measuredTextContrast(in: XCTUnwrap(context.makeImage())))
+        XCTAssertEqual(ratio, 2.6591, accuracy: 0.01)
+        XCTAssertLessThan(ratio, 4.5)
+    }
+
+    func testSolidBlendColourIsNotMistakenForAntialiasing() throws {
+        let context = try bitmapContext()
+        context.setFillColor(cream)
+        context.fill(CGRect(x: 0, y: 0, width: 100, height: 100))
+        context.setFillColor(nearBlack)
+        context.fill(CGRect(x: 10, y: 10, width: 10, height: 30))
+        // Exactly halfway along the cream/near-black colour line, but a separate solid block.
+        context.setFillColor(CGColor(srgbRed: 143.5 / 255, green: 138.0 / 255, blue: 128.0 / 255, alpha: 1))
+        context.fill(CGRect(x: 50, y: 10, width: 10, height: 30))
+        let ratio = try XCTUnwrap(measuredTextContrast(in: XCTUnwrap(context.makeImage())))
+        XCTAssertLessThan(ratio, 4.5)
+    }
+
+    func testInterleavedNearIdenticalGreysCannotHideEachOtherBesideDarkText() throws {
+        let context = try bitmapContext()
+        context.setFillColor(CGColor(srgbRed: 1, green: 1, blue: 1, alpha: 1))
+        context.fill(CGRect(x: 0, y: 0, width: 100, height: 100))
+        context.setFillColor(nearBlack)
+        context.fill(CGRect(x: 80, y: 10, width: 6, height: 50))
+        // Thin strokes of two near-identical greys on either side of a 5-bit bin boundary,
+        // mixed pixel by pixel; each is almost on the other's colour line toward white.
+        let greyA = CGColor(srgbRed: 151.0 / 255, green: 152.0 / 255, blue: 152.0 / 255, alpha: 1)
+        let greyB = CGColor(srgbRed: 152.0 / 255, green: 151.0 / 255, blue: 152.0 / 255, alpha: 1)
+        for row in stride(from: 10, to: 60, by: 4) {
+            for column in 10..<60 {
+                context.setFillColor(column.isMultiple(of: 2) ? greyA : greyB)
+                context.fill(CGRect(x: column, y: row, width: 1, height: 2))
+            }
+        }
+        let image = try XCTUnwrap(context.makeImage())
+        if let ratio = measuredTextContrast(in: image) {
+            XCTAssertLessThan(ratio, 4.5)
+        }
+    }
+
+    func testChainedBlendsCannotUseAnExcludedCore() throws {
+        let context = try bitmapContext()
+        context.setFillColor(cream)
+        context.fill(CGRect(x: 0, y: 0, width: 100, height: 100))
+        let lightStroke = CGColor(srgbRed: 144.0 / 255, green: 138.0 / 255, blue: 128.0 / 255, alpha: 1) // #908A80.
+        let middleStroke = CGColor(srgbRed: 88.0 / 255, green: 83.0 / 255, blue: 76.0 / 255, alpha: 1) // #58534C.
+        for x in [10, 30, 50, 70] {
+            for (offset, color) in [lightStroke, middleStroke, nearBlack].enumerated() {
+                context.setFillColor(color)
+                context.fill(CGRect(x: x + offset * 2, y: 10, width: 1, height: 80))
+            }
+        }
+        // Each tone covers 3.2%. The first is 3.24:1 against cream, four pixels from the dark core.
+        if let ratio = measuredTextContrast(in: try XCTUnwrap(context.makeImage())) {
+            XCTAssertLessThan(ratio, 4.5)
+            XCTAssertEqual(ratio, 3.2357, accuracy: 0.01)
+        }
+    }
+
+    func testInsetPanelCannotUseTheSurroundingCreamAsTextBackground() throws {
+        let context = try bitmapContext()
+        context.setFillColor(cream)
+        context.fill(CGRect(x: 0, y: 0, width: 100, height: 100))
+        context.setFillColor(CGColor(srgbRed: 64.0 / 255, green: 64.0 / 255, blue: 64.0 / 255, alpha: 1)) // #404040.
+        context.fill(CGRect(x: 30, y: 30, width: 40, height: 40))
+        context.setFillColor(nearBlack) // #201C18.
+        context.fill(CGRect(x: 42, y: 40, width: 16, height: 20))
+        // 84% cream, 12.8% panel and 3.2% text. Text/panel is only 1.63:1, not 9.80:1.
+        if let ratio = measuredTextContrast(in: try XCTUnwrap(context.makeImage())) {
+            XCTAssertLessThan(ratio, 4.5)
+        }
+    }
+
+    func testDisconnectedDarkBlockCannotRescueInsetLowContrastText() throws {
+        let context = try bitmapContext()
+        context.setFillColor(cream)
+        context.fill(CGRect(x: 0, y: 0, width: 100, height: 100))
+        context.setFillColor(CGColor(srgbRed: 64.0 / 255, green: 64.0 / 255, blue: 64.0 / 255, alpha: 1)) // #404040.
+        context.fill(CGRect(x: 30, y: 30, width: 40, height: 40))
+        context.setFillColor(nearBlack) // #201C18, both inside the panel and separately on cream.
+        context.fill(CGRect(x: 42, y: 40, width: 16, height: 20))
+        context.fill(CGRect(x: 5, y: 10, width: 16, height: 40))
+        // The separate block's supported boundary cannot rescue the inset text's 1.63:1 contrast.
+        if let ratio = measuredTextContrast(in: try XCTUnwrap(context.makeImage())) {
+            XCTAssertLessThan(ratio, 4.5)
+        }
+    }
+
+    func testFourPixelInsetGlyphCannotBorrowAnotherComponentsBoundary() throws {
+        let context = try bitmapContext()
+        context.setFillColor(cream)
+        context.fill(CGRect(x: 0, y: 0, width: 100, height: 100))
+        context.setFillColor(CGColor(srgbRed: 64.0 / 255, green: 64.0 / 255, blue: 64.0 / 255, alpha: 1))
+        context.fill(CGRect(x: 30, y: 30, width: 40, height: 40))
+        context.setFillColor(nearBlack)
+        context.fill(CGRect(x: 49, y: 49, width: 2, height: 2)) // Only 0.04% of the image, but significant.
+        context.fill(CGRect(x: 5, y: 10, width: 16, height: 40))
+        XCTAssertNil(measuredTextContrast(in: try XCTUnwrap(context.makeImage())))
+    }
+
+    func testSubthresholdAntialiasedPanelEdgeCannotSupportInsetDarkStrokes() throws {
+        let context = try bitmapContext()
+        context.setFillColor(cream)
+        context.fill(CGRect(x: 0, y: 0, width: 100, height: 100))
+        context.setFillColor(CGColor(srgbRed: 64.0 / 255, green: 64.0 / 255, blue: 64.0 / 255, alpha: 1))
+        context.fill(CGRect(x: 30, y: 30, width: 7, height: 20)) // Subthreshold panel, never a retained core.
+        // Each on-line blend pixel is within two pixels of BOTH cream and the x=33 core,
+        // but a one-pixel panel moat prevents any four-connected path from blend to cream.
+        context.setFillColor(CGColor(srgbRed: 159.5 / 255, green: 156.0 / 255, blue: 148.0 / 255, alpha: 1))
+        for x in [31, 35] {
+            context.fill(CGRect(x: x, y: 32, width: 1, height: 16)) // Together only 0.32%.
+        }
+        context.setFillColor(nearBlack)
+        context.fill(CGRect(x: 33, y: 32, width: 1, height: 16))
+        context.fill(CGRect(x: 5, y: 10, width: 16, height: 40))
+        XCTAssertNil(measuredTextContrast(in: try XCTUnwrap(context.makeImage())))
+    }
+
+    func testDifferentCoreBlendsCannotBridgeInsetDarkStrokesToBackground() throws {
+        let context = try bitmapContext()
+        context.setFillColor(cream)
+        context.fill(CGRect(x: 0, y: 0, width: 100, height: 100))
+        context.setFillColor(CGColor(srgbRed: 64.0 / 255, green: 64.0 / 255, blue: 64.0 / 255, alpha: 1))
+        context.fill(CGRect(x: 30, y: 30, width: 7, height: 20))
+        context.setFillColor(CGColor(srgbRed: 159.5 / 255, green: 156.0 / 255, blue: 148.0 / 255, alpha: 1))
+        for x in [31, 35] {
+            context.fill(CGRect(x: x, y: 32, width: 1, height: 16))
+        }
+        context.setFillColor(nearBlack)
+        context.fill(CGRect(x: 33, y: 32, width: 1, height: 16))
+        context.fill(CGRect(x: 5, y: 10, width: 16, height: 40))
+        // Extend the disconnected-blend fixture with a second retained core (#002060).
+        context.setFillColor(CGColor(srgbRed: 0, green: 32.0 / 255, blue: 96.0 / 255, alpha: 1))
+        for x in [28, 38] {
+            context.fill(CGRect(x: x, y: 32, width: 1, height: 16))
+        }
+        context.fill(CGRect(x: 70, y: 10, width: 10, height: 30))
+        // These #808CA4 blends reach cream, but cannot lend that path to the near-black blends.
+        context.setFillColor(CGColor(srgbRed: 128.0 / 255, green: 140.0 / 255, blue: 164.0 / 255, alpha: 1))
+        for x in [30, 36] {
+            context.fill(CGRect(x: x, y: 32, width: 1, height: 16))
+        }
+        XCTAssertNil(measuredTextContrast(in: try XCTUnwrap(context.makeImage())),
+                     "The inset near-black stroke is only 1.6324:1 against its panel")
+    }
+
+    func testPartiallyOverlappingStrokesCannotPassAgainstCream() throws {
+        let context = try bitmapContext()
+        context.setFillColor(cream)
+        context.fill(CGRect(x: 0, y: 0, width: 100, height: 100))
+        context.setFillColor(CGColor(srgbRed: 64.0 / 255, green: 64.0 / 255, blue: 64.0 / 255, alpha: 1))
+        context.fill(CGRect(x: 30, y: 50, width: 40, height: 20)) // x=30...69, y=50...69.
+        context.setFillColor(nearBlack)
+        for x in [34, 42, 50, 58] {
+            context.fill(CGRect(x: x, y: 40, width: 3, height: 20)) // Half on cream, half on panel.
+        }
+        if let ratio = measuredTextContrast(in: try XCTUnwrap(context.makeImage())) {
+            XCTAssertLessThan(ratio, 4.5, "The panel-backed half of each stroke is only 1.63:1")
+        }
+    }
+
+    func testAntialiased15PointBoldMixedContrastLinesFailAt3x() throws {
+        let image = try renderedLines([nearBlack, midGrey], bold: true)
+        let ratio = try XCTUnwrap(measuredTextContrast(in: image))
+        XCTAssertEqual(ratio, 2.6591, accuracy: 0.1)
+        XCTAssertLessThan(ratio, 4.5)
+    }
+
+    func testDarkIconDoesNotRescueMidGreyText() throws {
+        let image = try renderedLines([midGrey, midGrey], includesIcon: true)
+        let ratio = try XCTUnwrap(measuredTextContrast(in: image))
+        XCTAssertEqual(ratio, 2.6591, accuracy: 0.1)
+        XCTAssertLessThan(ratio, 4.5)
+    }
+
+    func testTwoTonePanelWithDarkTextIsUnmeasurable() throws {
+        let context = try bitmapContext()
+        context.setFillColor(cream)
+        context.fill(CGRect(x: 0, y: 0, width: 100, height: 100))
+        context.setFillColor(CGColor(srgbRed: 232.0 / 255, green: 241.0 / 255, blue: 221.0 / 255, alpha: 1))
+        context.fill(CGRect(x: 0, y: 0, width: 100, height: 40))
+        context.setFillColor(nearBlack)
+        context.fill(CGRect(x: 10, y: 10, width: 80, height: 10))
+        XCTAssertNil(measuredTextContrast(in: try XCTUnwrap(context.makeImage())))
+    }
+
+    func testSignificantNearBackgroundNoiseIsUnmeasurable() throws {
+        let context = try bitmapContext()
+        context.setFillColor(cream)
+        context.fill(CGRect(x: 0, y: 0, width: 100, height: 100))
+        context.setFillColor(CGColor(srgbRed: 250.0 / 255, green: 247.0 / 255, blue: 231.0 / 255, alpha: 1))
+        context.fill(CGRect(x: 0, y: 0, width: 10, height: 30))
+        context.setFillColor(nearBlack)
+        context.fill(CGRect(x: 50, y: 10, width: 30, height: 30))
+        XCTAssertNil(measuredTextContrast(in: try XCTUnwrap(context.makeImage())))
+    }
+
+    func testEqualLargeTonesAreUnmeasurable() throws {
+        let context = try bitmapContext()
+        context.setFillColor(cream)
+        context.fill(CGRect(x: 0, y: 0, width: 100, height: 100))
+        context.setFillColor(nearBlack)
+        context.fill(CGRect(x: 0, y: 0, width: 100, height: 50))
+        XCTAssertNil(measuredTextContrast(in: try XCTUnwrap(context.makeImage())))
+    }
+
+    func testBlackOffscreenBandDoesNotRescueMidGreyText() throws {
+        let context = try bitmapContext()
+        context.setFillColor(cream)
+        context.fill(CGRect(x: 0, y: 0, width: 100, height: 100))
+        context.setFillColor(CGColor(srgbRed: 0, green: 0, blue: 0, alpha: 1))
+        context.fill(CGRect(x: 0, y: 0, width: 100, height: 3)) // 3% black offscreen fill.
+        context.setFillColor(midGrey)
+        context.fill(CGRect(x: 10, y: 20, width: 80, height: 20))
+        let ratio = try XCTUnwrap(measuredTextContrast(in: XCTUnwrap(context.makeImage())))
+        XCTAssertEqual(ratio, 2.6591, accuracy: 0.01)
+        XCTAssertLessThan(ratio, 4.5)
+    }
+
+    func testSignificantAntialiasedEdgeBandsMeasureCoreContrast() throws {
+        let context = try bitmapContext()
+        context.setFillColor(cream)
+        context.fill(CGRect(x: 0, y: 0, width: 100, height: 100))
+        for x in [10, 30, 50, 70] {
+            context.setFillColor(CGColor(srgbRed: 143.5 / 255, green: 138.0 / 255, blue: 128.0 / 255, alpha: 1))
+            context.fill(CGRect(x: x, y: 10, width: 7, height: 80))
+            context.setFillColor(nearBlack)
+            context.fill(CGRect(x: x + 1, y: 10, width: 5, height: 80))
+        }
+        // The one-pixel blend bands cover 6.4%, exceed 2%, and are below 4.5:1 themselves.
+        let ratio = try XCTUnwrap(measuredTextContrast(in: XCTUnwrap(context.makeImage())))
+        XCTAssertEqual(ratio, 15.9943, accuracy: 0.01)
+    }
+
+    func testAntialiased15PointBoldEdgeCoverageAt3x() throws {
+        let image = try renderedLines([nearBlack, nearBlack], bold: true, text: "IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII")
+        let data = try XCTUnwrap(image.dataProvider?.data)
+        let pixels = try XCTUnwrap(CFDataGetBytePtr(data))
+        var counts: [Int: Int] = [:]
+        for y in 0..<image.height {
+            for x in 0..<image.width {
+                let offset = y * image.bytesPerRow + x * 4
+                let key = (Int(pixels[offset] >> 3) << 10) | (Int(pixels[offset + 1] >> 3) << 5) | Int(pixels[offset + 2] >> 3)
+                counts[key, default: 0] += 1
+            }
+        }
+        let creamKey = (31 << 10) | (31 << 5) | 29
+        let nearBlackKey = (4 << 10) | (3 << 5) | 3
+        let edgeCount = counts.filter { $0.key != creamKey && $0.key != nearBlackKey }.values.max() ?? 0
+        let edgeCoverage = Double(edgeCount) / Double(image.width * image.height)
+        XCTAssertGreaterThanOrEqual(edgeCoverage, 0.02, "A real bold-text edge cluster must exercise the 2% threshold")
+        let ratio = try XCTUnwrap(measuredTextContrast(in: image))
+        XCTAssertEqual(ratio, 15.9943, accuracy: 0.2)
+        XCTContext.runActivity(named: "Bold 15 pt 3x significant edge coverage") { activity in
+            let attachment = XCTAttachment(string: "largestEdgeClusterCoverage=\(edgeCoverage) ratio=\(ratio):1")
+            attachment.lifetime = .keepAlways
+            activity.add(attachment)
+        }
+    }
+
+    func testContrastMeasurementRejectsInvisibleFrames() {
+        let window = CGRect(x: 0, y: 0, width: 400, height: 800)
+        XCTAssertTrue(isFullyVisibleForContrastMeasurement(frame: CGRect(x: 20, y: 100, width: 200, height: 40), windowFrame: window, protectedMaxY: 100))
+        for frame in [CGRect.zero, CGRect(x: 20, y: 100, width: 0, height: 40),
+                      CGRect(x: -1, y: 100, width: 200, height: 40),
+                      CGRect(x: 20, y: 780, width: 200, height: 40),
+                      CGRect(x: 20, y: 60, width: 200, height: 80),
+                      CGRect(x: 20, y: -50, width: 200, height: 40)] {
+            XCTAssertFalse(isFullyVisibleForContrastMeasurement(frame: frame, windowFrame: window, protectedMaxY: 100), "\(frame)")
+        }
+        XCTAssertFalse(isFullyVisibleForContrastMeasurement(frame: CGRect(x: 0, y: 0, width: 10, height: 10), windowFrame: .zero, protectedMaxY: 0))
+    }
+
+    func testUniformImageIsUnmeasurable() throws {
+        let context = try bitmapContext()
+        context.setFillColor(cream)
+        context.fill(CGRect(x: 0, y: 0, width: 100, height: 100))
+        XCTAssertNil(measuredTextContrast(in: try XCTUnwrap(context.makeImage())))
+    }
+
+    func testOnlyTinyForegroundIsUnmeasurable() throws {
+        let context = try bitmapContext()
+        context.setFillColor(cream)
+        context.fill(CGRect(x: 0, y: 0, width: 100, height: 100))
+        context.setFillColor(nearBlack)
+        context.fill(CGRect(x: 0, y: 0, width: 10, height: 10))
+        XCTAssertNil(measuredTextContrast(in: try XCTUnwrap(context.makeImage())))
+    }
+
+    func testTransparentImageIsUnmeasurable() throws {
+        let context = try bitmapContext()
+        context.setFillColor(nearBlack)
+        context.fill(CGRect(x: 10, y: 10, width: 80, height: 20))
+        XCTAssertNil(measuredTextContrast(in: try XCTUnwrap(context.makeImage())))
+    }
+
+    func testExportedRoundedButtonPassesOnlyWithButtonFallback() throws {
+        let image = try exportedElement("iphone-hide-answer-button-light-3x")
+        let fullImageRatio = try XCTUnwrap(measuredTextContrast(in: image))
+        XCTAssertEqual(fullImageRatio, 1.19937, accuracy: 0.0001)
+        XCTAssertEqual(measuredControlTextContrast(in: image, scale: 3, isButton: false), fullImageRatio)
+        let measurement = controlTextContrastMeasurement(in: image, scale: 3, isButton: true)
+        let ratio = try XCTUnwrap(measurement.ratio)
+        XCTAssertGreaterThanOrEqual(ratio, 4.5)
+        XCTAssertEqual(ratio, 13.62039, accuracy: 0.0001)
+        XCTAssertEqual(measurement.fullImageRatio, fullImageRatio)
+        XCTAssertTrue(measurement.cropUsed)
+        XCTAssertEqual(measurement.cropInsetsInPixels, CGSize(width: 18, height: 6))
+        XCTAssertTrue(measurement.logDescription.contains("fullImageRatio=\(fullImageRatio):1"))
+        XCTAssertTrue(measurement.logDescription.contains("cropUsed=true cropInsetsPixels=horizontal=18.0 vertical=6.0"))
+        XCTContext.runActivity(named: "Measured rounded button at 3x") { activity in
+            let attachment = XCTAttachment(string: "resource=iphone-hide-answer-button-light-3x.png \(measurement.logDescription) horizontalInset=6pt verticalInset=2pt scale=3")
+            attachment.lifetime = .keepAlways
+            activity.add(attachment)
+        }
+    }
+
+    func testRoundedButtonLowContrastTextFailsAt2xAnd3x() throws {
+        for scale in [2, 3] {
+            let image = try renderedPill(scale: scale, runs: [("Hide answer 1", 20, midGrey)])
+            if let ratio = measuredControlTextContrast(in: image, scale: CGFloat(scale), isButton: true) {
+                XCTAssertLessThan(ratio, 4.5, "scale=\(scale)")
+            }
+        }
+    }
+
+    func testRoundedButtonRetainedLowContrastTextNearEndsFails() throws {
+        // The 6 pt inset is narrower than this 15 pt M glyph. Low-contrast end text remains
+        // inside the crop and cannot borrow the high-contrast middle text's ratio.
+        let image = try renderedPill(runs: [("MMM", 6, midGrey), ("MMMM", 55, nearBlack), ("MMM", 108, midGrey)])
+        if let ratio = measuredControlTextContrast(in: image, scale: 3, isButton: true) {
+            XCTAssertLessThan(ratio, 4.5)
+        }
+    }
+
+    func testRoundedButtonRetainedLowContrastMiddleTextFails() throws {
+        let image = try renderedPill(runs: [("MMM", 20, nearBlack), ("MMMMMM", 60, midGrey)])
+        if let ratio = measuredControlTextContrast(in: image, scale: 3, isButton: true) {
+            XCTAssertLessThan(ratio, 4.5)
+        }
+    }
+
+    func testRoundedButtonDarkTextPassesAt2xAnd3x() throws {
+        for scale in [2, 3] {
+            let image = try renderedPill(scale: scale, runs: [("Hide answer 1", 20, nearBlack)])
+            XCTAssertLessThan(try XCTUnwrap(measuredTextContrast(in: image)), 4.5)
+            XCTAssertGreaterThanOrEqual(try XCTUnwrap(measuredTextContrast(in: controlCrop(image, scale: scale))), 4.5)
+            let measurement = controlTextContrastMeasurement(in: image, scale: CGFloat(scale), isButton: true)
+            XCTAssertGreaterThanOrEqual(try XCTUnwrap(measurement.ratio), 4.5, "scale=\(scale)")
+            XCTAssertTrue(measurement.cropUsed)
+            XCTAssertEqual(measurement.cropInsetsInPixels, CGSize(width: 6 * scale, height: 2 * scale))
+        }
+    }
+
+    func testRoundedButtonNearEndDarkTextCropIsMeasurable() throws {
+        let image = try renderedPill(runs: [("MMM", 6, nearBlack), ("MMMM", 55, nearBlack), ("MMM", 108, nearBlack)])
+        XCTAssertGreaterThanOrEqual(try XCTUnwrap(measuredTextContrast(in: controlCrop(image))), 4.5)
+    }
+
+    func testRoundedButtonMiddleDarkTextCropIsMeasurable() throws {
+        let image = try renderedPill(runs: [("MMM", 20, nearBlack), ("MMMMMM", 60, nearBlack)])
+        XCTAssertGreaterThanOrEqual(try XCTUnwrap(measuredTextContrast(in: controlCrop(image))), 4.5)
+    }
+
+    func testRoundedButtonTextEntirelyWithinEndInsetsIsNotMeasured() throws {
+        // The raw crop hides these strokes; background-only strip validation must reject it.
+        let image = try renderedPill(runs: [("MMMMMM", 40, nearBlack)], includesExcludedEndStrokes: true)
+        XCTAssertFalse(measuredTextContrast(in: image).map { $0 >= 4.5 } ?? false)
+        XCTAssertGreaterThanOrEqual(try XCTUnwrap(measuredTextContrast(in: controlCrop(image))), 4.5)
+        let measurement = controlTextContrastMeasurement(in: image, scale: 3, isButton: true)
+        XCTAssertNil(measurement.ratio)
+        XCTAssertFalse(measurement.cropUsed)
+        XCTAssertEqual(measurement.cropInsetsInPixels, CGSize(width: 18, height: 6))
+    }
+
+    func testMoreButtonTrailingLowContrastChevronInStripsIsRejected() throws {
+        let scale = 3
+        let context = try bitmapContext(width: 100 * scale, height: 40 * scale)
+        context.scaleBy(x: CGFloat(scale), y: CGFloat(scale))
+        context.setFillColor(cream)
+        context.fill(CGRect(x: 0, y: 0, width: 100, height: 40))
+        let font = CTFontCreateWithName("Helvetica-Bold" as CFString, 15, nil)
+        let label = NSAttributedString(string: "More", attributes: [
+            NSAttributedString.Key(kCTFontAttributeName as String): font,
+            NSAttributedString.Key(kCTForegroundColorAttributeName as String): nearBlack
+        ])
+        context.setShouldSmoothFonts(false)
+        context.textPosition = CGPoint(x: 20, y: 15)
+        CTLineDraw(CTLineCreateWithAttributedString(label), context)
+        context.setStrokeColor(midGrey)
+        context.setLineWidth(3.5)
+        context.move(to: CGPoint(x: 93, y: 6))
+        context.addLine(to: CGPoint(x: 98, y: 20))
+        context.addLine(to: CGPoint(x: 93, y: 34))
+        context.strokePath()
+        let image = try XCTUnwrap(context.makeImage())
+        let data = try XCTUnwrap(image.dataProvider?.data)
+        let pixels = try XCTUnwrap(CFDataGetBytePtr(data))
+        var greyPixels = 0
+        for y in 0..<image.height {
+            for x in 0..<image.width {
+                let offset = y * image.bytesPerRow + x * 4
+                if pixels[offset] >> 3 == 19 && pixels[offset + 1] >> 3 == 19 && pixels[offset + 2] >> 3 == 19 {
+                    greyPixels += 1
+                }
+            }
+        }
+        let coverage = Double(greyPixels) / Double(image.width * image.height)
+        XCTAssertGreaterThanOrEqual(coverage, 0.02)
+        XCTAssertLessThanOrEqual(coverage, 0.03)
+        XCTAssertLessThan(try XCTUnwrap(measuredTextContrast(in: image)), 4.5)
+        XCTAssertGreaterThanOrEqual(try XCTUnwrap(measuredTextContrast(in: controlCrop(image))), 4.5)
+        XCTAssertNil(measuredControlTextContrast(in: image, scale: 3, isButton: true))
+    }
+
+    func testValidButtonCropWithoutTextIsUnmeasurable() throws {
+        let image = try renderedPill(runs: [])
+        let crop = try controlCrop(image)
+        XCTAssertGreaterThan(crop.width, 0)
+        XCTAssertGreaterThan(crop.height, 0)
+        XCTAssertNil(measuredTextContrast(in: crop))
+        let measurement = controlTextContrastMeasurement(in: image, scale: 3, isButton: true)
+        XCTAssertNil(measurement.ratio)
+        XCTAssertTrue(measurement.cropUsed)
+    }
+
+    func testControlMeasurementPreservesPassingFullImage() throws {
+        let image = try panel(background: cream, foreground: nearBlack)
+        let ratio = try XCTUnwrap(measuredTextContrast(in: image))
+        // An invalid crop scale proves a passing full image never needs the fallback.
+        let measurement = controlTextContrastMeasurement(in: image, scale: 0, isButton: true)
+        XCTAssertEqual(measurement.ratio, ratio)
+        XCTAssertEqual(measurement.fullImageRatio, ratio)
+        XCTAssertFalse(measurement.cropUsed)
+        XCTAssertNil(measurement.cropInsetsInPixels)
+        XCTAssertTrue(measurement.logDescription.contains("cropUsed=false cropInsetsPixels=none"))
+        XCTAssertEqual(measuredControlTextContrast(in: image, scale: 3, isButton: false), ratio)
+    }
+
+    func testControlMeasurementRejectsInvalidScaleAndEmptyCrop() throws {
+        let image = try renderedPill(runs: [("Hide answer 1", 20, midGrey)])
+        for scale in [CGFloat.zero, -1, .infinity, .nan, 100] {
+            XCTAssertNil(measuredControlTextContrast(in: image, scale: scale, isButton: true))
+        }
+        let context = try bitmapContext(width: 10, height: 4)
+        context.setFillColor(cream)
+        context.fill(CGRect(x: 0, y: 0, width: 10, height: 4))
+        XCTAssertNil(measuredControlTextContrast(in: try XCTUnwrap(context.makeImage()), scale: 1, isButton: true))
+    }
+
+    func testNonButtonUnmeasurableImageDoesNotRetry() throws {
+        let context = try bitmapContext()
+        context.setFillColor(cream)
+        context.fill(CGRect(x: 0, y: 0, width: 100, height: 100))
+        // Significant near-background noise makes the full measurement nil, but is entirely
+        // removed by the valid button crop and is a permitted page-like strip background.
+        context.setFillColor(CGColor(srgbRed: 250.0 / 255, green: 247.0 / 255, blue: 231.0 / 255, alpha: 1))
+        context.fill(CGRect(x: 0, y: 0, width: 6, height: 100))
+        context.setFillColor(nearBlack)
+        context.fill(CGRect(x: 20, y: 30, width: 60, height: 20))
+        let image = try XCTUnwrap(context.makeImage())
+        XCTAssertNil(measuredTextContrast(in: image))
+        XCTAssertGreaterThanOrEqual(try XCTUnwrap(measuredControlTextContrast(in: image, scale: 1, isButton: true)), 4.5)
+        XCTAssertNil(measuredControlTextContrast(in: image, scale: 1, isButton: false))
+    }
+
+    func testExportedCorrectFeedbackLightPasses() throws {
+        try assertExportedElementPasses("correct-feedback-light")
+    }
+
+    func testExportedCorrectFeedbackDarkPasses() throws {
+        try assertExportedElementPasses("correct-feedback-dark")
+    }
+
+    func testExportedTryItParagraphLightPasses() throws {
+        try assertExportedElementPasses("try-it-paragraph-light")
+    }
+
+    private func exportedElement(_ name: String) throws -> CGImage {
+        let url = try XCTUnwrap(Bundle(for: Self.self).url(
+            forResource: name, withExtension: "png", subdirectory: "ContrastMeasurement"
+        ))
+        let source = try XCTUnwrap(CGImageSourceCreateWithURL(url as CFURL, nil))
+        return try XCTUnwrap(CGImageSourceCreateImageAtIndex(source, 0, nil))
+    }
+
+    private func assertExportedElementPasses(_ name: String) throws {
+        let image = try exportedElement(name)
+        let ratio = try XCTUnwrap(measuredTextContrast(in: image))
+        XCTAssertGreaterThanOrEqual(ratio, 4.5, "\(name): measured ratio \(ratio):1")
+        XCTContext.runActivity(named: "Measured exported element \(name)") { activity in
+            let attachment = XCTAttachment(string: "resource=\(name).png ratio=\(ratio):1")
+            attachment.lifetime = .keepAlways
+            activity.add(attachment)
+        }
+    }
+
+    private func controlCrop(_ image: CGImage, scale: Int = 3) throws -> CGImage {
+        try XCTUnwrap(image.cropping(to: CGRect(
+            x: 6 * scale, y: 2 * scale, width: image.width - 12 * scale, height: image.height - 4 * scale
+        )))
+    }
+
+    private func renderedPill(
+        scale: Int = 3, runs: [(String, CGFloat, CGColor)], includesExcludedEndStrokes: Bool = false
+    ) throws -> CGImage {
+        let context = try bitmapContext(width: 150 * scale, height: 50 * scale)
+        context.scaleBy(x: CGFloat(scale), y: CGFloat(scale))
+        context.setFillColor(cream)
+        context.fill(CGRect(x: 0, y: 0, width: 150, height: 50))
+        context.setFillColor(CGColor(srgbRed: 234.0 / 255, green: 229.0 / 255, blue: 219.0 / 255, alpha: 1))
+        context.addPath(CGPath(roundedRect: CGRect(x: 0, y: 0, width: 150, height: 50), cornerWidth: 25, cornerHeight: 25, transform: nil))
+        context.fillPath()
+        context.setShouldAntialias(true)
+        context.setShouldSmoothFonts(false)
+        let font = CTFontCreateWithName("Helvetica-Bold" as CFString, 15, nil)
+        for (text, x, foreground) in runs {
+            let attributedText = NSAttributedString(string: text, attributes: [
+                NSAttributedString.Key(kCTFontAttributeName as String): font,
+                NSAttributedString.Key(kCTForegroundColorAttributeName as String): foreground
+            ])
+            context.textPosition = CGPoint(x: x, y: 20)
+            CTLineDraw(CTLineCreateWithAttributedString(attributedText), context)
+        }
+        if includesExcludedEndStrokes {
+            context.setFillColor(midGrey)
+            for x in [1, 145] {
+                context.fill(CGRect(x: x, y: 10, width: 4, height: 30))
+            }
+        }
+        return try XCTUnwrap(context.makeImage())
+    }
+
+    private func panel(background: CGColor, foreground: CGColor) throws -> CGImage {
+        let context = try bitmapContext()
+        context.setFillColor(background)
+        context.fill(CGRect(x: 0, y: 0, width: 100, height: 100))
+        context.setFillColor(foreground)
+        context.fill(CGRect(x: 10, y: 10, width: 80, height: 20))
+        return try XCTUnwrap(context.makeImage())
+    }
+
+    private func renderedText(foreground: CGColor) throws -> CGImage {
+        try renderedLines([foreground, foreground])
+    }
+
+    private func renderedLines(
+        _ foregrounds: [CGColor], bold: Bool = false, includesIcon: Bool = false,
+        text: String = "Correct 820 / 1 000 = 0.82 A"
+    ) throws -> CGImage {
+        // Three physical pixels per point, like the exported iPhone element screenshots.
+        let context = try bitmapContext(width: 600, height: 144)
+        context.scaleBy(x: 3, y: 3)
+        context.setFillColor(cream)
+        context.fill(CGRect(x: 0, y: 0, width: 200, height: 48))
+        context.setShouldAntialias(true)
+        context.setShouldSmoothFonts(false)
+        if includesIcon {
+            context.setFillColor(nearBlack)
+            context.fill(CGRect(x: 2, y: 10, width: 20, height: 26)) // 5.4% dark icon.
+        }
+        let font = CTFontCreateWithName((bold ? "Helvetica-Bold" : "Helvetica") as CFString, 15, nil)
+        for (index, foreground) in foregrounds.enumerated() {
+            let attributedText = NSAttributedString(string: text, attributes: [
+                NSAttributedString.Key(kCTFontAttributeName as String): font,
+                NSAttributedString.Key(kCTForegroundColorAttributeName as String): foreground
+            ])
+            let line = CTLineCreateWithAttributedString(attributedText)
+            context.textPosition = CGPoint(x: includesIcon ? 28 : 2, y: 10 + Double(index) * 20)
+            CTLineDraw(line, context)
+        }
+        return try XCTUnwrap(context.makeImage())
+    }
+
+    private func bitmapContext(width: Int = 100, height: Int = 100) throws -> CGContext {
+        let colorSpace = try XCTUnwrap(CGColorSpace(name: CGColorSpace.sRGB))
+        return try XCTUnwrap(CGContext(
+            data: nil, width: width, height: height, bitsPerComponent: 8,
+            bytesPerRow: width * 4, space: colorSpace,
+            bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue | CGBitmapInfo.byteOrder32Big.rawValue
+        ))
+    }
+}

@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-005-003-002",
+  "questionId": "B-005-003-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review what a lamp's watt rating tells you about energy use.",
+      "fr": "Revoyez ce que la cote en watts d'une lampe indique sur l'utilisation de l'énergie."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-02",
+    "sectionAnchor": "power-how-fast-energy-is-used"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure rating recall: any second hint would identify or eliminate an option."
+}

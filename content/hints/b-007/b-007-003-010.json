@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-007-003-010",
+  "questionId": "B-007-003-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review what sets skip distance in the skip-distance and skip-zone section.",
+      "fr": "Revoyez ce qui détermine la distance de saut dans la section sur la distance de saut et la zone de silence."
+    }
+  ],
+  "singleLevelReason": "Any method hint names launch angle, which appears in only one option; topic pointer and lesson link only.",
+  "lessonLink": {
+    "lessonId": "L-007-01",
+    "sectionAnchor": "skip-distance-and-skip-zone"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

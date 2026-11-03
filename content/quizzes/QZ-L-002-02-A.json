@@ -36,5 +36,177 @@
     "B-002-007-010",
     "B-002-007-011"
   ],
-  "conceptChecks": []
+  "conceptChecks": [
+    {
+      "id": "QZ-L-002-02-A-C1",
+      "prompt": {
+        "en": "You send QRL? and hear no direct reply. During the pause, a faint ongoing contact becomes audible. What should guide the next step?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "Treat only a reply addressed to you as evidence that the channel is busy.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "A contact can already be using the channel without answering your check. Listening supplies evidence too.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Repeat QRL? at higher power to establish which station has priority.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "A busy check does not establish priority. Repeating over the contact would cover the traffic you just found.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Treat the heard contact as evidence of use and look for a clear channel.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "The ongoing contact shows use even without a direct reply. Listen on a different clear frequency before calling.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Begin CQ during a fading dip because the contact is below a steady copy level.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "A fading dip is not a free channel. The other stations may still be exchanging information.",
+            "fr": null
+          }
+        }
+      ],
+      "explanation": {
+        "en": "An occupied channel can be heard without a reply addressed to you. Listening is part of the busy check.",
+        "fr": null
+      }
+    },
+    {
+      "id": "QZ-L-002-02-A-C2",
+      "prompt": {
+        "en": "A transmitter rises from 7 W to 28 W while the path stays steady. Assume a meter calibrated at 6 dB per S-unit. What change should you expect?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "About one S-unit upward.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "28 / 7 = 4. Two power doublings give about 6 dB, or one calibrated S-unit upward.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "About two S-units upward.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "This counts each power doubling as a full S-unit. Under the stated calibration, each doubling is about half an S-unit.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "About one S-unit downward.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The power increased. A one-unit fall would correspond to quartering power under the same assumptions.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "About half an S-unit upward.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Half an S-unit is about 3 dB, or a doubling. This change includes two doublings.",
+            "fr": null
+          }
+        }
+      ],
+      "explanation": {
+        "en": "The fourfold rise is two power doublings, about 6 dB. Under the stated calibration, that is one S-unit upward.",
+        "fr": null
+      }
+    },
+    {
+      "id": "QZ-L-002-02-A-C3",
+      "prompt": {
+        "en": "You turn a directional antenna and the strength meter drops. The distant station says its power is unchanged. Which conclusion is supported?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "The drop measures a transmitter-power reduction despite the unchanged-power report.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The power-only shortcut requires an unchanged antenna. Turning it breaks that condition.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The drop shows poorer readability by the same number of report steps.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Strength and readability are different observations. A weaker signal can remain fully readable.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The drop proves the receiver gain setting changed during the turn.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The antenna changed, but the evidence does not show a receiver gain adjustment. Several causes can move the meter.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The drop may come from antenna direction, so it cannot isolate a transmitter-power change.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "The antenna can change received strength at fixed transmitter power. Keep other conditions steady before using the power shortcut.",
+            "fr": null
+          }
+        }
+      ],
+      "explanation": {
+        "en": "The calibrated power shortcut requires unchanged antennas, path, and receiver settings. An antenna turn breaks that comparison.",
+        "fr": null
+      }
+    }
+  ]
 }

@@ -21,6 +21,7 @@ struct AccessibleSecondaryButtonLabel: View {
                         style: StrokeStyle(lineWidth: 1, dash: isEnabled ? [] : [5, 4])
                     )
             }
+            .accessibilityLabel(Text(title)) // l10n: localized
     }
 }
 

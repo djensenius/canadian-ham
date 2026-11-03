@@ -1,12 +1,12 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { mkdir, mkdtemp, rm, symlink, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 
-import { checkLessonOriginality, LessonOriginalityError } from "../src/check-lesson-originality.ts";
+import { checkLessonOriginality, LessonOriginalityError, type LessonOriginalityAllowlistEntry, type LessonOriginalityOptions } from "../src/check-lesson-originality.ts";
 
 const CHECK_SCRIPT = fileURLToPath(new URL("../src/check-lesson-originality.ts", import.meta.url));
 
@@ -69,11 +69,16 @@ async function writeFixture(root: string, questions: FixtureQuestion[], markdown
   await writeFile(path.join(root, "content/lessons/lesson.md"), markdown, "utf8");
 }
 
-async function runCheck(root: string) {
+async function writeAllowlist(root: string, entries: LessonOriginalityAllowlistEntry[]): Promise<void> {
+  await writeFile(path.join(root, "content/lessons/originality-allowlist.json"), `${JSON.stringify(entries, null, 2)}\n`, "utf8");
+}
+
+async function runCheck(root: string, options: LessonOriginalityOptions = {}) {
   return checkLessonOriginality({
     lessonRoot: path.join(root, "content/lessons"),
     questionsPath: path.join(root, "content/generated/basic-2025-07-15/questions.json"),
     allowlistPath: path.join(root, "content/lessons/originality-allowlist.json"),
+    ...options,
   });
 }
 
@@ -117,6 +122,37 @@ test("originality check passes original numeric examples", async () => {
   });
 });
 
+test("numeric originality allows common dB and ratio shortcut numbers without question context", async () => {
+  await withFixture("common-db-steps", async (root) => {
+    await writeFixture(root, [
+      question("B-TEST-DB-001", "A two-times increase in power results in a change of how many dB?", "3 dB higher"),
+      question("B-TEST-DB-002", "If a signal has a 10 dB power gain, what is the approximate power ratio?", "10 times"),
+      question("B-TEST-DB-003", "What change in transmitter power results in a 3 dB decrease?", "Divide the original power by 2"),
+    ], lessonMarkdown(`# Lesson
+
+## Worked example: estimating gain without copying a question
+
+For Basic-level estimating, use practical power shortcuts. A 2x power step is about +3 dB, +10 dB is about 10x, and a -3 dB step means divide power by 2.
+`));
+
+    const report = await runCheck(root);
+
+    assert.equal(report.issueCount, 0);
+  });
+});
+
+test("numeric originality allows standalone common numbers without distinctive context", async () => {
+  await withFixture("standalone-common-numbers", async (root) => {
+    await writeFixture(root, [
+      question("B-TEST-COMMON-001", "If a 5 V circuit draws 2 A, what is the power?", "10 W"),
+    ], lessonMarkdown("# Lesson\n\nA 2-minute warm-up reviews a 5 W handheld note and the +10 dB shortcut before any circuit examples begin.\n"));
+
+    const report = await runCheck(root);
+
+    assert.equal(report.issueCount, 0);
+  });
+});
+
 test("originality check rejects integer-only question and answer numbers in one heading block", async () => {
   await withFixture("integer-only", async (root) => {
     await writeFixture(root, [
@@ -141,6 +177,255 @@ test("originality check rejects unit-word bank scenarios such as two 500 ohm 1 W
       () => runCheck(root),
       (error: unknown) => error instanceof LessonOriginalityError
         && error.report.issues.some((issue) => issue.questionId === "B-TEST-003" && issue.issueType === "numeric-overlap"),
+    );
+  });
+});
+
+test("numeric originality rejects common numbers when paired with distinctive question context", async () => {
+  await withFixture("common-numbers-with-context", async (root) => {
+    await writeFixture(root, [
+      question("B-TEST-CONTEXT-001", "If you wire two 20-microfarad capacitors in series, what is the capacity of the combination?", "10 microfarads"),
+    ], lessonMarkdown("# Lesson\n\nTwo 20 uF capacitors in series combine to make 10 uF.\n"));
+
+    await assert.rejects(
+      () => runCheck(root),
+      (error: unknown) => error instanceof LessonOriginalityError
+        && error.report.issues.some((issue) => issue.questionId === "B-TEST-CONTEXT-001" && issue.issueType === "numeric-overlap"),
+    );
+  });
+});
+
+test("numeric originality rejects common-number leaks when matching units replace missing nouns", async () => {
+  const cases = [
+    {
+      name: "microfarad-symbol",
+      id: "B-TEST-UNIT-001",
+      text: "If you wire two 20-microfarad capacitors in series, what is the capacity of the combination?",
+      answer: "10 microfarads",
+      lesson: "Two 20 µF in series give 10 µF.",
+    },
+    {
+      name: "microfarad-synonym",
+      id: "B-TEST-UNIT-002",
+      text: "If you wire two 20-microfarad capacitors in series, what is the capacity of the combination?",
+      answer: "10 microfarads",
+      lesson: "Two 20 uF caps in series: 10 uF.",
+    },
+    {
+      name: "millihenry-parallel",
+      id: "B-TEST-UNIT-003",
+      text: "If you wire two 20-millihenry inductors in parallel, what is the inductance of the combination?",
+      answer: "10 millihenries",
+      lesson: "Two 20 mH coils in parallel give 10 mH.",
+    },
+    {
+      name: "ohm-volt-watt",
+      id: "B-005-006-009",
+      text: "What is the power consumption of two 10-ohm resistors connected in series with a 10-volt battery?",
+      answer: "5 watts",
+      lesson: "Two 10 ohm loads in series across a 10 V supply draw 5 W.",
+    },
+    {
+      name: "spelled-ohm-volt-watt",
+      id: "B-005-006-009",
+      text: "What is the power consumption of two 10-ohm resistors connected in series with a 10-volt battery?",
+      answer: "5 watts",
+      lesson: "Two ten-ohm loads in series on a ten-volt supply draw five watts.",
+    },
+    {
+      name: "spelled-microfarad",
+      id: "B-005-009-010",
+      text: "If you wire two 20-microfarad capacitors in series, what is the capacity of the combination?",
+      answer: "10 microfarads",
+      lesson: "Two twenty-microfarad caps in series give ten microfarads.",
+    },
+    {
+      name: "spelled-coax-values",
+      id: "B-TEST-UNIT-005",
+      text: "A line is 50 ohms and another is 75 ohms. What value is used for the dummy load?",
+      answer: "50 ohms",
+      lesson: "A fifty-ohm feed line and a seventy-five-ohm line are compared before choosing a fifty-ohm dummy load.",
+    },
+  ];
+
+  for (const fixture of cases) {
+    await withFixture(fixture.name, async (root) => {
+      await writeFixture(root, [
+        question(fixture.id, fixture.text, fixture.answer),
+      ], lessonMarkdown(`# Lesson
+
+${fixture.lesson}
+`));
+
+      await assert.rejects(
+        () => runCheck(root),
+        (error: unknown) => error instanceof LessonOriginalityError
+          && error.report.issues.some((issue) => issue.questionId === fixture.id && issue.issueType === "numeric-overlap"),
+      );
+    });
+  }
+});
+
+test("numeric originality requires unit word boundaries", async () => {
+  await withFixture("unit-word-boundary", async (root) => {
+    await writeFixture(root, [
+      question("B-TEST-UNIT-BOUNDARY-001", "If two 20-watt loads are connected in series, what number is shown?", "10"),
+    ], lessonMarkdown("# Lesson\n\nTwo 20 wires in series give 10.\n"));
+
+    const report = await runCheck(root);
+
+    assert.equal(report.issueCount, 0);
+  });
+});
+
+test("numeric originality does not treat picofarads as farads", async () => {
+  await withFixture("picofarad-not-farad", async (root) => {
+    await writeFixture(root, [
+      question("B-TEST-PF-FAMILY-001", "If two 20-farad capacitors are connected in series, what number is shown?", "10"),
+    ], lessonMarkdown("# Lesson\n\nTwo 20 pF parts in series give 10.\n"));
+
+    const report = await runCheck(root);
+
+    assert.equal(report.issueCount, 0);
+  });
+});
+
+test("numeric originality keeps scaled unit-pair magnitudes distinct", async () => {
+  await withFixture("scaled-unit-pair-magnitude", async (root) => {
+    await writeFixture(root, [
+      question("B-TEST-SCALED-PAIR-001", "If two 1-kohm resistors are connected in series, what total resistance results?", "2 kohms"),
+    ], lessonMarkdown("# Lesson\n\nTwo 1 ohm loads in series give 2 ohms.\n"));
+
+    const report = await runCheck(root);
+
+    assert.equal(report.issueCount, 0);
+  });
+});
+
+test("numeric originality allows low-context metric conversion teaching", async () => {
+  await withFixture("allowed-metric-conversion", async (root) => {
+    await writeFixture(root, [
+      question("B-005-001-003", "How many hertz is 1 kHz?", "1000 Hz"),
+    ], lessonMarkdown("# Lesson\n\nA kilohertz is 1000 hertz.\n"));
+
+    const report = await runCheck(root);
+
+    assert.equal(report.issueCount, 0);
+  });
+});
+
+test("numeric originality recognizes scaled unit words and abbreviations", async () => {
+  await withFixture("scaled-unit-words", async (root) => {
+    await writeFixture(root, [
+      question("B-TEST-KILOHM-001", "A resistor is marked 4.7 kilohms. What is its resistance in ohms?", "4700 ohms"),
+      question("B-TEST-MEGOHM-001", "A resistor is marked 0.027 megohms. What is its resistance in ohms?", "27000 ohms"),
+      question("B-TEST-MILLIWATT-001", "If a hand-held output is 500 milliwatts, how many watts is that?", "0.5 watts"),
+      question("B-TEST-MICROHENRY-001", "For a coil conversion, 10000 microhenries equals how many millihenries?", "10 millihenries"),
+      question("B-TEST-MV-001", "For a signal conversion, 2000 mV equals how many volts?", "2 volts"),
+      question("B-TEST-PICOFARAD-001", "If two 20-picofarad capacitors are in series, what capacitance results?", "10 picofarads"),
+    ], lessonMarkdown(`# Lesson
+
+A copied resistance value says 4700 ohms.
+Another copied resistance value says 27000 ohms.
+A hand-held output conversion says 0.5 W.
+A coil conversion says 10 mH.
+A signal conversion equals 2 volts.
+Two 20 pF caps in series give 10 pF.
+`));
+
+    await assert.rejects(
+      () => runCheck(root),
+      (error: unknown) => error instanceof LessonOriginalityError
+        && error.report.issues.some((issue) => issue.questionId === "B-TEST-KILOHM-001" && issue.issueType === "numeric-overlap")
+        && error.report.issues.some((issue) => issue.questionId === "B-TEST-MEGOHM-001" && issue.issueType === "numeric-overlap")
+        && error.report.issues.some((issue) => issue.questionId === "B-TEST-MILLIWATT-001" && issue.issueType === "numeric-overlap")
+        && error.report.issues.some((issue) => issue.questionId === "B-TEST-MICROHENRY-001" && issue.issueType === "numeric-overlap")
+        && error.report.issues.some((issue) => issue.questionId === "B-TEST-MV-001" && issue.issueType === "numeric-overlap")
+        && error.report.issues.some((issue) => issue.questionId === "B-TEST-PICOFARAD-001" && issue.issueType === "numeric-overlap"),
+    );
+  });
+});
+
+test("numeric originality normalizes voltage and resistance plurals for context", async () => {
+  await withFixture("plural-context-forms", async (root) => {
+    await writeFixture(root, [
+      question("B-TEST-PLURAL-001", "If voltage resistance uses two items, what total is shown?", "10"),
+      question("B-TEST-PLURAL-002", "What is the voltage across a 2-ohm resistor if a current of 0.5 amperes flows through it?", "1.0 volts"),
+      question("B-TEST-PLURAL-003", "What is the total resistance of five 10-ohm resistors in series?", "50 ohms"),
+    ], lessonMarkdown(`# Lesson
+
+Voltages resistances use two items: 10.
+Resistor voltages: 2 ohms at 0.5 A gives 1 V.
+Five 10-ohm resistances in series give 50 ohms.
+`));
+
+    await assert.rejects(
+      () => runCheck(root),
+      (error: unknown) => error instanceof LessonOriginalityError
+        && error.report.issues.some((issue) => issue.questionId === "B-TEST-PLURAL-001" && issue.issueType === "numeric-overlap")
+        && error.report.issues.some((issue) => issue.questionId === "B-TEST-PLURAL-002" && issue.issueType === "numeric-overlap")
+        && error.report.issues.some((issue) => issue.questionId === "B-TEST-PLURAL-003" && issue.issueType === "numeric-overlap"),
+    );
+  });
+});
+
+test("numeric originality keeps the common-number context threshold boundary", async () => {
+  await withFixture("one-context-word", async (root) => {
+    await writeFixture(root, [
+      question("B-TEST-THRESHOLD-001", "If you place two blue tokens in series, what total is shown?", "10"),
+    ], lessonMarkdown("# Lesson\n\nTwo items in series give 10.\n"));
+
+    const report = await runCheck(root);
+
+    assert.equal(report.issueCount, 0);
+  });
+
+  await withFixture("two-context-words", async (root) => {
+    await writeFixture(root, [
+      question("B-TEST-THRESHOLD-002", "If you place two blue tokens in series, what total is shown?", "10"),
+    ], lessonMarkdown("# Lesson\n\nTwo blue items in series give 10.\n"));
+
+    await assert.rejects(
+      () => runCheck(root),
+      (error: unknown) => error instanceof LessonOriginalityError
+        && error.report.issues.some((issue) => issue.questionId === "B-TEST-THRESHOLD-002" && issue.issueType === "numeric-overlap"),
+    );
+  });
+});
+
+test("numeric originality flags low-context unit and scaled-prefix copies", async () => {
+  await withFixture("low-context-units", async (root) => {
+    await writeFixture(root, [
+      question("B-TEST-HZ-001", "For a dial, how many hertz is 1 kHz?", "1 000 Hz"),
+      question("B-TEST-HZ-002", "What dial frequency is 1.5 kHz in hertz?", "1500 Hz"),
+      question("B-TEST-KOHM-001", "A resistor is marked 1.5 k ohms. What is its resistance in ohms?", "1500 ohms"),
+    ], lessonMarkdown(`# Lesson
+
+A copied dial conversion says 1 kHz is 1,000 Hz.
+A copied scaled-unit dial example says 1500 Hz.
+A copied resistance note says a 1500 ohm part has 1500 ohms.
+`));
+
+    await assert.rejects(
+      () => runCheck(root),
+      (error: unknown) => error instanceof LessonOriginalityError
+        && error.report.issues.some((issue) => issue.questionId === "B-TEST-HZ-001" && issue.issueType === "numeric-overlap")
+        && error.report.issues.some((issue) => issue.questionId === "B-TEST-HZ-002" && issue.issueType === "numeric-overlap")
+        && error.report.issues.some((issue) => issue.questionId === "B-TEST-KOHM-001" && issue.issueType === "numeric-overlap"),
+    );
+  });
+});
+
+test("numeric originality parses French decimal commas with units", async () => {
+  await withFixture("french-decimal-comma", async (root) => {
+    await writeFixture(root, [
+      question("B-TEST-DECIMAL-001", "What is the second harmonic of a 1.5 kHz signal?", "3 kHz"),
+    ], lessonMarkdown("# Lesson\n\nA copied example says 1,5 kHz doubled is 3 kHz.\n"));
+
+    await assert.rejects(
+      () => runCheck(root),
+      (error: unknown) => error instanceof LessonOriginalityError
+        && error.report.issues.some((issue) => issue.questionId === "B-TEST-DECIMAL-001" && issue.issueType === "numeric-overlap"),
     );
   });
 });
@@ -286,5 +571,150 @@ test("five-gram originality allows a case just below the ratio threshold", async
     const report = await runCheck(root);
 
     assert.equal(report.issueCount, 0);
+  });
+});
+
+test("originality allowlist rejects a stale common dB entry with its lesson and heading", async () => {
+  await withFixture("stale-db-allowlist", async (root) => {
+    await writeFixture(root, [
+      question("B-TEST-DB-001", "A two-times increase in power results in a change of how many dB?", "3 dB higher"),
+    ], lessonMarkdown("# Lesson\n\n## Power shortcuts\n\nA 2x power step is about +3 dB.\n"));
+    const entry = {
+      lessonId: "L-TEST-01",
+      blockHeading: "Power shortcuts",
+      reason: "Previously reviewed standard dB shortcut values, not a copied scenario.",
+    };
+    await writeAllowlist(root, [entry]);
+
+    await assert.rejects(() => runCheck(root), (error: unknown) => {
+      assert.ok(error instanceof LessonOriginalityError);
+      assert.equal(error.report.issueCount, 0);
+      assert.equal(error.report.allowlistedBlockCount, 0);
+      assert.equal(error.report.staleAllowlistEntryCount, 1);
+      assert.deepEqual(error.report.staleAllowlistEntries, [entry]);
+      assert.ok(error.report.summaryLines.includes("Stale allow-list entries: 1"));
+      return true;
+    });
+  });
+});
+
+test("originality allowlist suppresses numeric issues but still reports unallowlisted issues", async () => {
+  await withFixture("numeric-allowlist", async (root) => {
+    await writeFixture(root, [
+      question("B-TEST-NUMERIC-001", "A 12 volt circuit draws 3 amperes. What power is used?", "36 watts"),
+    ], lessonMarkdown("# Lesson\n\n## Reviewed example\n\nA 12 V accessory drawing 3 A needs 36 W.\n\n## Unreviewed example\n\nA 12 V accessory drawing 3 A needs 36 W.\n"));
+    await writeAllowlist(root, [{
+      lessonId: "L-TEST-01",
+      blockHeading: "Reviewed example",
+      reason: "Fixture review accepts this numeric overlap only in the reviewed example.",
+    }]);
+
+    await assert.rejects(() => runCheck(root), (error: unknown) => {
+      assert.ok(error instanceof LessonOriginalityError);
+      assert.equal(error.report.allowlistedBlockCount, 1);
+      assert.equal(error.report.staleAllowlistEntryCount, 0);
+      assert.deepEqual(error.report.staleAllowlistEntries, []);
+      assert.equal(error.report.issueCount, 1);
+      assert.equal(error.report.issues[0]?.blockHeading, "Unreviewed example");
+      assert.equal(error.report.issues[0]?.issueType, "numeric-overlap");
+      return true;
+    });
+  });
+});
+
+test("originality allowlist is current when it suppresses only a whole-bank near-verbatim issue", async () => {
+  await withFixture("verbatim-allowlist", async (root) => {
+    await writeFixture(root, [
+      question("B-TEST-VERBATIM-001", "Which antenna part keeps the feed line shield away from RF current?", "A choke balun", "B-006-001"),
+    ], lessonMarkdown("# Lesson\n\n## Reviewed vocabulary\n\nWhich antenna part keeps the feed line shield away from RF current? A choke balun.\n"));
+    await writeAllowlist(root, [{
+      lessonId: "L-TEST-01",
+      blockHeading: "Reviewed vocabulary",
+      reason: "Fixture review accepts the wording in this vocabulary block.",
+    }]);
+
+    const report = await runCheck(root);
+
+    assert.equal(report.allowlistedBlockCount, 1);
+    assert.equal(report.staleAllowlistEntryCount, 0);
+    assert.deepEqual(report.staleAllowlistEntries, []);
+    assert.equal(report.issueCount, 0);
+  });
+});
+
+test("originality allowlist reports a missing heading in a checked lesson", async () => {
+  await withFixture("missing-allowlisted-heading", async (root) => {
+    await writeFixture(root, [], lessonMarkdown("# Lesson\n\nOriginal teaching.\n"));
+    const entry = { lessonId: "L-TEST-01", blockHeading: "Deleted heading", reason: "Reviewed reference wording in the former heading." };
+    await writeAllowlist(root, [entry]);
+
+    await assert.rejects(() => runCheck(root), (error: unknown) => error instanceof LessonOriginalityError
+      && error.report.staleAllowlistEntryCount === 1
+      && error.report.staleAllowlistEntries[0]?.blockHeading === "Deleted heading");
+  });
+});
+
+test("originality allowlist audits missing lessons only in full-allowlist runs", async () => {
+  await withFixture("missing-allowlisted-lesson", async (root) => {
+    await writeFixture(root, [], lessonMarkdown("# Lesson\n\nOriginal teaching.\n"));
+    const entry = { lessonId: "L-OTHER-01", blockHeading: "Other heading", reason: "Reviewed reference wording in a different lesson." };
+    await writeAllowlist(root, [entry]);
+
+    const report = await runCheck(root);
+    assert.equal(report.staleAllowlistEntryCount, 0);
+    assert.equal(report.allowlistedBlockCount, 0);
+
+    await assert.rejects(() => runCheck(root, { auditAllAllowlistEntries: true }), (error: unknown) => {
+      assert.ok(error instanceof LessonOriginalityError);
+      assert.deepEqual(error.report.staleAllowlistEntries, [entry]);
+      return true;
+    });
+  });
+});
+
+test("originality allowlist does not count numeric overlaps outside the lesson categories as suppression", async () => {
+  await withFixture("allowlist-category-scope", async (root) => {
+    await writeFixture(root, [
+      question("B-TEST-OTHER-001", "A 24 volt circuit draws 2 amperes. What power is used?", "48 watts", "B-006-001"),
+    ], lessonMarkdown("# Lesson\n\nA fresh exercise uses 24 V and 2 A for a 48 W result.\n"));
+    await writeAllowlist(root, [{ lessonId: "L-TEST-01", blockHeading: "Lesson", reason: "Previously reviewed numeric exercise." }]);
+
+    await assert.rejects(() => runCheck(root), (error: unknown) => error instanceof LessonOriginalityError
+      && error.report.issueCount === 0
+      && error.report.staleAllowlistEntryCount === 1);
+  });
+});
+
+test("originality allowlist rejects duplicate entries rather than silently hiding a reason", async () => {
+  await withFixture("duplicate-allowlist", async (root) => {
+    await writeFixture(root, [], lessonMarkdown("# Lesson\n\nOriginal teaching.\n"));
+    const entry = { lessonId: "L-TEST-01", blockHeading: "Lesson", reason: "Reviewed reference wording." };
+    await writeAllowlist(root, [entry, { ...entry, reason: "Another review of the same block." }]);
+
+    await assert.rejects(() => runCheck(root), /duplicate allow-list entry for L-TEST-01, heading block "Lesson"/);
+  });
+});
+
+test("originality allowlist requires a non-empty reason", async () => {
+  await withFixture("empty-allowlist-reason", async (root) => {
+    await writeFixture(root, [], lessonMarkdown("# Lesson\n\nOriginal teaching.\n"));
+    await writeAllowlist(root, [{ lessonId: "L-TEST-01", blockHeading: "Lesson", reason: "  " }]);
+
+    await assert.rejects(() => runCheck(root), /must include non-empty lessonId, blockHeading, and reason/);
+  });
+});
+
+test("originality check --all fails with actionable stale-allowlist diagnostics even for missing lessons", async () => {
+  await withFixture("stale-allowlist-cli", async (root) => {
+    await writeFixture(root, [], lessonMarkdown("# Lesson\n\nOriginal teaching.\n"));
+    const defaultAllowlist: LessonOriginalityAllowlistEntry[] = JSON.parse(await readFile(new URL("../../../content/lessons/originality-allowlist.json", import.meta.url), "utf8"));
+    assert.ok(defaultAllowlist.length > 0);
+
+    const result = spawnSync(process.execPath, [CHECK_SCRIPT, "--all", `--lesson-root=${path.join(root, "content/lessons")}`], { encoding: "utf8" });
+
+    assert.equal(result.status, 1);
+    for (const entry of defaultAllowlist) {
+      assert.ok(result.stderr.includes(`stale allow-list entry for ${entry.lessonId}, heading block "${entry.blockHeading}" suppresses no current originality issues; remove it from the allow-list`));
+    }
   });
 });

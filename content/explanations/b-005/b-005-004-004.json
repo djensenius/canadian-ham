@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-005-004-004.\n\nWhy the correct answer is right: Use E = I x R when current and resistance are known.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Voltage equals current divided by resistance\": Current divided by resistance has the wrong relationship for voltage.\n- sourceIndex 2: \"Voltage equals resistance divided by current\": Resistance divided by current has the wrong relationship for voltage.\n- sourceIndex 3: \"Voltage equals power divided by current\": Power divided by current can find voltage only when power is known; power is not the given pair here.",
+    "en": "Question B-005-004-004.\n\nWhy the correct answer is right: Use E = I x R when current and resistance are known.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Voltage equals current divided by resistance\": Current divided by resistance has the wrong relationship for voltage.\n- sourceIndex 2: \"Voltage equals resistance divided by current\": Resistance divided by current has the wrong relationship for voltage.\n- sourceIndex 3: \"Voltage equals power divided by current\": Power divided by current can find voltage only when power is known. Here the known pair is current and resistance.",
     "fr": null
   },
   "citations": [

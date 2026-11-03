@@ -1,0 +1,2900 @@
+{
+  "schemaVersion": 1,
+  "kind": "calculator-sequences",
+  "semantics": {
+    "execution": "Immediate-execution basic calculator: chained binary operations evaluate left to right, so 2 + 3 × 4 = 20.",
+    "repeatedEquals": "Pressing = again repeats the last binary operation with the same right operand.",
+    "percent": "With + or -, % converts the displayed entry to that percentage of the left operand; with × or ÷, % converts the displayed entry to entry/100. Without a pending operation it also converts entry to entry/100.",
+    "errors": "Divide by zero and square root of a negative value display Error; the next digit or AC starts a fresh calculation."
+  },
+  "cases": [
+    {
+      "id": "initial-display",
+      "keys": [],
+      "expectedDisplay": "0"
+    },
+    {
+      "id": "single-zero",
+      "keys": [
+        "0"
+      ],
+      "expectedDisplay": "0"
+    },
+    {
+      "id": "leading-zeroes",
+      "keys": [
+        "0",
+        "0",
+        "7"
+      ],
+      "expectedDisplay": "7"
+    },
+    {
+      "id": "multi-digit-entry",
+      "keys": [
+        "1",
+        "2",
+        "3"
+      ],
+      "expectedDisplay": "123"
+    },
+    {
+      "id": "decimal-entry",
+      "keys": [
+        "1",
+        ".",
+        "2",
+        "3"
+      ],
+      "expectedDisplay": "1.23"
+    },
+    {
+      "id": "leading-decimal-entry",
+      "keys": [
+        ".",
+        "5"
+      ],
+      "expectedDisplay": "0.5"
+    },
+    {
+      "id": "second-decimal-ignored",
+      "keys": [
+        "1",
+        ".",
+        ".",
+        "2"
+      ],
+      "expectedDisplay": "1.2"
+    },
+    {
+      "id": "backspace-removes-last-digit",
+      "keys": [
+        "1",
+        "2",
+        "backspace"
+      ],
+      "expectedDisplay": "1"
+    },
+    {
+      "id": "backspace-to-zero",
+      "keys": [
+        "9",
+        "backspace"
+      ],
+      "expectedDisplay": "0"
+    },
+    {
+      "id": "backspace-leaves-trailing-decimal",
+      "keys": [
+        "1",
+        ".",
+        "2",
+        "backspace"
+      ],
+      "expectedDisplay": "1."
+    },
+    {
+      "id": "backspace-removes-decimal-point",
+      "keys": [
+        "1",
+        ".",
+        "backspace"
+      ],
+      "expectedDisplay": "1"
+    },
+    {
+      "id": "backspace-after-operator-noop",
+      "keys": [
+        "5",
+        "+",
+        "backspace"
+      ],
+      "expectedDisplay": "5"
+    },
+    {
+      "id": "clear-entry-during-entry",
+      "keys": [
+        "4",
+        "5",
+        "C/CE"
+      ],
+      "expectedDisplay": "0"
+    },
+    {
+      "id": "clear-entry-keeps-pending-operation",
+      "keys": [
+        "5",
+        "+",
+        "2",
+        "C/CE",
+        "3",
+        "="
+      ],
+      "expectedDisplay": "8"
+    },
+    {
+      "id": "all-clear-resets-calculation",
+      "keys": [
+        "5",
+        "+",
+        "2",
+        "AC",
+        "3"
+      ],
+      "expectedDisplay": "3"
+    },
+    {
+      "id": "addition",
+      "keys": [
+        "2",
+        "+",
+        "3",
+        "="
+      ],
+      "expectedDisplay": "5"
+    },
+    {
+      "id": "subtraction",
+      "keys": [
+        "9",
+        "-",
+        "4",
+        "="
+      ],
+      "expectedDisplay": "5"
+    },
+    {
+      "id": "multiplication",
+      "keys": [
+        "6",
+        "×",
+        "7",
+        "="
+      ],
+      "expectedDisplay": "42"
+    },
+    {
+      "id": "division",
+      "keys": [
+        "8",
+        "÷",
+        "2",
+        "="
+      ],
+      "expectedDisplay": "4"
+    },
+    {
+      "id": "decimal-sum-rounds-cleanly",
+      "keys": [
+        "0",
+        ".",
+        "1",
+        "+",
+        "0",
+        ".",
+        "2",
+        "="
+      ],
+      "expectedDisplay": "0.3"
+    },
+    {
+      "id": "near-zero-subtraction-rounds-cleanly",
+      "keys": [
+        "0",
+        ".",
+        "3",
+        "-",
+        "0",
+        ".",
+        "2",
+        "-",
+        "0",
+        ".",
+        "1",
+        "="
+      ],
+      "expectedDisplay": "0"
+    },
+    {
+      "id": "left-to-right-plus-then-multiply",
+      "keys": [
+        "2",
+        "+",
+        "3",
+        "×",
+        "4",
+        "="
+      ],
+      "expectedDisplay": "20"
+    },
+    {
+      "id": "left-to-right-divide-then-add",
+      "keys": [
+        "8",
+        "÷",
+        "2",
+        "+",
+        "3",
+        "="
+      ],
+      "expectedDisplay": "7"
+    },
+    {
+      "id": "left-to-right-divide-then-multiply",
+      "keys": [
+        "8",
+        "÷",
+        "2",
+        "×",
+        "3",
+        "="
+      ],
+      "expectedDisplay": "12"
+    },
+    {
+      "id": "left-to-right-repeated-subtract",
+      "keys": [
+        "9",
+        "-",
+        "3",
+        "-",
+        "2",
+        "="
+      ],
+      "expectedDisplay": "4"
+    },
+    {
+      "id": "operator-replacement",
+      "keys": [
+        "5",
+        "+",
+        "-",
+        "2",
+        "="
+      ],
+      "expectedDisplay": "3"
+    },
+    {
+      "id": "equals-with-no-pending-operation",
+      "keys": [
+        "7",
+        "="
+      ],
+      "expectedDisplay": "7"
+    },
+    {
+      "id": "equals-after-operator-uses-left-operand",
+      "keys": [
+        "2",
+        "+",
+        "="
+      ],
+      "expectedDisplay": "4"
+    },
+    {
+      "id": "repeat-equals-on-addition",
+      "keys": [
+        "2",
+        "+",
+        "3",
+        "=",
+        "="
+      ],
+      "expectedDisplay": "8"
+    },
+    {
+      "id": "repeat-equals-on-addition-twice",
+      "keys": [
+        "2",
+        "+",
+        "3",
+        "=",
+        "=",
+        "="
+      ],
+      "expectedDisplay": "11"
+    },
+    {
+      "id": "repeat-equals-on-subtraction",
+      "keys": [
+        "1",
+        "0",
+        "-",
+        "2",
+        "=",
+        "="
+      ],
+      "expectedDisplay": "6"
+    },
+    {
+      "id": "repeat-equals-on-multiplication",
+      "keys": [
+        "3",
+        "×",
+        "4",
+        "=",
+        "="
+      ],
+      "expectedDisplay": "48"
+    },
+    {
+      "id": "repeat-equals-on-division",
+      "keys": [
+        "8",
+        "÷",
+        "2",
+        "=",
+        "="
+      ],
+      "expectedDisplay": "2"
+    },
+    {
+      "id": "digit-after-equals-starts-fresh",
+      "keys": [
+        "2",
+        "+",
+        "3",
+        "=",
+        "9"
+      ],
+      "expectedDisplay": "9"
+    },
+    {
+      "id": "operator-after-equals-continues-from-result",
+      "keys": [
+        "2",
+        "+",
+        "3",
+        "=",
+        "×",
+        "4",
+        "="
+      ],
+      "expectedDisplay": "20"
+    },
+    {
+      "id": "square-root",
+      "keys": [
+        "9",
+        "√"
+      ],
+      "expectedDisplay": "3"
+    },
+    {
+      "id": "square-root-as-pending-operand",
+      "keys": [
+        "5",
+        "+",
+        "9",
+        "√",
+        "="
+      ],
+      "expectedDisplay": "8"
+    },
+    {
+      "id": "square",
+      "keys": [
+        "1",
+        "2",
+        "x²"
+      ],
+      "expectedDisplay": "144"
+    },
+    {
+      "id": "square-as-pending-operand",
+      "keys": [
+        "2",
+        "+",
+        "3",
+        "x²",
+        "="
+      ],
+      "expectedDisplay": "11"
+    },
+    {
+      "id": "reciprocal",
+      "keys": [
+        "4",
+        "1/x"
+      ],
+      "expectedDisplay": "0.25"
+    },
+    {
+      "id": "reciprocal-as-pending-operand",
+      "keys": [
+        "2",
+        "+",
+        "4",
+        "1/x",
+        "="
+      ],
+      "expectedDisplay": "2.25"
+    },
+    {
+      "id": "toggle-sign-entry",
+      "keys": [
+        "5",
+        "±"
+      ],
+      "expectedDisplay": "−5"
+    },
+    {
+      "id": "toggle-sign-twice",
+      "keys": [
+        "5",
+        "±",
+        "±"
+      ],
+      "expectedDisplay": "5"
+    },
+    {
+      "id": "toggle-sign-as-pending-operand",
+      "keys": [
+        "5",
+        "+",
+        "3",
+        "±",
+        "="
+      ],
+      "expectedDisplay": "2"
+    },
+    {
+      "id": "negative-square-root-errors",
+      "keys": [
+        "9",
+        "±",
+        "√"
+      ],
+      "expectedDisplay": "Error"
+    },
+    {
+      "id": "negative-square-is-positive",
+      "keys": [
+        "3",
+        "±",
+        "x²"
+      ],
+      "expectedDisplay": "9"
+    },
+    {
+      "id": "percent-without-pending-operation",
+      "keys": [
+        "5",
+        "0",
+        "%"
+      ],
+      "expectedDisplay": "0.5"
+    },
+    {
+      "id": "percent-addition",
+      "keys": [
+        "2",
+        "0",
+        "0",
+        "+",
+        "1",
+        "0",
+        "%",
+        "="
+      ],
+      "expectedDisplay": "220"
+    },
+    {
+      "id": "percent-subtraction",
+      "keys": [
+        "2",
+        "0",
+        "0",
+        "-",
+        "1",
+        "0",
+        "%",
+        "="
+      ],
+      "expectedDisplay": "180"
+    },
+    {
+      "id": "percent-multiplication",
+      "keys": [
+        "2",
+        "0",
+        "0",
+        "×",
+        "1",
+        "0",
+        "%",
+        "="
+      ],
+      "expectedDisplay": "20"
+    },
+    {
+      "id": "percent-division",
+      "keys": [
+        "2",
+        "0",
+        "0",
+        "÷",
+        "1",
+        "0",
+        "%",
+        "="
+      ],
+      "expectedDisplay": "2000"
+    },
+    {
+      "id": "percent-repeat-equals",
+      "keys": [
+        "1",
+        "0",
+        "0",
+        "+",
+        "5",
+        "%",
+        "=",
+        "="
+      ],
+      "expectedDisplay": "110"
+    },
+    {
+      "id": "divide-by-zero-errors",
+      "keys": [
+        "5",
+        "÷",
+        "0",
+        "="
+      ],
+      "expectedDisplay": "Error"
+    },
+    {
+      "id": "digit-recovers-from-divide-by-zero",
+      "keys": [
+        "5",
+        "÷",
+        "0",
+        "=",
+        "7"
+      ],
+      "expectedDisplay": "7"
+    },
+    {
+      "id": "all-clear-recovers-from-divide-by-zero",
+      "keys": [
+        "5",
+        "÷",
+        "0",
+        "=",
+        "AC"
+      ],
+      "expectedDisplay": "0"
+    },
+    {
+      "id": "digit-recovers-from-square-root-error",
+      "keys": [
+        "9",
+        "±",
+        "√",
+        "2"
+      ],
+      "expectedDisplay": "2"
+    },
+    {
+      "id": "reciprocal-of-zero-errors",
+      "keys": [
+        "0",
+        "1/x"
+      ],
+      "expectedDisplay": "Error"
+    },
+    {
+      "id": "decimal-point-does-not-recover-from-error",
+      "keys": [
+        "5",
+        "÷",
+        "0",
+        "=",
+        "."
+      ],
+      "expectedDisplay": "Error"
+    },
+    {
+      "id": "one-third-display",
+      "keys": [
+        "1",
+        "÷",
+        "3",
+        "="
+      ],
+      "expectedDisplay": "0.333333333333"
+    },
+    {
+      "id": "two-thirds-display",
+      "keys": [
+        "2",
+        "÷",
+        "3",
+        "="
+      ],
+      "expectedDisplay": "0.666666666667"
+    },
+    {
+      "id": "ten-sixths-display",
+      "keys": [
+        "1",
+        "0",
+        "÷",
+        "6",
+        "="
+      ],
+      "expectedDisplay": "1.66666666667"
+    },
+    {
+      "id": "large-square-normal-display",
+      "keys": [
+        "9",
+        "9",
+        "9",
+        "9",
+        "9",
+        "9",
+        "x²"
+      ],
+      "expectedDisplay": "999998000001"
+    },
+    {
+      "id": "large-result-scientific-display",
+      "keys": [
+        "9",
+        "9",
+        "9",
+        "9",
+        "9",
+        "9",
+        "9",
+        "×",
+        "9",
+        "9",
+        "9",
+        "9",
+        "9",
+        "9",
+        "9",
+        "="
+      ],
+      "expectedDisplay": "9.999998e13"
+    },
+    {
+      "id": "small-result-normal-at-threshold",
+      "keys": [
+        "1",
+        "÷",
+        "1",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "="
+      ],
+      "expectedDisplay": "0.000000001"
+    },
+    {
+      "id": "small-result-scientific-display",
+      "keys": [
+        "1",
+        "÷",
+        "1",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "="
+      ],
+      "expectedDisplay": "1e−10"
+    },
+    {
+      "id": "french-decimal-entry",
+      "locale": "fr",
+      "keys": [
+        "1",
+        ".",
+        "2"
+      ],
+      "expectedDisplay": "1,2"
+    },
+    {
+      "id": "french-decimal-sum",
+      "locale": "fr",
+      "keys": [
+        "0",
+        ".",
+        "1",
+        "+",
+        "0",
+        ".",
+        "2",
+        "="
+      ],
+      "expectedDisplay": "0,3"
+    },
+    {
+      "id": "french-division-display",
+      "locale": "fr",
+      "keys": [
+        "1",
+        "÷",
+        "3",
+        "="
+      ],
+      "expectedDisplay": "0,333333333333"
+    },
+    {
+      "id": "french-scientific-display",
+      "locale": "fr",
+      "keys": [
+        "1",
+        "÷",
+        "1",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "="
+      ],
+      "expectedDisplay": "1e−10"
+    },
+    {
+      "id": "french-square-root-display",
+      "locale": "fr",
+      "keys": [
+        "2",
+        "√"
+      ],
+      "expectedDisplay": "1,41421356237"
+    },
+    {
+      "id": "french-error-display",
+      "locale": "fr",
+      "keys": [
+        "9",
+        "±",
+        "√"
+      ],
+      "expectedDisplay": "Error",
+      "expectedDisplayValue": {
+        "mantissa": null,
+        "exponent": null,
+        "isNegative": false,
+        "isError": true,
+        "visual": "Error",
+        "spoken": {
+          "en": "Error",
+          "fr": "Erreur"
+        }
+      }
+    },
+    {
+      "id": "decimal-after-equals-starts-fresh",
+      "keys": [
+        "2",
+        "+",
+        "3",
+        "=",
+        ".",
+        "5"
+      ],
+      "expectedDisplay": "0.5"
+    },
+    {
+      "id": "clear-entry-after-result",
+      "keys": [
+        "2",
+        "+",
+        "3",
+        "=",
+        "C/CE"
+      ],
+      "expectedDisplay": "0"
+    },
+    {
+      "id": "backspace-negative-entry",
+      "keys": [
+        "1",
+        "2",
+        "±",
+        "backspace"
+      ],
+      "expectedDisplay": "−1"
+    },
+    {
+      "id": "clear-entry-then-equals-uses-zero",
+      "keys": [
+        "5",
+        "+",
+        "2",
+        "C/CE",
+        "="
+      ],
+      "expectedDisplay": "5"
+    },
+    {
+      "id": "left-to-right-mixed-chain",
+      "keys": [
+        "1",
+        "+",
+        "2",
+        "×",
+        "3",
+        "-",
+        "4",
+        "="
+      ],
+      "expectedDisplay": "5"
+    },
+    {
+      "id": "toggle-sign-result",
+      "keys": [
+        "2",
+        "+",
+        "3",
+        "=",
+        "±"
+      ],
+      "expectedDisplay": "−5"
+    },
+    {
+      "id": "operator-ignored-during-error-before-digit-recovery",
+      "keys": [
+        "5",
+        "÷",
+        "0",
+        "=",
+        "+",
+        "8"
+      ],
+      "expectedDisplay": "8"
+    },
+    {
+      "id": "all-clear-removes-repeat-equals",
+      "keys": [
+        "2",
+        "+",
+        "3",
+        "=",
+        "AC",
+        "="
+      ],
+      "expectedDisplay": "0"
+    },
+    {
+      "id": "backspace-after-result-noop",
+      "keys": [
+        "1",
+        "2",
+        "=",
+        "backspace"
+      ],
+      "expectedDisplay": "12"
+    },
+    {
+      "id": "c-ce-recovers-from-divide-by-zero",
+      "keys": [
+        "5",
+        "÷",
+        "0",
+        "=",
+        "C/CE"
+      ],
+      "expectedDisplay": "0",
+      "expectedDisplayValue": {
+        "mantissa": "0",
+        "exponent": 0,
+        "isNegative": false,
+        "isError": false,
+        "visual": "0",
+        "spoken": {
+          "en": "0",
+          "fr": "0"
+        }
+      }
+    },
+    {
+      "id": "one-e-minus-fifteen-product-preserved",
+      "keys": [
+        "0",
+        ".",
+        "0",
+        "0",
+        "0",
+        "0",
+        "1",
+        "×",
+        "0",
+        ".",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "1",
+        "="
+      ],
+      "expectedDisplay": "1e−15"
+    },
+    {
+      "id": "one-e-minus-eighteen-product-preserved",
+      "keys": [
+        "0",
+        ".",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "1",
+        "×",
+        "0",
+        ".",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "1",
+        "="
+      ],
+      "expectedDisplay": "1e−18"
+    },
+    {
+      "id": "small-square-preserved",
+      "keys": [
+        "0",
+        ".",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "1",
+        "x²"
+      ],
+      "expectedDisplay": "1e−16"
+    },
+    {
+      "id": "large-result-reciprocal-preserved",
+      "keys": [
+        "1",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "×",
+        "1",
+        "0",
+        "0",
+        "0",
+        "0",
+        "=",
+        "1/x"
+      ],
+      "expectedDisplay": "1e−15"
+    },
+    {
+      "id": "resonance-style-chain-preserves-small-intermediate",
+      "keys": [
+        "0",
+        ".",
+        "0",
+        "0",
+        "0",
+        "0",
+        "1",
+        "×",
+        "0",
+        ".",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "1",
+        "=",
+        "√",
+        "1/x"
+      ],
+      "expectedDisplay": "31622776.6017"
+    },
+    {
+      "id": "round-tie-normal-integer-half-away",
+      "keys": [
+        "2",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "1",
+        "÷",
+        "2",
+        "="
+      ],
+      "expectedDisplay": "100000000001"
+    },
+    {
+      "id": "round-tie-normal-one-decimal-half-away",
+      "keys": [
+        "2",
+        "4",
+        "6",
+        "9",
+        "1",
+        "3",
+        "5",
+        "7",
+        "8",
+        "0",
+        "2",
+        "5",
+        "÷",
+        "2",
+        "0",
+        "="
+      ],
+      "expectedDisplay": "12345678901.3"
+    },
+    {
+      "id": "round-tie-scientific-half-away",
+      "keys": [
+        "2",
+        "4",
+        "6",
+        "9",
+        "1",
+        "3",
+        "5",
+        "7",
+        "8",
+        "1",
+        "0",
+        "×",
+        "5",
+        "0",
+        "="
+      ],
+      "expectedDisplay": "1.234567891e12"
+    },
+    {
+      "id": "round-tie-negative-half-away",
+      "keys": [
+        "0",
+        "-",
+        "2",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "1",
+        "÷",
+        "2",
+        "="
+      ],
+      "expectedDisplay": "−100000000001"
+    },
+    {
+      "id": "entry-limit-integer-ignores-extra-significant-digits",
+      "keys": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "0",
+        "1",
+        "2",
+        "3"
+      ],
+      "expectedDisplay": "123456789012"
+    },
+    {
+      "id": "entry-limit-decimal-ignores-extra-significant-digits",
+      "keys": [
+        "1",
+        ".",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "0",
+        "1",
+        "2",
+        "3"
+      ],
+      "expectedDisplay": "1.23456789012"
+    },
+    {
+      "id": "entry-limit-leading-zero-decimal-ignores-extra-significant-digits",
+      "keys": [
+        "0",
+        ".",
+        "0",
+        "0",
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "0",
+        "1",
+        "2",
+        "3"
+      ],
+      "expectedDisplay": "0.0001234567890"
+    },
+    {
+      "id": "zero-point-zero-five-entry",
+      "keys": [
+        "0",
+        ".",
+        "0",
+        "5"
+      ],
+      "expectedDisplay": "0.05"
+    },
+    {
+      "id": "negative-reciprocal",
+      "keys": [
+        "4",
+        "±",
+        "1/x"
+      ],
+      "expectedDisplay": "−0.25"
+    },
+    {
+      "id": "negative-scientific-accessibility",
+      "keys": [
+        "1",
+        ".",
+        "5",
+        "÷",
+        "1",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "=",
+        "±"
+      ],
+      "expectedDisplay": "−1.5e−10",
+      "expectedDisplayValue": {
+        "mantissa": "1.5",
+        "exponent": -10,
+        "isNegative": true,
+        "isError": false,
+        "visual": "−1.5e−10",
+        "spoken": {
+          "en": "minus 1.5 times ten to the minus 10",
+          "fr": "moins 1,5 fois dix puissance moins 10"
+        }
+      }
+    },
+    {
+      "id": "french-negative-decimal-accessibility",
+      "locale": "fr",
+      "keys": [
+        "1",
+        ".",
+        "5",
+        "±"
+      ],
+      "expectedDisplay": "−1,5",
+      "expectedDisplayValue": {
+        "mantissa": "1.5",
+        "exponent": 0,
+        "isNegative": true,
+        "isError": false,
+        "visual": "−1,5",
+        "spoken": {
+          "en": "minus 1.5",
+          "fr": "moins 1,5"
+        }
+      }
+    },
+    {
+      "id": "french-error-accessibility",
+      "locale": "fr",
+      "keys": [
+        "9",
+        "±",
+        "√"
+      ],
+      "expectedDisplay": "Error",
+      "expectedDisplayValue": {
+        "mantissa": null,
+        "exponent": null,
+        "isNegative": false,
+        "isError": true,
+        "visual": "Error",
+        "spoken": {
+          "en": "Error",
+          "fr": "Erreur"
+        }
+      }
+    },
+    {
+      "id": "percent-straight-after-add-operator",
+      "keys": [
+        "2",
+        "0",
+        "0",
+        "+",
+        "%"
+      ],
+      "expectedDisplay": "400"
+    },
+    {
+      "id": "repeat-equals-cleared-after-square-root-result",
+      "keys": [
+        "2",
+        "+",
+        "3",
+        "=",
+        "√",
+        "7",
+        "="
+      ],
+      "expectedDisplay": "7"
+    },
+    {
+      "id": "repeat-equals-cleared-after-sign-result",
+      "keys": [
+        "2",
+        "+",
+        "3",
+        "=",
+        "±",
+        "7",
+        "="
+      ],
+      "expectedDisplay": "7"
+    },
+    {
+      "id": "repeat-equals-cleared-after-percent-result",
+      "keys": [
+        "2",
+        "+",
+        "3",
+        "=",
+        "%",
+        "7",
+        "="
+      ],
+      "expectedDisplay": "7"
+    },
+    {
+      "id": "repeat-equals-cleared-after-clear-entry",
+      "keys": [
+        "2",
+        "+",
+        "3",
+        "=",
+        "C/CE",
+        "="
+      ],
+      "expectedDisplay": "0"
+    },
+    {
+      "id": "repeated-equals-at-range-floor",
+      "keys": [
+        "1",
+        "÷",
+        "1",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "=",
+        "=",
+        "=",
+        "=",
+        "=",
+        "=",
+        "=",
+        "=",
+        "=",
+        "=",
+        "="
+      ],
+      "expectedDisplay": "1e−99"
+    },
+    {
+      "id": "repeated-equals-underflows-to-zero",
+      "keys": [
+        "1",
+        "÷",
+        "1",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "=",
+        "=",
+        "=",
+        "=",
+        "=",
+        "=",
+        "=",
+        "=",
+        "=",
+        "=",
+        "=",
+        "="
+      ],
+      "expectedDisplay": "0"
+    },
+    {
+      "id": "repeated-square-overflows-to-error",
+      "keys": [
+        "1",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "x²",
+        "x²",
+        "x²",
+        "x²"
+      ],
+      "expectedDisplay": "Error",
+      "expectedDisplayValue": {
+        "mantissa": null,
+        "exponent": null,
+        "isNegative": false,
+        "isError": true,
+        "visual": "Error",
+        "spoken": {
+          "en": "Error",
+          "fr": "Erreur"
+        }
+      }
+    },
+    {
+      "id": "entry-total-length-caps-leading-zeroes",
+      "keys": [
+        "0",
+        ".",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "1"
+      ],
+      "expectedDisplay": "0.0000000000000",
+      "expectedDisplayValue": {
+        "mantissa": "0.0000000000000",
+        "exponent": 0,
+        "isNegative": false,
+        "isError": false,
+        "visual": "0.0000000000000",
+        "spoken": {
+          "en": "0.0000000000000",
+          "fr": "0,0000000000000"
+        }
+      }
+    },
+    {
+      "id": "typing-spoken-decimal-matches-entry",
+      "keys": [
+        "0",
+        ".",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "1",
+        "2",
+        "3"
+      ],
+      "expectedDisplay": "0.000000000123",
+      "expectedDisplayValue": {
+        "mantissa": "0.000000000123",
+        "exponent": 0,
+        "isNegative": false,
+        "isError": false,
+        "visual": "0.000000000123",
+        "spoken": {
+          "en": "0.000000000123",
+          "fr": "0,000000000123"
+        }
+      }
+    },
+    {
+      "id": "typing-spoken-trailing-zero-matches-entry",
+      "keys": [
+        "1",
+        ".",
+        "5",
+        "0"
+      ],
+      "expectedDisplay": "1.50",
+      "expectedDisplayValue": {
+        "mantissa": "1.50",
+        "exponent": 0,
+        "isNegative": false,
+        "isError": false,
+        "visual": "1.50",
+        "spoken": {
+          "en": "1.50",
+          "fr": "1,50"
+        }
+      }
+    },
+    {
+      "id": "display-rule-one-over-550000",
+      "keys": [
+        "1",
+        "÷",
+        "5",
+        "5",
+        "0",
+        "0",
+        "0",
+        "0",
+        "="
+      ],
+      "expectedDisplay": "1.818181818e−6"
+    },
+    {
+      "id": "display-rule-one-over-550000-fr",
+      "locale": "fr",
+      "keys": [
+        "1",
+        "÷",
+        "5",
+        "5",
+        "0",
+        "0",
+        "0",
+        "0",
+        "="
+      ],
+      "expectedDisplay": "1,818181818e−6"
+    },
+    {
+      "id": "display-rule-one-over-30",
+      "keys": [
+        "1",
+        "÷",
+        "3",
+        "0",
+        "="
+      ],
+      "expectedDisplay": "0.033333333333"
+    },
+    {
+      "id": "display-rule-one-over-70",
+      "keys": [
+        "1",
+        "÷",
+        "7",
+        "0",
+        "="
+      ],
+      "expectedDisplay": "0.014285714286"
+    },
+    {
+      "id": "display-rule-one-over-300",
+      "keys": [
+        "1",
+        "÷",
+        "3",
+        "0",
+        "0",
+        "="
+      ],
+      "expectedDisplay": "0.003333333333"
+    },
+    {
+      "id": "display-rule-one-over-3000",
+      "keys": [
+        "1",
+        "÷",
+        "3",
+        "0",
+        "0",
+        "0",
+        "="
+      ],
+      "expectedDisplay": "3.333333333e−4"
+    },
+    {
+      "id": "display-rule-fixed-small-exact",
+      "keys": [
+        "0",
+        ".",
+        "0",
+        "0",
+        "0",
+        "1",
+        "2",
+        "5",
+        "="
+      ],
+      "expectedDisplay": "0.000125"
+    },
+    {
+      "id": "display-rule-one-over-800000000",
+      "keys": [
+        "1",
+        "÷",
+        "8",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "="
+      ],
+      "expectedDisplay": "0.00000000125"
+    },
+    {
+      "id": "display-rule-two-thirds-bound",
+      "keys": [
+        "2",
+        "÷",
+        "3",
+        "="
+      ],
+      "expectedDisplay": "0.666666666667"
+    },
+    {
+      "id": "display-rule-trillion-switch",
+      "keys": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "0",
+        "1",
+        "2",
+        "×",
+        "1",
+        "0",
+        "="
+      ],
+      "expectedDisplay": "1.23456789e12"
+    },
+    {
+      "id": "display-rule-scientific-carry",
+      "keys": [
+        "9",
+        "9",
+        "9",
+        "9",
+        "9",
+        "9",
+        "9",
+        "9",
+        "9",
+        "9",
+        "9",
+        "9",
+        "×",
+        "9",
+        "9",
+        "9",
+        "9",
+        "9",
+        "9",
+        "9",
+        "9",
+        "9",
+        "9",
+        "9",
+        "9",
+        "="
+      ],
+      "expectedDisplay": "1e24"
+    },
+    {
+      "id": "display-rule-negative-maximum-length-scientific",
+      "keys": [
+        "3",
+        "±",
+        "1/x",
+        "÷",
+        "1",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "=",
+        "=",
+        "=",
+        "=",
+        "=",
+        "=",
+        "=",
+        "="
+      ],
+      "expectedDisplay": "−3.333333333e−89"
+    },
+    {
+      "id": "power-table-12-digit-classification-tie-rounds-to-compact-scientific",
+      "keys": [
+        "2",
+        ".",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "1",
+        "÷",
+        "2",
+        "×",
+        ".",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "1",
+        "="
+      ],
+      "expectedDisplay": "1e−12"
+    },
+    {
+      "id": "entry-cap-excludes-sign-toggle",
+      "keys": [
+        "0",
+        ".",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "±",
+        "1"
+      ],
+      "expectedDisplay": "−0.0000000000001"
+    },
+    {
+      "id": "power-table-10-digit-scientific-tie-uses-decimal-literal-scale",
+      "keys": [
+        "2",
+        ".",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "1",
+        "÷",
+        "2",
+        "×",
+        "0",
+        ".",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "1",
+        "×",
+        "1",
+        "0",
+        "%",
+        "="
+      ],
+      "expectedDisplay": "1.000000001e−14"
+    }
+  ],
+  "fuzzDrift": {
+    "seed": 1141903873,
+    "steps": 20000,
+    "snapshotEvery": 100,
+    "lcg": "seed = (seed * 1664525 + 1013904223) mod 2^32; key = keys[seed % keys.length]",
+    "displayDigest": {
+      "algorithm": "FNV-1a-64 over every step display's UTF-8 bytes in order, followed by one separator byte per display",
+      "separatorByte": "0x00",
+      "hex": "0e3028a737d4c315"
+    },
+    "keys": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      ".",
+      "+",
+      "-",
+      "×",
+      "÷",
+      "=",
+      "√",
+      "x²",
+      "1/x",
+      "±",
+      "%",
+      "C/CE",
+      "AC",
+      "backspace"
+    ],
+    "snapshots": [
+      {
+        "step": 100,
+        "key": "5",
+        "display": "5"
+      },
+      {
+        "step": 200,
+        "key": "1",
+        "display": "50721"
+      },
+      {
+        "step": 300,
+        "key": "×",
+        "display": "6.0056710775"
+      },
+      {
+        "step": 400,
+        "key": "x²",
+        "display": "7569"
+      },
+      {
+        "step": 500,
+        "key": "C/CE",
+        "display": "0"
+      },
+      {
+        "step": 600,
+        "key": "1",
+        "display": "0.1"
+      },
+      {
+        "step": 700,
+        "key": "×",
+        "display": "82.8"
+      },
+      {
+        "step": 800,
+        "key": "1",
+        "display": "521"
+      },
+      {
+        "step": 900,
+        "key": "5",
+        "display": "5"
+      },
+      {
+        "step": 1000,
+        "key": "1",
+        "display": "58721"
+      },
+      {
+        "step": 1100,
+        "key": "×",
+        "display": "15.26"
+      },
+      {
+        "step": 1200,
+        "key": "1",
+        "display": "1"
+      },
+      {
+        "step": 1300,
+        "key": "C/CE",
+        "display": "0"
+      },
+      {
+        "step": 1400,
+        "key": "9",
+        "display": "29"
+      },
+      {
+        "step": 1500,
+        "key": "5",
+        "display": "65"
+      },
+      {
+        "step": 1600,
+        "key": "9",
+        "display": "9"
+      },
+      {
+        "step": 1700,
+        "key": "5",
+        "display": "365"
+      },
+      {
+        "step": 1800,
+        "key": "1",
+        "display": "7.1"
+      },
+      {
+        "step": 1900,
+        "key": "5",
+        "display": "5"
+      },
+      {
+        "step": 2000,
+        "key": "9",
+        "display": "29"
+      },
+      {
+        "step": 2100,
+        "key": "C/CE",
+        "display": "0"
+      },
+      {
+        "step": 2200,
+        "key": "1",
+        "display": "1"
+      },
+      {
+        "step": 2300,
+        "key": "×",
+        "display": "0"
+      },
+      {
+        "step": 2400,
+        "key": "9",
+        "display": "9"
+      },
+      {
+        "step": 2500,
+        "key": "×",
+        "display": "0"
+      },
+      {
+        "step": 2600,
+        "key": "9",
+        "display": "0.9"
+      },
+      {
+        "step": 2700,
+        "key": "C/CE",
+        "display": "0"
+      },
+      {
+        "step": 2800,
+        "key": "x²",
+        "display": "0"
+      },
+      {
+        "step": 2900,
+        "key": "5",
+        "display": "5"
+      },
+      {
+        "step": 3000,
+        "key": "9",
+        "display": "5.9"
+      },
+      {
+        "step": 3100,
+        "key": "C/CE",
+        "display": "0"
+      },
+      {
+        "step": 3200,
+        "key": "1",
+        "display": "1"
+      },
+      {
+        "step": 3300,
+        "key": "×",
+        "display": "6.079"
+      },
+      {
+        "step": 3400,
+        "key": "x²",
+        "display": "4"
+      },
+      {
+        "step": 3500,
+        "key": "5",
+        "display": "5"
+      },
+      {
+        "step": 3600,
+        "key": "1",
+        "display": "1"
+      },
+      {
+        "step": 3700,
+        "key": "C/CE",
+        "display": "0"
+      },
+      {
+        "step": 3800,
+        "key": "1",
+        "display": "1"
+      },
+      {
+        "step": 3900,
+        "key": "5",
+        "display": "65"
+      },
+      {
+        "step": 4000,
+        "key": "x²",
+        "display": "4"
+      },
+      {
+        "step": 4100,
+        "key": "5",
+        "display": "5"
+      },
+      {
+        "step": 4200,
+        "key": "9",
+        "display": "9"
+      },
+      {
+        "step": 4300,
+        "key": "×",
+        "display": "0"
+      },
+      {
+        "step": 4400,
+        "key": "9",
+        "display": "9"
+      },
+      {
+        "step": 4500,
+        "key": "×",
+        "display": "0"
+      },
+      {
+        "step": 4600,
+        "key": "9",
+        "display": "9"
+      },
+      {
+        "step": 4700,
+        "key": "×",
+        "display": "−3905441"
+      },
+      {
+        "step": 4800,
+        "key": "9",
+        "display": "0.9"
+      },
+      {
+        "step": 4900,
+        "key": "×",
+        "display": "0"
+      },
+      {
+        "step": 5000,
+        "key": "9",
+        "display": "65.9"
+      },
+      {
+        "step": 5100,
+        "key": "C/CE",
+        "display": "0"
+      },
+      {
+        "step": 5200,
+        "key": "x²",
+        "display": "4"
+      },
+      {
+        "step": 5300,
+        "key": "×",
+        "display": "7.14"
+      },
+      {
+        "step": 5400,
+        "key": "1",
+        "display": "1"
+      },
+      {
+        "step": 5500,
+        "key": "C/CE",
+        "display": "0"
+      },
+      {
+        "step": 5600,
+        "key": "9",
+        "display": "9"
+      },
+      {
+        "step": 5700,
+        "key": "C/CE",
+        "display": "0"
+      },
+      {
+        "step": 5800,
+        "key": "x²",
+        "display": "0.002739726027"
+      },
+      {
+        "step": 5900,
+        "key": "5",
+        "display": "5"
+      },
+      {
+        "step": 6000,
+        "key": "9",
+        "display": "29"
+      },
+      {
+        "step": 6100,
+        "key": "C/CE",
+        "display": "0"
+      },
+      {
+        "step": 6200,
+        "key": "x²",
+        "display": "0.0004"
+      },
+      {
+        "step": 6300,
+        "key": "5",
+        "display": "5"
+      },
+      {
+        "step": 6400,
+        "key": "1",
+        "display": "1"
+      },
+      {
+        "step": 6500,
+        "key": "×",
+        "display": "6"
+      },
+      {
+        "step": 6600,
+        "key": "1",
+        "display": "7.1"
+      },
+      {
+        "step": 6700,
+        "key": "×",
+        "display": "1764"
+      },
+      {
+        "step": 6800,
+        "key": "9",
+        "display": "9"
+      },
+      {
+        "step": 6900,
+        "key": "×",
+        "display": "0.09"
+      },
+      {
+        "step": 7000,
+        "key": "1",
+        "display": "6521"
+      },
+      {
+        "step": 7100,
+        "key": "C/CE",
+        "display": "0"
+      },
+      {
+        "step": 7200,
+        "key": "9",
+        "display": "9"
+      },
+      {
+        "step": 7300,
+        "key": "×",
+        "display": "0"
+      },
+      {
+        "step": 7400,
+        "key": "x²",
+        "display": "0"
+      },
+      {
+        "step": 7500,
+        "key": "5",
+        "display": "5"
+      },
+      {
+        "step": 7600,
+        "key": "9",
+        "display": "0.9"
+      },
+      {
+        "step": 7700,
+        "key": "×",
+        "display": "36"
+      },
+      {
+        "step": 7800,
+        "key": "x²",
+        "display": "49"
+      },
+      {
+        "step": 7900,
+        "key": "5",
+        "display": "65"
+      },
+      {
+        "step": 8000,
+        "key": "x²",
+        "display": "4"
+      },
+      {
+        "step": 8100,
+        "key": "5",
+        "display": "5"
+      },
+      {
+        "step": 8200,
+        "key": "9",
+        "display": "0.9"
+      },
+      {
+        "step": 8300,
+        "key": "C/CE",
+        "display": "0"
+      },
+      {
+        "step": 8400,
+        "key": "1",
+        "display": "1"
+      },
+      {
+        "step": 8500,
+        "key": "C/CE",
+        "display": "0"
+      },
+      {
+        "step": 8600,
+        "key": "1",
+        "display": "1"
+      },
+      {
+        "step": 8700,
+        "key": "×",
+        "display": "6"
+      },
+      {
+        "step": 8800,
+        "key": "1",
+        "display": "1"
+      },
+      {
+        "step": 8900,
+        "key": "C/CE",
+        "display": "0"
+      },
+      {
+        "step": 9000,
+        "key": "x²",
+        "display": "133225"
+      },
+      {
+        "step": 9100,
+        "key": "5",
+        "display": "65"
+      },
+      {
+        "step": 9200,
+        "key": "9",
+        "display": "9"
+      },
+      {
+        "step": 9300,
+        "key": "5",
+        "display": "5"
+      },
+      {
+        "step": 9400,
+        "key": "9",
+        "display": "29"
+      },
+      {
+        "step": 9500,
+        "key": "×",
+        "display": "4"
+      },
+      {
+        "step": 9600,
+        "key": "x²",
+        "display": "0.004063556222"
+      },
+      {
+        "step": 9700,
+        "key": "5",
+        "display": "65"
+      },
+      {
+        "step": 9800,
+        "key": "x²",
+        "display": "4"
+      },
+      {
+        "step": 9900,
+        "key": "C/CE",
+        "display": "0"
+      },
+      {
+        "step": 10000,
+        "key": "1",
+        "display": "0.1"
+      },
+      {
+        "step": 10100,
+        "key": "C/CE",
+        "display": "0"
+      },
+      {
+        "step": 10200,
+        "key": "1",
+        "display": "1"
+      },
+      {
+        "step": 10300,
+        "key": "×",
+        "display": "0.9436"
+      },
+      {
+        "step": 10400,
+        "key": "1",
+        "display": "1"
+      },
+      {
+        "step": 10500,
+        "key": "×",
+        "display": "0"
+      },
+      {
+        "step": 10600,
+        "key": "1",
+        "display": "7.1"
+      },
+      {
+        "step": 10700,
+        "key": "×",
+        "display": "Error"
+      },
+      {
+        "step": 10800,
+        "key": "9",
+        "display": "0.9"
+      },
+      {
+        "step": 10900,
+        "key": "×",
+        "display": "−2.040816327e−4"
+      },
+      {
+        "step": 11000,
+        "key": "x²",
+        "display": "0.04"
+      },
+      {
+        "step": 11100,
+        "key": "×",
+        "display": "−946"
+      },
+      {
+        "step": 11200,
+        "key": "1",
+        "display": "0.1"
+      },
+      {
+        "step": 11300,
+        "key": "×",
+        "display": "−35"
+      },
+      {
+        "step": 11400,
+        "key": "1",
+        "display": "0.1"
+      },
+      {
+        "step": 11500,
+        "key": "5",
+        "display": "5"
+      },
+      {
+        "step": 11600,
+        "key": "9",
+        "display": "9"
+      },
+      {
+        "step": 11700,
+        "key": "5",
+        "display": "65"
+      },
+      {
+        "step": 11800,
+        "key": "x²",
+        "display": "0"
+      },
+      {
+        "step": 11900,
+        "key": "5",
+        "display": "5"
+      },
+      {
+        "step": 12000,
+        "key": "1",
+        "display": "21"
+      },
+      {
+        "step": 12100,
+        "key": "C/CE",
+        "display": "0"
+      },
+      {
+        "step": 12200,
+        "key": "9",
+        "display": "0.9"
+      },
+      {
+        "step": 12300,
+        "key": "×",
+        "display": "0"
+      },
+      {
+        "step": 12400,
+        "key": "1",
+        "display": "8721"
+      },
+      {
+        "step": 12500,
+        "key": "×",
+        "display": "0"
+      },
+      {
+        "step": 12600,
+        "key": "9",
+        "display": "0.9"
+      },
+      {
+        "step": 12700,
+        "key": "5",
+        "display": "5"
+      },
+      {
+        "step": 12800,
+        "key": "x²",
+        "display": "0.020408163265"
+      },
+      {
+        "step": 12900,
+        "key": "C/CE",
+        "display": "0"
+      },
+      {
+        "step": 13000,
+        "key": "1",
+        "display": "0.1"
+      },
+      {
+        "step": 13100,
+        "key": "×",
+        "display": "0.008099623029"
+      },
+      {
+        "step": 13200,
+        "key": "x²",
+        "display": "Error"
+      },
+      {
+        "step": 13300,
+        "key": "×",
+        "display": "0"
+      },
+      {
+        "step": 13400,
+        "key": "x²",
+        "display": "0"
+      },
+      {
+        "step": 13500,
+        "key": "×",
+        "display": "1"
+      },
+      {
+        "step": 13600,
+        "key": "x²",
+        "display": "7569"
+      },
+      {
+        "step": 13700,
+        "key": "×",
+        "display": "0"
+      },
+      {
+        "step": 13800,
+        "key": "9",
+        "display": "87.9"
+      },
+      {
+        "step": 13900,
+        "key": "C/CE",
+        "display": "0"
+      },
+      {
+        "step": 14000,
+        "key": "x²",
+        "display": "0"
+      },
+      {
+        "step": 14100,
+        "key": "C/CE",
+        "display": "0"
+      },
+      {
+        "step": 14200,
+        "key": "9",
+        "display": "0.9"
+      },
+      {
+        "step": 14300,
+        "key": "5",
+        "display": "5"
+      },
+      {
+        "step": 14400,
+        "key": "9",
+        "display": "729"
+      },
+      {
+        "step": 14500,
+        "key": "×",
+        "display": "0"
+      },
+      {
+        "step": 14600,
+        "key": "x²",
+        "display": "0"
+      },
+      {
+        "step": 14700,
+        "key": "5",
+        "display": "87.94365"
+      },
+      {
+        "step": 14800,
+        "key": "x²",
+        "display": "4"
+      },
+      {
+        "step": 14900,
+        "key": "×",
+        "display": "1"
+      },
+      {
+        "step": 15000,
+        "key": "x²",
+        "display": "0.020408163265"
+      },
+      {
+        "step": 15100,
+        "key": "×",
+        "display": "−0.21"
+      },
+      {
+        "step": 15200,
+        "key": "1",
+        "display": "0.1"
+      },
+      {
+        "step": 15300,
+        "key": "×",
+        "display": "0"
+      },
+      {
+        "step": 15400,
+        "key": "1",
+        "display": "21"
+      },
+      {
+        "step": 15500,
+        "key": "5",
+        "display": "5"
+      },
+      {
+        "step": 15600,
+        "key": "9",
+        "display": "507.9"
+      },
+      {
+        "step": 15700,
+        "key": "C/CE",
+        "display": "0"
+      },
+      {
+        "step": 15800,
+        "key": "9",
+        "display": "7.9"
+      },
+      {
+        "step": 15900,
+        "key": "×",
+        "display": "436"
+      },
+      {
+        "step": 16000,
+        "key": "x²",
+        "display": "0.015625"
+      },
+      {
+        "step": 16100,
+        "key": "C/CE",
+        "display": "0"
+      },
+      {
+        "step": 16200,
+        "key": "9",
+        "display": "9"
+      },
+      {
+        "step": 16300,
+        "key": "×",
+        "display": "−14"
+      },
+      {
+        "step": 16400,
+        "key": "9",
+        "display": "0.9"
+      },
+      {
+        "step": 16500,
+        "key": "5",
+        "display": "5"
+      },
+      {
+        "step": 16600,
+        "key": "9",
+        "display": "8729"
+      },
+      {
+        "step": 16700,
+        "key": "5",
+        "display": "5"
+      },
+      {
+        "step": 16800,
+        "key": "9",
+        "display": "29"
+      },
+      {
+        "step": 16900,
+        "key": "C/CE",
+        "display": "0"
+      },
+      {
+        "step": 17000,
+        "key": "x²",
+        "display": "Error"
+      },
+      {
+        "step": 17100,
+        "key": "C/CE",
+        "display": "0"
+      },
+      {
+        "step": 17200,
+        "key": "1",
+        "display": "1"
+      },
+      {
+        "step": 17300,
+        "key": "×",
+        "display": "0"
+      },
+      {
+        "step": 17400,
+        "key": "x²",
+        "display": "0"
+      },
+      {
+        "step": 17500,
+        "key": "5",
+        "display": "5"
+      },
+      {
+        "step": 17600,
+        "key": "x²",
+        "display": "0.04"
+      },
+      {
+        "step": 17700,
+        "key": "C/CE",
+        "display": "0"
+      },
+      {
+        "step": 17800,
+        "key": "1",
+        "display": "721"
+      },
+      {
+        "step": 17900,
+        "key": "×",
+        "display": "13"
+      },
+      {
+        "step": 18000,
+        "key": "9",
+        "display": "0.9"
+      },
+      {
+        "step": 18100,
+        "key": "C/CE",
+        "display": "0"
+      },
+      {
+        "step": 18200,
+        "key": "1",
+        "display": "21"
+      },
+      {
+        "step": 18300,
+        "key": "×",
+        "display": "0"
+      },
+      {
+        "step": 18400,
+        "key": "x²",
+        "display": "760384"
+      },
+      {
+        "step": 18500,
+        "key": "×",
+        "display": "−0.503397936068"
+      },
+      {
+        "step": 18600,
+        "key": "1",
+        "display": "1"
+      },
+      {
+        "step": 18700,
+        "key": "C/CE",
+        "display": "0"
+      },
+      {
+        "step": 18800,
+        "key": "9",
+        "display": "0.9"
+      },
+      {
+        "step": 18900,
+        "key": "×",
+        "display": "0"
+      },
+      {
+        "step": 19000,
+        "key": "1",
+        "display": "1"
+      },
+      {
+        "step": 19100,
+        "key": "5",
+        "display": "65"
+      },
+      {
+        "step": 19200,
+        "key": "x²",
+        "display": "0.0004"
+      },
+      {
+        "step": 19300,
+        "key": "5",
+        "display": "5"
+      },
+      {
+        "step": 19400,
+        "key": "x²",
+        "display": "Error"
+      },
+      {
+        "step": 19500,
+        "key": "5",
+        "display": "5"
+      },
+      {
+        "step": 19600,
+        "key": "x²",
+        "display": "0.020408163265"
+      },
+      {
+        "step": 19700,
+        "key": "C/CE",
+        "display": "0"
+      },
+      {
+        "step": 19800,
+        "key": "1",
+        "display": "50721"
+      },
+      {
+        "step": 19900,
+        "key": "5",
+        "display": "65"
+      },
+      {
+        "step": 20000,
+        "key": "9",
+        "display": "0.9"
+      }
+    ]
+  }
+}

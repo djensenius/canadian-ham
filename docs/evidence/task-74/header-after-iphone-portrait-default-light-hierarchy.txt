@@ -1,0 +1,66 @@
+Attributes: Application, 0x108063840, pid: 98402, label: 'Canadian Ham'
+Element subtree:
+ →Application, 0x108063840, pid: 98402, label: 'Canadian Ham'
+    Window (Main), 0x108061f40, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x108061b80, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x108061400, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x108063d40, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x108060dc0, {{0.0, 0.0}, {402.0, 874.0}}
+              Other, 0x108063200, {{0.0, 0.0}, {402.0, 874.0}}
+                NavigationBar, 0x108061540, {{0.0, 62.0}, {402.0, 106.0}}, identifier: 'Mock exam'
+                  Button, 0x108060c80, {{16.0, 62.0}, {44.0, 44.0}}, identifier: 'BackButton', label: 'Practice'
+                  StaticText, 0x108063ac0, {{16.0, 119.7}, {180.0, 40.7}}, label: 'Mock exam'
+                Other, 0x1080612c0, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x108062580, {{0.0, 0.0}, {402.0, 874.0}}
+                    Other, 0x108062080, {{0.0, 0.0}, {402.0, 874.0}}
+                      Other, 0x108063340, {{0.0, 0.0}, {402.0, 874.0}}
+                        Other, 0x108060780, {{0.0, 168.0}, {402.0, 664.0}}
+                        ScrollView, 0x108063980, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x108062300, {{0.0, 0.0}, {402.0, 874.0}}
+                            Other, 0x108063e80, {{0.0, 0.0}, {402.0, 156.0}}
+                          Other, 0x108061180, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x108063c00, {{0.0, 168.0}, {402.0, 1151.7}}
+                            StaticText, 0x108061040, {{40.0, 208.0}, {252.3, 14.3}}, identifier: 'mock-exam-seed', label: 'Exam code: ui-a11y-mock-exam-timer'
+                            StaticText, 0x108062a80, {{40.0, 230.3}, {157.3, 26.3}}, label: 'Question 1 of 1'
+                            StaticText, 0x108062440, {{40.0, 264.7}, {203.0, 20.3}}, label: 'Answered 0 of 1. Timer off.'
+                            Button, 0x108061a40, {{40.0, 293.0}, {148.7, 56.0}}, identifier: 'mock-flag-button', label: 'Flag for review'
+                            Button, 0x108063480, {{40.0, 357.0}, {112.7, 56.0}}, identifier: 'mock-questions-button', label: 'Questions'
+                            Button, 0x108062e40, {{40.0, 421.0}, {170.3, 56.0}}, identifier: 'mock-next-unanswered-button', label: 'Next unanswered', Disabled
+                            Button, 0x108060500, {{218.3, 421.0}, {134.0, 56.0}}, identifier: 'mock-next-flagged-button', label: 'Next flagged', Disabled
+                            StaticText, 0x108b40000, {{40.0, 485.0}, {111.3, 14.3}}, label: 'Timer off by default'
+                            Other, 0x108b40140, {{24.0, 531.3}, {354.0, 80.0}}, identifier: 'exam-tools-controls'
+                              Button, 0x108b40280, {{36.0, 543.3}, {113.7, 56.0}}, identifier: 'exam-tool-calculator-button', label: 'Calculator'
+                              Button, 0x108b403c0, {{157.7, 543.3}, {161.7, 56.0}}, identifier: 'exam-tool-referenceSheet-button', label: 'Reference sheet'
+                            Other, 0x108b40500, {{24.0, 627.3}, {354.0, 113.3}}, identifier: 'question-card'
+                              StaticText, 0x108b40640, {{40.0, 643.3}, {136.7, 20.3}}, identifier: 'question-identifier', label: 'B-001-002-002'
+                              StaticText, 0x108b40780, {{24.0, 659.7}, {289.0, 81.0}}, identifier: 'question-stem', label: 'An Amateur Radio Operator Certificate is valid for:'
+                            StaticText, 0x108b408c0, {{24.0, 756.7}, {93.0, 26.3}}, identifier: 'mock-answers-title', label: 'Answers'
+                            Button, 0x108b40a00, {{24.0, 795.0}, {354.0, 74.0}}, identifier: 'answer-A-button', label: 'Answer A, one year'
+                              StaticText, 0x108b40b40, {{40.0, 811.0}, {42.0, 42.0}}, identifier: 'answer-A-chip', label: 'A'
+                              StaticText, 0x108b40c80, {{94.0, 811.0}, {65.7, 20.3}}, identifier: 'answer-A-text', label: 'one year'
+                            Button, 0x108b40dc0, {{24.0, 881.0}, {354.0, 74.0}}, identifier: 'answer-B-button', label: 'Answer B, five years'
+                              StaticText, 0x108b40f00, {{40.0, 897.0}, {42.0, 42.0}}, identifier: 'answer-B-chip', label: 'B'
+                              StaticText, 0x108b41040, {{94.0, 897.0}, {72.7, 20.3}}, identifier: 'answer-B-text', label: 'five years'
+                            Button, 0x108b41180, {{24.0, 967.0}, {354.0, 74.0}}, identifier: 'answer-C-button', label: 'Answer C, three years'
+                              StaticText, 0x108b412c0, {{40.0, 983.0}, {42.0, 42.0}}, identifier: 'answer-C-chip', label: 'C'
+                              StaticText, 0x108b41400, {{94.0, 983.0}, {85.3, 20.3}}, identifier: 'answer-C-text', label: 'three years'
+                            Button, 0x108b41540, {{24.0, 1053.0}, {354.0, 74.0}}, identifier: 'answer-D-button', label: 'Answer D, life'
+                              StaticText, 0x108b41680, {{40.0, 1069.0}, {42.0, 42.0}}, identifier: 'answer-D-chip', label: 'D'
+                              StaticText, 0x108b417c0, {{94.0, 1069.0}, {22.3, 20.3}}, identifier: 'answer-D-text', label: 'life'
+                            Button, 0x108b41900, {{24.0, 1143.0}, {101.0, 56.0}}, identifier: 'mock-previous-button', label: 'Previous', Disabled
+                            Button, 0x108b41a40, {{133.0, 1143.0}, {69.3, 56.0}}, identifier: 'mock-next-button', label: 'Next', Disabled
+                            Button, 0x108b41b80, {{24.0, 1215.0}, {135.7, 44.3}}, identifier: 'submit-mock-exam-button', label: 'Submit exam'
+                            Button, 0x108b41cc0, {{24.0, 1275.3}, {74.3, 20.3}}, identifier: 'end-mock-exam-button', label: 'End exam'
+                          Other, 0x108b41e00, {{369.0, 168.0}, {30.0, 644.0}}, label: 'Vertical scroll bar, 2 pages', value: 0%
+                            Other, 0x108b41f40, {{396.0, 171.0}, {3.0, 409.7}}
+                          Other, 0x108b42080, {{369.0, 168.0}, {30.0, 644.0}}, label: 'Vertical scroll bar, 2 pages', value: 0%
+                            Other, 0x108b421c0, {{396.0, 171.0}, {3.0, 409.7}}
+                Toolbar, 0x108b42300, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'Toolbar', label: 'Toolbar'
+                  Other, 0x108b42440, {{0.0, 0.0}, {402.0, 874.0}}
+Path to element:
+ →Application, 0x108063840, pid: 98402, label: 'Canadian Ham'
+Query chain:
+ →Find: Target Application 'org.davidjensenius.CanadianHam'
+  Output: {
+    Application, 0x108b42580, pid: 98402, label: 'Canadian Ham'
+  }

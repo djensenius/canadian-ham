@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-007-006.\n\nWhy the correct answer is right: Some transceivers include an audio codec, so analog/digital audio conversion is built in and a separate sound-card box is unnecessary.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Because they provide a USB connector\": A USB connector is only a physical/data connection; without codec functionality it would not replace the audio interface.\n- sourceIndex 2: \"Because digital signal processing (DSP) is built-in\": DSP may process signals, but the key replacement for a separate sound card is the built-in audio conversion path.\n- sourceIndex 3: \"Because they support CAT (Computer Aided Transceiver)\": CAT controls frequency or radio settings; it does not itself convert audio for digital modes.",
+    "en": "Question B-003-007-006.\n\nWhy the correct answer is right: Some transceivers include an audio codec, so analog/digital audio conversion is built in and a separate sound-card box is unnecessary.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Because they provide a USB connector\": A universal serial bus (USB) connector is only a physical/data connection. Without codec functionality it would not replace the audio interface.\n- sourceIndex 2: \"Because digital signal processing (DSP) is built-in\": DSP may process signals, but the key replacement for a separate sound card is the built-in audio conversion path.\n- sourceIndex 3: \"Because they support CAT (Computer Aided Transceiver)\": CAT lets a computer control frequency or other radio settings. It does not itself convert audio for digital modes.",
     "fr": null
   },
   "citations": [

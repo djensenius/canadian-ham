@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-005-002",
+  "questionId": "B-005-005-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "For equal resistors in parallel, first find total resistance with Rt = R / number of branches.",
+      "fr": "Pour des résistances égales en parallèle, trouvez d'abord la résistance totale avec Rt = R / nombre de branches."
+    },
+    {
+      "level": 2,
+      "en": "Use Rt = 100 ohms / 4, then I = 12 V / Rt; convert the amperes result to milliamperes.",
+      "fr": "Utilisez Rt = 100 ohms / 4, puis I = 12 V / Rt; convertissez le résultat en ampères en milliampères."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-03",
+    "sectionAnchor": "parallel-resistors-make-more-paths"
+  },
+  "referenceSheetSection": "series-parallel-resistance",
+  "licenseClass": "original"
+}

@@ -11,9 +11,9 @@ describe("PWA manifest and service worker assets", () => {
     assert.equal(manifest.name, "Canadian Ham Basic Study");
     assert.equal(manifest.display, "standalone");
     assert.equal(manifest.theme_color, "#F6EEDC");
-    assert.deepEqual(manifest.icons.map((icon) => icon.src), ["./pwa-icon-192.png", "./pwa-icon-512.png"]);
+    assert.deepEqual(manifest.icons.map((icon) => icon.src), ["./pwa-icon-192.png", "./pwa-icon-512.png", "./pwa-maskable-icon-192.png", "./pwa-maskable-icon-512.png"]);
     assert.ok(manifest.icons.every((icon) => icon.type === "image/png"));
-    assert.ok(manifest.icons.every((icon) => icon.purpose === undefined));
+    assert.deepEqual(manifest.icons.map((icon) => icon.purpose), ["any", "any", "maskable", "maskable"]);
   });
 
   it("builds a precache list covering app shell, generated assets, icons, and question bank", () => {
@@ -31,6 +31,8 @@ describe("PWA manifest and service worker assets", () => {
     assert.ok(precache.includes("./favicon-32.png"));
     assert.ok(precache.includes("./favicon-64.png"));
     assert.ok(precache.includes("./pwa-icon-192.png"));
+    assert.ok(precache.includes("./pwa-maskable-icon-192.png"));
+    assert.ok(precache.includes("./pwa-maskable-icon-512.png"));
     assert.ok(precache.includes("./assets/questions-def456.json"));
     assert.ok(precache.every((entry) => !entry.endsWith(".map")));
   });

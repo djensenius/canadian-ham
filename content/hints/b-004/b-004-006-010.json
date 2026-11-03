@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-004-006-010",
+  "questionId": "B-004-006-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Read a colour-coded resistor band by band in order: value digit, value digit, multiplier.",
+      "fr": "Lisez une résistance codée par couleurs bande par bande dans l'ordre : chiffre de valeur, chiffre de valeur, multiplicateur."
+    },
+    {
+      "level": 2,
+      "en": "Write the band colours for 120 ohms and for 1200 ohms side by side using the colour-code table, then compare them.",
+      "fr": "Écrivez côte à côte les couleurs des bandes pour 120 ohms et pour 1200 ohms à l'aide du tableau du code de couleurs, puis comparez-les."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-004-03",
+    "sectionAnchor": "differentiating-similar-values"
+  },
+  "referenceSheetSection": "resistor-colour-code",
+  "licenseClass": "original"
+}

@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { validateMorseText, weightedCharacterCount } from "@canadian-ham/morse-engine";
 import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, beforeEach, describe, it, vi } from "vitest";
 
@@ -91,6 +92,21 @@ describe("MorseSendingPracticeSection", () => {
   async function finalizeCharacter(): Promise<void> {
     await act(async () => { vi.advanceTimersByTime(1500); });
   }
+
+  it("defaults to the official three-minute sending duration and at least 75 weighted characters", async () => {
+    renderSending({ examSeedFactory: () => "sending-standard-web" });
+    fireEvent.click(screen.getByRole("button", { name: "Exam-style check" }));
+    const exam = screen.getByRole("heading", { name: "3-minute sending check" }).parentElement!;
+    assert.ok(within(exam).getByText("Time remaining: 3:00"));
+    const passage = exam.querySelector(".morse-copy")!.textContent!;
+    assert.ok(validateMorseText(passage).valid);
+    assert.ok(weightedCharacterCount(passage).weightedCharacters >= 75);
+    await act(async () => { vi.advanceTimersByTime(179_000); });
+    assert.ok(within(exam).getByText("Time remaining: 0:01"));
+    assert.equal(screen.queryByRole("heading", { name: "Sending results" }), null);
+    await act(async () => { vi.advanceTimersByTime(1000); });
+    assert.ok(screen.getByRole("heading", { name: "Sending results" }));
+  });
 
   it("decodes straight-key keyboard timing with fake timers", async () => {
     renderSending();
@@ -210,6 +226,21 @@ describe("MorseSendingPracticeSection", () => {
 
     assert.ok(screen.getByRole("heading", { name: "Sending results" }));
     assert.match(screen.getByRole("heading", { name: "Sending results" }).parentElement?.textContent ?? "", /PASS, 100%, with 0 errors/);
+  });
+
+  it("releases a held straight key and stops playback before manual grading", async () => {
+    renderSending({ examDurationSeconds: 180, examTextFactory: () => "E" });
+    const panel = screen.getByRole("heading", { name: "Sending practice" }).closest("section")!;
+
+    fireEvent.click(screen.getByRole("button", { name: "Exam-style check" }));
+    fireEvent.keyDown(panel, { key: " " });
+    now += 100;
+    fireEvent.click(screen.getByRole("button", { name: "End and grade" }));
+
+    assert.ok(oscillatorStopCalls > 0, "grading should stop the continuous side-tone before scoring");
+    const results = screen.getByRole("heading", { name: "Sending results" }).parentElement?.textContent ?? "";
+    assert.match(results, /PASS, 100%, with 0 errors/);
+    assert.match(results, /E/);
   });
 
   it("grades timeout from current text and counts only unsent characters as missing errors", async () => {

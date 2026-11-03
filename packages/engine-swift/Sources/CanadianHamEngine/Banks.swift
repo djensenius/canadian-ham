@@ -50,6 +50,23 @@ public let advancedBankRules = BankRules(
     honoursPercent: nil
 )
 
+/// Matches packages/schemas/common.schema.json (`^basic-[0-9]{4}-[0-9]{2}-[0-9]{2}$`): the whole id, not just the prefix.
+func isValidBasicBankId(_ bankId: String) -> Bool {
+    let prefix = "basic-"
+    guard bankId.hasPrefix(prefix) else { return false }
+    let rest = bankId.dropFirst(prefix.count)
+    guard rest.count == 10 else { return false }
+    let scalars = Array(rest.unicodeScalars)
+    for index in scalars.indices {
+        if index == 4 || index == 7 {
+            guard scalars[index] == "-" else { return false }
+        } else if !("0"..."9").contains(scalars[index]) {
+            return false
+        }
+    }
+    return true
+}
+
 /// Matches packages/schemas/common.schema.json (`^advanced-[a-z0-9-]+$`): the whole id, not just the prefix.
 func isValidAdvancedBankId(_ bankId: String) -> Bool {
     let prefix = "advanced-"
@@ -61,8 +78,16 @@ func isValidAdvancedBankId(_ bankId: String) -> Bool {
 }
 
 public func rulesForBankId(_ bankId: String = basicBankId) throws -> BankRules {
-    if bankId == basicBankId {
-        return basicBankRules
+    if isValidBasicBankId(bankId) {
+        return BankRules(
+            bankId: bankId,
+            categoryIds: basicBankRules.categoryIds,
+            mockExamQuestionCount: basicBankRules.mockExamQuestionCount,
+            subsectionCount: basicBankRules.subsectionCount,
+            passPercent: basicBankRules.passPercent,
+            hasHonours: basicBankRules.hasHonours,
+            honoursPercent: basicBankRules.honoursPercent
+        )
     }
     if bankId == syntheticAdvancedBankId || isValidAdvancedBankId(bankId) {
         return BankRules(

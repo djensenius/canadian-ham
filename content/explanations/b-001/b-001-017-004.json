@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-017-004.\n\nWhy the correct answer is right: Basic with Morse code uses the Basic SSB peak-envelope limit of 560 watts in this below-30-MHz example.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"1000 watts\": 1000 watts is the Advanced DC input value, not Basic-with-Morse SSB PEP.\n- sourceIndex 2: \"1500 watts\": 1500 watts is not the RBR-4 value recorded for this qualification and mode.\n- sourceIndex 3: \"2250 watts\": 2250 watts is the Advanced SSB PEP maximum, not the Basic-with-Morse limit.",
+    "en": "Question B-001-017-004.\n\nWhy the correct answer is right: Basic with Morse code uses the Basic single-sideband (SSB) peak-envelope power (PEP) limit of 560 watts in this below-30-MHz example.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"1000 watts\": 1 000 watts is the Advanced direct-current (DC) input value, not Basic-with-Morse SSB PEP.\n- sourceIndex 2: \"1500 watts\": 1 500 watts is not the RBR-4 value for this qualification and mode.\n- sourceIndex 3: \"2250 watts\": 2 250 watts is the Advanced SSB PEP maximum, not the Basic-with-Morse limit.",
     "fr": null
   },
   "citations": [

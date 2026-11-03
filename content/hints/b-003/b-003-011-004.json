@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-011-004",
+  "questionId": "B-003-011-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the modulation family that varies the RF envelope.",
+      "fr": "Revoyez la famille de modulation qui fait varier l’enveloppe RF."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-05",
+    "sectionAnchor": "am-envelope-and-sidebands"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-001-015-010",
+  "questionId": "B-001-015-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "A band’s name is roughly its wavelength. Convert with f (MHz) ≈ 300 / λ (m).",
+      "fr": "Le nom d’une bande correspond approximativement à sa longueur d’onde. Convertissez avec f (MHz) ≈ 300 / λ (m)."
+    },
+    {
+      "level": 2,
+      "en": "Work out 300 ÷ 10. Then use the band table to check which candidate range is the Canadian amateur allocation for that band; the conversion is a starting check, not the deciding shortcut.",
+      "fr": "Calculez 300 ÷ 10. Utilisez ensuite le tableau des bandes pour vérifier quelle plage proposée correspond à l’attribution canadienne de cette bande; la conversion sert de point de départ, pas de raccourci décisif."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-04",
+    "sectionAnchor": "reference-facts-band-edges-contain-the-whole-signal"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

@@ -43,5 +43,83 @@
     "B-001-009-008",
     "B-001-009-009"
   ],
-  "conceptChecks": []
+  "conceptChecks": [],
+  "rounds": [
+    {
+      "sectionAnchor": "reference-facts-both-sides-need-authority",
+      "title": {
+        "en": "Reference facts: Both sides need authority",
+        "fr": "Faits de référence : Les deux parties ont besoin d’une autorisation"
+      },
+      "officialQuestionIds": [
+        "B-001-005-001",
+        "B-001-005-002",
+        "B-001-005-003",
+        "B-001-005-004",
+        "B-001-005-005",
+        "B-001-005-006",
+        "B-001-006-001",
+        "B-001-006-002",
+        "B-001-006-003",
+        "B-001-006-004",
+        "B-001-006-005",
+        "B-001-006-006"
+      ]
+    },
+    {
+      "sectionAnchor": "reference-facts-qualification-by-privilege-matrix-for-station-work",
+      "title": {
+        "en": "Reference facts: Qualification-by-privilege matrix for station work",
+        "fr": "Faits de référence : Matrice des qualifications et privilèges pour les travaux de station"
+      },
+      "officialQuestionIds": [
+        "B-001-008-001",
+        "B-001-008-002",
+        "B-001-008-003",
+        "B-001-008-004",
+        "B-001-008-005",
+        "B-001-008-006",
+        "B-001-008-007",
+        "B-001-008-008"
+      ]
+    },
+    {
+      "sectionAnchor": "reference-facts-messages-stay-open-and-non-commercial",
+      "title": {
+        "en": "Reference facts: Messages stay open and non-commercial",
+        "fr": "Faits de référence : Les messages restent ouverts et non commerciaux"
+      },
+      "officialQuestionIds": [
+        "B-001-007-001",
+        "B-001-007-002",
+        "B-001-007-003",
+        "B-001-007-004",
+        "B-001-007-005",
+        "B-001-007-006",
+        "B-001-007-007",
+        "B-001-007-008",
+        "B-001-007-009",
+        "B-001-007-010",
+        "B-001-007-011"
+      ]
+    },
+    {
+      "sectionAnchor": "reference-facts-control-stays-with-responsible-people",
+      "title": {
+        "en": "Reference facts: Control stays with responsible people",
+        "fr": "Faits de référence : Le contrôle reste entre les mains de personnes responsables"
+      },
+      "officialQuestionIds": [
+        "B-001-009-001",
+        "B-001-009-002",
+        "B-001-009-003",
+        "B-001-009-004",
+        "B-001-009-005",
+        "B-001-009-006",
+        "B-001-009-007",
+        "B-001-009-008",
+        "B-001-009-009"
+      ]
+    }
+  ]
 }

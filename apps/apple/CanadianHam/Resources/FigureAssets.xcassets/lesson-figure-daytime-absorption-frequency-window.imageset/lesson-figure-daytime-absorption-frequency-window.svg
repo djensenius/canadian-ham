@@ -1,0 +1,48 @@
+<svg id="daytime-absorption-frequency-window" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 640" role="img">
+  <title>Daytime D-region absorption and usable frequency window</title>
+  <desc>Two panels show a low HF ray absorbed in the D region, a higher HF ray returning from the F region, and a frequency window labelled LUF, OWF, and MUF.</desc>
+  <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="88" cy="86" r="40" stroke-width="8"/>
+    <path d="M88 10 C88 20 88 28 88 36" stroke-width="6"/>
+    <path d="M88 136 C88 146 88 154 88 166" stroke-width="6"/>
+    <path d="M12 86 C22 86 30 86 38 86" stroke-width="6"/>
+    <path d="M138 86 C148 86 156 86 166 86" stroke-width="6"/>
+    <path d="M34 32 C42 40 48 46 54 52" stroke-width="6"/>
+    <path d="M142 32 C134 40 128 46 122 52" stroke-width="6"/>
+
+    <path d="M58 488 C170 458 326 458 438 488" stroke-width="8"/>
+    <path d="M70 352 C170 326 328 326 430 352" stroke-width="13"/>
+    <path d="M96 196 C188 164 316 164 406 196" stroke-width="7"/>
+    <path d="M112 488 C132 430 158 386 190 350" stroke-width="8"/>
+    <path d="M176 336 C184 344 196 356 204 364" stroke-width="8"/>
+    <path d="M176 364 C184 356 196 344 204 336" stroke-width="8"/>
+    <path d="M282 466 C310 64 374 64 410 488" stroke-width="8"/>
+    <path d="M410 488 L380 460" stroke-width="8"/>
+    <path d="M410 488 L368 498" stroke-width="8"/>
+
+    <path d="M520 418 C650 418 806 418 944 418" stroke-width="8"/>
+    <path d="M944 418 L908 398" stroke-width="8"/>
+    <path d="M944 418 L908 438" stroke-width="8"/>
+    <path d="M600 378 C600 402 600 434 600 462" stroke-width="6"/>
+    <path d="M838 378 C838 402 838 434 838 462" stroke-width="6"/>
+    <path d="M890 378 C890 402 890 434 890 462" stroke-width="6"/>
+    <path d="M620 252 C684 240 812 240 872 252" stroke-width="7"/>
+    <path d="M528 498 C552 516 578 516 602 498" stroke-width="7"/>
+    <path d="M890 498 C904 512 918 512 932 498" stroke-width="7"/>
+  </g>
+  <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
+    <text x="358" y="108" font-size="40" font-weight="700">daytime HF</text>
+    <text x="190" y="230" font-size="38" font-weight="700">F return</text>
+    <text x="132" y="308" font-size="38" font-weight="700">D absorbs</text>
+
+    <text x="760" y="150" font-size="40" font-weight="700">freq window</text>
+    <text x="716" y="228" font-size="36">usable window</text>
+    <text x="600" y="286" font-size="38" font-weight="700">LUF</text>
+    <text x="838" y="334" font-size="38" font-weight="700">OWF</text>
+    <text x="890" y="286" font-size="38" font-weight="700">MUF</text>
+    <text x="566" y="554" font-size="36">too low</text>
+    <text x="566" y="612" font-size="36">absorbed</text>
+    <text x="822" y="554" font-size="36">too high</text>
+    <text x="822" y="612" font-size="36">through</text>
+  </g>
+</svg>

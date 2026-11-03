@@ -1,13 +1,13 @@
 ---
 id: TASK-11
 title: Advanced qualification course
-status: To Do
+status: In Progress
 assignee: []
-created_date: '2026-10-01 02:27'
-updated_date: '2026-10-02 01:12'
+created_date: 2026-10-01 02:27
+updated_date: '2026-10-26T13:26:00Z'
 labels:
   - content
-  - 'legacy:T-701'
+  - legacy:T-701
 milestone: m-1
 dependencies: []
 ordinal: 18000
@@ -36,4 +36,8 @@ Owner decisions (2026-10-02, owner accepted all recommendations in docs/proposal
 4. Interim private-development policy: approved in principle to extend to verbatim Advanced source files under content/sources/ised/advanced-*/; the docs/content-licensing.md change is its own subtask and gates Advanced ingestion.
 
 2026-10-02: implementation subtasks created from the approved plan (see Subtasks).
+
+Blocked (2026-10-16 board cleanup): multi-bank plumbing, the current Advanced bank and the course switcher are done (11.1-11.5, 11.8-11.14). Remaining work waits for ISED: 11.6 ingest the new Advanced bank when published and 11.7 author the Advanced curriculum. No Advanced bank is active in the apps.
+
+Status check 2026-10-25: all three ACs are met and subtasks 11.1-11.5 and 11.8-11.14 are Done. It stays In Progress only because 11.6 (ingest the new ISED Advanced bank) and 11.7 (Advanced curriculum) wait on ISED publishing the new bank.
 <!-- SECTION:NOTES:END -->

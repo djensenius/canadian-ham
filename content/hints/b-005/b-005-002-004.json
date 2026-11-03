@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-005-002-004",
+  "questionId": "B-005-002-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the common conductor examples and their practical ranking in the materials section.",
+      "fr": "Revoyez les exemples courants de conducteurs et leur classement pratique dans la section sur les matériaux."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-01",
+    "sectionAnchor": "conductors-insulators-and-semiconductors"
+  },
+  "singleLevelReason": "Pure material-ranking recall: a second hint would identify the listed material that conducts best.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

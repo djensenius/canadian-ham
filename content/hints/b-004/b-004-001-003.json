@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-004-001-003",
+  "questionId": "B-004-001-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the receiver signal path that starts at the antenna input.",
+      "fr": "Revoyez le trajet du signal de réception qui commence à l'entrée d'antenne."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-004-01",
+    "sectionAnchor": "in-the-real-world-following-a-signal-through-a-receiver"
+  },
+  "singleLevelReason": "Block-diagram recall: a second hint would identify the needed stage and frequency range.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-006-008",
+  "questionId": "B-006-006-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review where matching reduces high-SWR loss on the main feedline.",
+      "fr": "Revoyez où l’adaptation réduit les pertes causées par un ROS élevé dans la ligne principale."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-02",
+    "sectionAnchor": "matching-networks-and-tuners"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Principle item: a content hint would restate the rule that selects one option; topic pointer and lesson link only."
+}

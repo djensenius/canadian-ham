@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-013-011",
+  "questionId": "B-006-013-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the total wire length convention for a triangular loop antenna.",
+      "fr": "Revoyez la convention de longueur totale du fil pour une antenne à boucle triangulaire."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-05",
+    "sectionAnchor": "delta-loops-and-polarization"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Formula recall item: a second hint would state the formula being tested; topic pointer and lesson link only."
+}

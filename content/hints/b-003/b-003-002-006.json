@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-002-006",
+  "questionId": "B-003-002-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the FM transmitter stage that intentionally uses a harmonic in the block diagram.",
+      "fr": "Revoyez l’étage du schéma d’un émetteur FM qui utilise volontairement un harmonique."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-01",
+    "sectionAnchor": "fm-transmitter-blocks"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

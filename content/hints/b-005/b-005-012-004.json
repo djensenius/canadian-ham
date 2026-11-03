@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-005-012-004",
+  "questionId": "B-005-012-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the parts described at the start of the resonance and tuned-circuits section.",
+      "fr": "Revoyez les pièces décrites au début de la section sur la résonance et les circuits accordés."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-05",
+    "sectionAnchor": "resonance-and-tuned-circuits"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Component-pair recall: any second hint would name or eliminate the component pair."
+}

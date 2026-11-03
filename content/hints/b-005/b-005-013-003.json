@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-005-013-003",
+  "questionId": "B-005-013-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the basic functions available on a general-purpose multimeter.",
+      "fr": "Revoyez les fonctions de base disponibles sur un multimètre d'usage général."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-06",
+    "sectionAnchor": "meters-and-how-to-connect-them"
+  },
+  "singleLevelReason": "Pure instrument recall: a second hint would list the measured quantities and identify the answer.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

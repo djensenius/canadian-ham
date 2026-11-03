@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-010-011.\n\nWhy the correct answer is right: A CW audio band-pass centred around an 800 Hz tone passes the desired note while rejecting lower and higher audio noise.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"2100 Hz to 2300 Hz\": 2100 Hz to 2300 Hz is centred much higher than the common CW pitch range used here.\n- sourceIndex 2: \"300 Hz to 2700 Hz\": 300 Hz to 2700 Hz is a voice-like audio range and too wide to be an optimum CW band-pass.\n- sourceIndex 3: \"100 Hz to 1100 Hz\": 100 Hz to 1100 Hz includes the CW tone but also admits much more low-frequency noise and adjacent audio than the narrower 750 Hz to 850 Hz range.",
+    "en": "Question B-003-010-011.\n\nWhy the correct answer is right: A continuous wave (CW) audio band-pass centred around an 800 Hz tone passes the desired note while rejecting lower and higher audio noise.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"2100 Hz to 2300 Hz\": 2 100 Hz to 2 300 Hz is centred much higher than the common CW pitch range used here.\n- sourceIndex 2: \"300 Hz to 2700 Hz\": 300 Hz to 2 700 Hz is a voice-like audio range and too wide to be an optimum CW band-pass.\n- sourceIndex 3: \"100 Hz to 1100 Hz\": 100 Hz to 1 100 Hz includes the CW tone but also admits much more low-frequency noise and adjacent audio than the narrower 750 Hz to 850 Hz range.",
     "fr": null
   },
   "citations": [

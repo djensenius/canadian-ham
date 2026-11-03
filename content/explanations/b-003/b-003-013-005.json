@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-013-005.\n\nWhy the correct answer is right: FM works well for local VHF/UHF because limiting and demodulation can give good signal-to-noise performance when the received signal is above threshold.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The carrier is not detectable\": An FM signal has a detectable carrier; receivers lock onto and limit that carrier.\n- sourceIndex 2: \"It is more resistant to distortion caused by reflected signals\": Multipath can still distort FM, especially in mobile use, so this is not the basic reason for local FM voice.\n- sourceIndex 3: \"Its RF carrier stays on frequency better than the AM modes\": Frequency stability depends on oscillator design, not on FM being inherently more stable than AM.",
+    "en": "Question B-003-013-005.\n\nWhy the correct answer is right: Frequency modulation (FM) works well for local very-high-frequency (VHF) and ultra-high-frequency (UHF) operation because limiting and demodulation can give good signal-to-noise performance when the received signal is above threshold.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The carrier is not detectable\": An FM signal has a detectable carrier. Receivers lock onto and limit that carrier.\n- sourceIndex 2: \"It is more resistant to distortion caused by reflected signals\": Multipath can still distort FM, especially in mobile use, so this is not the basic reason for local FM voice.\n- sourceIndex 3: \"Its RF carrier stays on frequency better than the AM modes\": Frequency stability depends on oscillator design, not on FM being inherently more stable than amplitude modulation (AM).",
     "fr": null
   },
   "citations": [

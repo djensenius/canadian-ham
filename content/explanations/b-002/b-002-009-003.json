@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-002-009-003.\n\nWhy the correct answer is right: In a VHF contest, a grid square request asks for your location as a compact four- or six-character code.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Your antenna azimuth stated in compass degrees\": Antenna azimuth is a bearing, not the station location code requested.\n- sourceIndex 2: \"The number of contacts you have made\": Contact count is a contest score detail, not your grid square.\n- sourceIndex 3: \"The elevation of your station in thirty-metre increments\": Elevation in thirty-metre increments is not what a Maidenhead-style grid communicates.",
+    "en": "Question B-002-009-003.\n\nWhy the correct answer is right: In a very-high-frequency (VHF) contest, a grid square request asks for your location as a compact four- or six-character code.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Your antenna azimuth stated in compass degrees\": Antenna azimuth is a bearing, not the station location code requested.\n- sourceIndex 2: \"The number of contacts you have made\": Contact count is a contest score detail, not your grid square.\n- sourceIndex 3: \"The elevation of your station in thirty-metre increments\": Elevation in thirty-metre increments is not what a Maidenhead-style grid communicates.",
     "fr": null
   },
   "citations": [

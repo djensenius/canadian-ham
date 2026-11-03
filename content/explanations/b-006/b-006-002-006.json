@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-006-002-006.\n\nWhy the correct answer is right: A line is unbalanced when one conductor is tied to ground or shield reference while the other is the signal conductor. Coax is the common example because the shield is usually grounded through the station equipment.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The conductors are twisted together\": Twisting can be used with balanced pairs; it does not by itself make one conductor the grounded side.\n- sourceIndex 2: \"One conductor has a poor connection at the antenna\": A poor connection is a fault that can cause erratic readings, not the definition of an unbalanced line.\n- sourceIndex 3: \"The conductors have deteriorated insulation\": Bad insulation can add leakage or loss, but balance is about the relationship of the conductors to ground.",
+    "en": "Question B-006-002-006.\n\nWhy the correct answer is right: A line is unbalanced when one conductor is tied to ground or shield reference and the other carries the signal. Coax is the common example because the shield is usually grounded through the station equipment.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The conductors are twisted together\": Twisting can be used with balanced pairs; it does not by itself make one conductor the grounded side.\n- sourceIndex 2: \"One conductor has a poor connection at the antenna\": A poor connection is a fault that can cause erratic readings, not the definition of an unbalanced line.\n- sourceIndex 3: \"The conductors have deteriorated insulation\": Bad insulation can add leakage or loss, but balance is about the relationship of the conductors to ground.",
     "fr": null
   },
   "citations": [

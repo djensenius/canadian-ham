@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-021-006",
+  "questionId": "B-003-021-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the main biological effect discussed for high RF exposure.",
+      "fr": "Revoyez le principal effet biologique abordé pour une forte exposition RF."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-08",
+    "sectionAnchor": "rf-exposure-and-nearby-people"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-008-006.\n\nWhy the correct answer is right: A voltage regulator in a linear supply often dissipates heat equal to voltage drop times load current, so it commonly needs a heat sink.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Transformer\": A transformer is sized for core and winding heating, but it is not the series control element dropping excess DC voltage as heat.\n- sourceIndex 2: \"Rectifier\": Rectifiers dissipate diode-drop heat, but the regulator usually has the larger continuous voltage-drop times load-current loss.\n- sourceIndex 3: \"Filter\": The filter stores and smooths energy in capacitors or inductors; it is not the stage normally mounted to a heat sink to shed regulator loss.",
+    "en": "Question B-003-008-006.\n\nWhy the correct answer is right: A voltage regulator in a linear supply often dissipates heat equal to voltage drop times load current, so it commonly needs a heat sink.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Transformer\": A transformer is sized for core and winding heating, but it is not the series control element dropping excess direct-current (DC) voltage as heat.\n- sourceIndex 2: \"Rectifier\": Rectifiers dissipate diode-drop heat, but the regulator usually has the larger continuous voltage-drop times load-current loss.\n- sourceIndex 3: \"Filter\": The filter stores and smooths energy in capacitors or inductors. It is not the stage normally mounted to a heat sink to shed regulator loss.",
     "fr": null
   },
   "citations": [

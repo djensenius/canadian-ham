@@ -1,0 +1,155 @@
+---
+id: TASK-71
+title: Measured-contrast verification for audit contrast findings
+status: Done
+assignee:
+  - '@worker'
+created_date: '2026-10-23 12:50'
+updated_date: '2026-10-23 14:16'
+labels:
+  - accessibility
+  - tests
+dependencies: []
+priority: high
+ordinal: 150000
+---
+
+## Description
+
+<!-- SECTION:DESCRIPTION:BEGIN -->
+Owner-delegated decision 2026-10-22 (owner: make the best decisions you can). XCTest's performAccessibilityAudit reports contrast findings on fully visible, visibly high-contrast lesson and lesson-quiz text in the new TASK-46.5 and TASK-46.6.1 tests (e.g. 'Correct 820 / 1 000 = 0.82 A…' on the success panel, a Try-it intro paragraph, 'Question 1 of 1'), while main's existing tests pass. Evidence is in TASK-65 and /tmp/task-46.6.1-iphone-final-failure-evidence.json. Add a shared UI-test helper that runs the full default audit and, for contrast findings only on a non-nil element, measures the WCAG contrast ratio from the element screenshot pixels and ignores the finding only when the measured ratio is at least 4.5:1, logging the label, frame and ratio. Measurement failure or a ratio below 4.5:1 still fails; all non-contrast issues still fail. Used only by the new TASK-46.5 and TASK-46.6.1 audits unless a later decision widens it.
+<!-- SECTION:DESCRIPTION:END -->
+
+## Acceptance Criteria
+<!-- AC:BEGIN -->
+- [x] #1 A shared helper measures text/background contrast from the element screenshot (WCAG relative luminance), ignores contrast findings only when the measured ratio >= 4.5:1, and logs label, frame and ratio; non-contrast, nil-element, unmeasurable and < 4.5:1 findings fail
+- [x] #2 Unit-style tests prove the measurement on synthetic images: dark-on-cream passes, mid-grey-on-cream (< 4.5:1) fails, two-colour panels and anti-aliased text are handled, and a uniform image is unmeasurable
+- [x] #3 AGENTS.md records the dated owner-delegated decision and its scope; existing helpers and existing tests are unchanged
+- [x] #4 Targeted proof: the helper passes on the known false-positive screens and fails on a deliberately low-contrast DEBUG-only fixture or an equivalent synthetic proof
+<!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Inspect failure screenshots and existing UI-test audit/target conventions.
+2. Add a pure quantized WCAG contrast measurement helper, strict default-audit wrapper, synthetic proofs and three exported element-image resources; document the narrow approved scope.
+3. Regenerate XcodeGen twice and verify no second-run changes; run only the new pure UI-test class on iPhone 17 Pro through nohup/xbuild, polling its log. Verify the test guard flags the handler.
+4. Record evidence per AC, finalize TASK-71, commit and push the task branch (no PR).
+
+5. Review fixes B1/B2: report the minimum significant non-background contrast, reject ambiguous multi-backgrounds, and discard only colour-line blends supported by spatial edge evidence; retain existing proofs and add mixed blocks/text/icon/panel/black-band and bold 3× edge-band regressions.
+6. Review fixes S1/S2: reject empty/off-window/under-nav frames before screenshots; attach label/frame/ratio or unmeasurable for every contrast failure. Update measurement docs.
+7. Run the targeted proof class via nohup/xbuild and grep polling, recheck the test guard with dated marker, record all results, restore Done, commit and push without a PR.
+
+8. Copilot PR #1007: add exact inset-panel (84% cream/12.8% #404040/3.2% #201C18) and chained-blend (#908A80/#58534C/#201C18, x/x+2/x+4, 3.2% each) regressions; run both against the previous implementation through nohup/xbuild with grep polling to prove failures.
+9. Select foreground cores in descending distance from background luminance; exclude blends only against already retained cores with fraction <=0.9. Require >=50% of each retained cluster to be within three native pixels of the background; reject foreground-dominated local neighborhoods as ambiguous. Keep all existing tests including real screenshots and bold edges.
+10. Run the complete targeted proof class on iPhone 17 Pro, inspect screenshot evidence, document results, commit/push, and reply to/resolve both Copilot threads via GraphQL.
+
+Supervisor clarification for step9: validate retained-cluster BOUNDARY pixels (4-neighbour boundary, treating that cores excluded antialias blends as the same region), not every filled pixel. Require >=50% of boundary pixels near background within radius2; reject boundaries dominated by another retained foreground. This preserves all original thick synthetic blocks/icons without increasing radius or altering any fixtures.
+
+11. Copilot PRRT_kwDOUxZq_M6vn59C: add the exact inset-panel plus separate 16x40 #201C18 rectangle at (5,10) regression and prove it fails on 3478f40e using nohup/xbuild and grep polling. Label retained-core components with four-connectivity; assign each excluded blend pixel to its nearest supporting core component within the unchanged radius-two neighborhood (deterministic ties). Independently validate every component with at least four native pixels, preserving minimum-ratio semantics and existing thresholds. Run the full targeted class, especially screenshots and bold proofs; report any nil rather than loosen. Document, commit/push, reply to and resolve the thread via GraphQL.
+
+12. Supervisor-approved refinement after screenshot failures: keep four-connectivity and four-pixel component threshold; identify sub-2% boundary-support-only blends with the identical fraction<=0.9/RGB8/every-pixel radius2 core+background rules. Count support only through four-connected blend paths to background, and only for the validated retained core colour. Never alter minimum ratios. Add the thin dark strokes/subthreshold inset-panel AA-edge adversarial proof, rerun all29 tests, and retain diagnostic evidence.
+
+13. Final adversarial hardening: add exact partial-overlap and 1.9% grey fixtures and replace the weak subthreshold support test with a per-pixel-valid but background-disconnected blend fixture. Prove both attacks red on 5da09a53 and the strengthened test red with reachability temporarily bypassed; measure the baseline class runtime. Precompute per-bin pixel indices, reject retained low-contrast boundary pairs and >=6-pixel subthreshold non-blends below4.5, preserving all thresholds otherwise. Rerun all three screenshots, report any nil and cluster diagnostics without loosening. Document outline/tiny-component/quantization limits and full class before/after/per-test results; run targeted iPhone17Pro via nohup/xbuild and grep polling, guard/diff checks, commit/push.
+
+14. Supervisor decision supersedes step13 attack1 guard: omit the proposed >=6px subthreshold rejection and its failing test after all3 real screenshots became nil; document the confirmed false-pass risk and token-check mitigations. Preserve strict partial-overlap rejection, stronger reachability fixture/mutation proof, per-bin index optimization and all other thresholds. Compare identical30-test class before/after optimization, finalize targeted evidence and push for independent review.
+
+15. Copilot PRRT_kwDOUxZq_M6von_z: add the exact two-core extension of the subthreshold-panel reachability fixture (#002060 cores at x28/38 plus (70,10) 10x30 block; #808CA4 blends at x30/36). Prove the false 14.4268 ratio on 93f71274 through nohup/xbuild/grep, restrict every blend flood-fill edge to the same supporting retained-core key, and keep the endpoint core check. Run the complete iPhone17Pro measurement class including all three real screenshots; escalate any nil without loosening. Record per-test evidence, finalize, commit/push and reply to/resolve only the assigned GraphQL thread.
+<!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Implementation and evidence (2026-10-23):
+AC1: UITestContrastMeasurement.swift implements native-pixel CGImage -> 5-bit RGB clusters (original-channel means), dominant background, >=2% candidate text, WCAG sRGB luminance/ratio; nil for uniform, transparent or insufficient foreground. auditVerifyingMeasuredContrast calls the full DEFAULT audit, guards exact .contrast + non-nil element + measurable screenshot + ratio>=4.5, logs label/frame/unrounded ratio in keepAlways XCTContext attachment, returns false otherwise. Code compiled by targeted iOS proof; no live audit call site changed.
+AC2: UITestContrastMeasurementTests: 12/12 passed, 0 skipped/failures on iPhone 17 Pro iOS27.0. Includes near-black/cream15.9943, #9A9A9A/cream2.6591<4.5, pale/green10.5978, antialiased15pt high/low text, <2% high-contrast tail, uniform/tiny foreground/transparent nil, plus 3 real element exports. Final class2.372s; per-test results in docs/testing/task-71-measured-contrast.md. Initial12/12 passed too; fixed a new XCTContext actor warning with @MainActor and reran only this class. Final new Swift files have no warnings/errors.
+AC3: AGENTS.md records owner-delegated decision2026-10-22 TASK-71 limited to NEW TASK-46.5/TASK-46.6.1 audits. git diff main --exit-code on all3 existing UI-test source files passed: existing tests/helpers byte-identical. Added only iOS UI-test target source/resources via project.yml; regenerated XcodeGen twice; full generated diff and project.pbxproj byte-identical on second run.
+AC4: Unmodified exported Correct-feedback light8.344323837747055:1/dark11.403364958858397:1 and Try-it paragraph16.336427704401043:1 pass; deliberately low-contrast synthetic panel and antialiased text assert2.6591<4.5. Provenance, SHA256 and actual attachment ratios in docs/testing/task-71-measured-contrast.md. Final log /tmp/task-71-contrast-tests-final.log; bundle /tmp/task-71-contrast-tests-final.xcresult; summary /tmp/task-71-final-summary.json; measurements /tmp/task-71-final-proof-attachments/. Run used nohup/xbuild with -only-testing:CanadianHamUITests/UITestContrastMeasurementTests on the single requested destination and grep polling; no builds killed. No app launches in pure tests, no live screen-integration claim.
+Guard: self-test passed. node scripts/check-test-guard.mjs --base main --head HEAD failed as expected(exit1) and flagged new handler/default audit call at UITestContrastMeasurement.swift72-73. Same check with TEST_GUARD_PR_BODY="Test-guard-approved: owner decision 2026-10-22" passed(exit0). Logs /tmp/task-71-test-guard-{unapproved,approved}.log. Required future PR marker documented. git diff --check passed. macOS/tvOS/visionOS and full iOS suites skipped: only the iOS UI-test target changed; integration into the two task branches remains separate. No PR opened.
+
+Internal review fixes (2026-10-23), B1/B2/S1/S2/S3:
+AC1/B1: minimum WCAG ratio across all remaining >=2% non-background clusters replaces maximum luminance difference. Discard only colour-line blends (8 RGB units perpendicular tolerance) with EVERY pixel within two native pixels of both background and significant core. This spatial constraint prevents solid or separate blend-coloured grey text from being discarded. Background <=50%, another >=25% tone, and significant <=1.1:1 noise fail closed with nil. S1: non-empty frame must be fully window-contained and below navigation/status bars before screenshot; pure geometry test proves rejection. S2: BOTH successful and failed contrast findings attach keepAlways label/frame/ratio or unmeasurable; non-contrast always false.
+AC2/B2/S3: all original 12 tests retained; 11 added for 3% high+low blocks, exact colour-line solid block, mixed bold15pt3x lines, 5.4% dark icon+grey text, cream/green panel+dark text, equal large tones, near-background noise, 3% black offscreen band+grey text, significant6.4% synthetic AA bands, actual bold3x significant AA cluster coverage, and geometry. Actual bold15pt3x edge cluster2.6666667% passes core15.9942758247219:1, so no cutoff/tolerance widening needed.
+AC3: scope remains only new TASK-46.5/46.6.1 audits. Existing pre-TASK-71 UI-test files unchanged; app code, existing audit helpers/calls, project membership and resources untouched by fix. XcodeGen not needed.
+AC4: all23 targeted iPhone17Pro/iOS27.0 tests PASSED,0 failures/skips, class3.469s, xbuild exit0. Re-run real screenshot ratios remain8.344323837747055/11.403364958858397/16.336427704401043:1. Mixed grey tests assert2.6591 within0.01/0.1 or panel nil. Log/tmp/task-71-review-tests.log; bundle/tmp/task-71-review-tests.xcresult; summary/tmp/task-71-review-summary.json; exported keepAlways proofs/tmp/task-71-review-proof-attachments/. Run used nohup bash /tmp/task-71-review-tests.sh and grep polling; no other builds killed. Detailed per-test results in docs/testing/task-71-measured-contrast.md. No Swift errors/warnings in changed files (unrelated AppIntents metadata warning). No live app launch/audit integration claimed. Other platforms/full suites skipped because only iOS UI-test target changed.
+Guard self-test passed; unapproved main...HEAD correctly failed(exit1) at handler/default audit lines128/136; same diff with standalone Test-guard-approved: owner decision 2026-10-22 passed(exit0). Logs/tmp/task-71-review-test-guard-{self,unapproved,approved}.log. git diff --check passed. Implementation commit6b6af119c04597bcca616f71d75ed0fd7f9671fd. Independent re-review remains required; no PR opened.
+
+Coordinator, after the re-review (approve with notes): closed the mutual-blend gap. A cluster is an antialiasing blend only toward a core with fraction <= 0.9, so two near-identical colours across a 5-bit bin boundary cannot each drop the other. New regression testInterleavedNearIdenticalGreysCannotHideEachOtherBesideDarkText fails with the old rule (exit 65) and passes with the fix. iPhone 17 Pro UITestContrastMeasurementTests 24/24 passed.
+
+Reopened only for the two user-confirmed Copilot findings PRRT_kwDOUxZq_M6vncjQ and PRRT_kwDOUxZq_M6vncj3; conservative spatial background validation and retained-core ordering, no scope widening.
+
+Pre-fix proof on original helper e2ea6e06: both exact new regressions FAILED as expected on iPhone17Pro (xbuild exit65). Chained blends returned15.9942758247219:1 instead of low3.24; inset panel returned9.797721859358917:1 although text/panel1.63. Log/tmp/task-71-copilot-regressions-before.log; bundle/tmp/task-71-copilot-regressions-before.xcresult. Used nohup and grep polling; no builds killed.
+
+Copilot PR#1007 fixes2026-10-23: implementation e22a6405403c6484f468dc2111befbcf618a1c6a, only measurement helper/two new proof methods/evidence doc changed. Permanent cores selected farthest-from-background luminance first; blend exclusions require an already retained core and fraction<=0.9. Local-background validation uses supervisor-approved four-neighbour BOUNDARIES, not filled interiors, including only the blends each core actually supported. >=50% of boundary pixels need background within2 native pixels; >50% bordering another retained foreground, or absent boundary, fails closed with nil. No fixtures, old assertions, colour/coverage tolerances, app code, existing audit helpers or call sites changed.
+Pre-fix proof: both exact regressions failed on previous helper(e2ea6e06), exit65,2failed/0passed/0skipped. Inset84%cream/12.8%#404040/3.2%#201C18 returned9.797721859358917; chained#908A80/#58534C/#201C18 x/x+2/x+4 each3.2% returned15.9942758247219. Log/tmp/task-71-copilot-regressions-before.log, bundle/tmp/task-71-copilot-regressions-before.xcresult, summary/tmp/task-71-copilot-before-summary.json.
+Post-fix complete targeted class iPhone17Pro/iOS27.0:26PASSED/0failed/0skipped, exit0, class4.886s. All24 existing tests unchanged and passing, including actual bold15pt3x edge2.6667% ratio15.9942758247219; synthetic6.4% edge bands; all3 real screenshot ratios non-nil/unchanged8.344323837747055,11.403364958858397,16.336427704401043. No screenshot ambiguity or loosening. Log/tmp/task-71-copilot-tests.log, bundle/tmp/task-71-copilot-tests.xcresult, summary/tmp/task-71-copilot-summary.json, keepAlways proofs/tmp/task-71-copilot-proof-attachments/. Per-test results and exact command in docs/testing/task-71-measured-contrast.md. Both xbuild runs launched via nohup with grep polling, single iPhone17Pro destination; no builds killed. No changed-source Swift warnings/errors; unrelated AppIntents metadata warning only.
+Test guard self-test passed; main...e22a6405 unapproved failed as expected(exit1), with existing PR-body dated approval marker passed(exit0), flags handler/default-audit lines175/183. Logs/tmp/task-71-copilot-test-guard-{self,unapproved,approved}.log. git diff --check passed. Full suites and macOS/tvOS/visionOS skipped because only iOS UI-test target changed. No XcodeGen required. Independent reviewer gate remains; measured contrast is still a dominant-background/<2% coverage heuristic, not semantic text recognition.
+
+Reopened solely for the user-confirmed disconnected-region masking finding PRRT_kwDOUxZq_M6vn59C on PR #1007. Scope remains measurement/proof/docs only.
+
+Exact requested mixed-background fixture failed as expected before the fix: 9.797721859358917:1 (xbuild exit65), log/bundle /tmp/task-71-components-before.{log,xcresult}. First per-component run: all three real exported screenshots became nil while bold/AA proofs and adversarial regressions passed. Stopped and escalated rather than loosening. Supervisor authorized diagnostic analysis and principled 8-connectivity/background-connected blend interpretation under radius2, >=50% support, and all existing adversarial-test constraints; tiny-component exemption only beside a validated same-cluster component.
+
+Diagnostics isolated the nil screenshots to two-pixel-thick equal signs/hyphens: dark feedback two48px components, light feedback one48px, Try-it four32px; only4 boundary pixels each directly background-supported, no other-retained neighbours, all adjacent AA shades below2% and thus absent from blendCores. Full details /tmp/task-71-components-diagnostics.log. Supervisor explicitly approved subthreshold support-only blends using SAME strict blend tests plus 4-connected background reachability, with an additional thin-stroke inset-panel AA-edge regression. Host CGImage check with this refinement restores all3 original ratios unchanged; no radius/50%/blend tolerance changes.
+
+PR#1007 disconnected-component fix implementation b7448103b29fe51ab9939e85385269552f8dd954: four-connected retained cores, nearest supporting-core assignment of each excluded blend pixel (radius2, row-major squared-distance ties), independent >=4-native-pixel component boundary rules (>=50% supported, <=50% other-retained foreground); minimum ratio untouched. Exact requested mixed fixture proven red on 3478f40e; added four-pixel-glyph and supervisor-required subthreshold-panel-AA-edge adversarial tests. First screenshot nils were escalated; explicitly approved subthreshold support-only blends use SAME fraction<=.9/RGB8/every-pixel radius2 core+background checks, plus four-connected reachability to background, supporting only their validated core colour. Never alter ratio, merge components, enlarge radius or exempt tiny glyphs. Detailed diagnostics and all29 per-test results in docs/testing/task-71-measured-contrast.md.
+
+Final iPhone17Pro/iOS27.0 targeted class29/29 PASSED,0 failures/skips, exit0, class23.466s. Log/tmp/task-71-components-final.log, bundle/tmp/task-71-components-final.xcresult, summary/tmp/task-71-components-final-summary.json, keepAlways proofs/tmp/task-71-components-proof-attachments/. Real ratios unchanged8.344323837747055/11.403364958858397/16.336427704401043; boldedge2.6667% ratio15.9942758247219. All26 prior methods, visibility helper and audit wrapper byte-identical to3478f40e. All3 xbuild runs via nohup/grep polling, single requested iPhone, no builds killed. No changed-source Swift warnings/errors; unrelated AppIntents metadata warning only. No app launch or live audit integration. Full iOS suites and macOS/tvOS/visionOS skipped: only iOS UI-test target changed, no membership changes/XcodeGen needed.
+
+Guard self-test passed; main...b7448103 unapproved failed as expected(exit1), current PR-body approval passed(exit0), focused3478f40e...b7448103 passed with no guarded changes. Logs/tmp/task-71-components-test-guard-{self,unapproved,approved,fix}.log. git diff3478f40e --check passed. Independent review and CI still required. Dominant-background/5-bit/<2%-ratio heuristic limitations and 1-3px spatial speck exclusion remain documented.
+
+Reopened solely for the user-requested adversarial final hardening pass (review attacks1/6, reachability mutation proof, per-bin performance, remaining-limits docs); no app or audit scope changes.
+
+Final-hardening pre-fix proof on5da09a53: full31-test baseline29pass/2fail,22.662s,exit65. Exact partial overlap returned9.797721859358917; exact1.9%grey beside black returned19.84419971993603. Strengthened support test passed normally but failed at15.9942758247219 when backgroundConnectedBlend was temporarily replaced with true (single-test exit65); mutation restored. Logs/bundles /tmp/task-71-hardening-{before,reachability-mutant}.{log,xcresult}.
+
+DECISION UPDATE (supervisor final hardening): requested >=6px/<2% non-blend/<4.5 guard made all3 real screenshots nil. Reported full per-bin counts/RGB/ratio/bounds in /tmp/task-71-hardening-cluster-diagnostics.log. Dark6bins19–852px,light10bins42–686px,Try-it8bins27–647px,ratios1.012–4.3505. Supervisor explicitly DROPPED attack1 guard because rendering residue is indistinguishable under those tests; no blend-criteria diagnosis/loosening. Removed temporary guard and its failing proof from final source; preserve red proof/docs as an explicit known limit including gradients. Continue partial-overlap/reachability/per-bin optimization/docs only; narrow scope/logged ratios/token-test provenance are mitigations.
+
+Final-hardening green validation: identical30-test class before pixel-index optimization20.401s,after9.328s (54.3% lower/2.19x),both30pass/0fail/0skip,xbuildexit0. Before log/bundle /tmp/task-71-hardening-performance-before.{log,xcresult};final /tmp/task-71-hardening-final.{log,xcresult}, summary /tmp/task-71-hardening-final-summary.json,attachments /tmp/task-71-hardening-proof-attachments/. Final screenshot ratios unchanged8.344323837747055/11.403364958858397/16.336427704401043;boldedge2.6667% ratio15.9942758247219. All4xbuildruns via nohup/grep,singleiPhone17Pro/iOS27.0,no builds killed. Only unrelated AppIntents warning in final build.28old tests,wrapper,visibility gate byte-identical to5da09a53;stronger same-named support test plus1new partial-overlap test. Docs cover attack1 confirmed/deferred,outline/halo perWCAG,tinycomponent residual,quantization,and exact tests/diagnostics/per-test runtimes. Narrow audit scope/app/resources/project membership untouched;fullsuites/otherplatforms skipped. Test guard and independent re-review pending.
+
+Final-hardening implementation d57d10ced6eb95b052aaf685023368dfd0bd7bd7; guard/evidence doc follow-up cdfbdc4f. Guard self-test passed;focused5da09a53...d57d10ce passed(no guardedchanges);main...HEAD unapproved failedasexpected(exit1),dated-marker approved passed(exit0),and actualPR1007 body approved passed. Logs /tmp/task-71-hardening-test-guard-{self,focused,unapproved,approved,pr-body}.log. gitdiff5da09a53--check passed,no staged files. No source edits after final30/30 run;later commits are docs/Backlog only. Done pending required independent re-review and PR CI; attack1 under2%/gradient false-pass risk explicitly accepted as remaining limit by supervisor,not silently fixed or hidden.
+
+Reopened solely for user-confirmed cross-core blend-reachability finding PRRT_kwDOUxZq_M6von_z on PR#1007. No changes to audit scope, app code, fixtures/resources or existing thresholds.
+
+Cross-core follow-up implementation 7d15f3c5f15be76da02fe9ba1a9171d03cc77f0e: flood-fill transitions require identical supporting retained-core key, keeping direct-background seeds and endpoint core validation unchanged. Exact second-core regression added alongside unchanged original support test: #002060 columns x28/38,y32...47 and10x30 block(70,10); #808CA4 columns x30/36,y32...47. On unchanged93f71274 helper the new fixture failed at14.426790204267782:1 (actual inset contrast1.6324:1), exit65,1failed/0passed/0skipped,test0.736s. Final fixture asserts nil and passed0.072s. Pre-fix log/bundle/summary /tmp/task-71-cross-core-before.{log,xcresult} and /tmp/task-71-cross-core-before-summary.json.
+Final full targeted class iPhone17Pro/iOS27.0:31pass/0fail/0skip,exit0,class13.365s; /tmp/task-71-cross-core-final.{log,xcresult}, /tmp/task-71-cross-core-final-{summary,tests}.json, keepAlways attachments /tmp/task-71-cross-core-proof-attachments/. All30 existing test methods, visibility gate and audit wrapper byte-identical to93f71274. Three real screenshots non-nil/unchanged8.344323837747055,11.403364958858397,16.336427704401043:1; boldedge2.6667% ratio15.9942758247219. Both xbuild runs via nohup/grep,one requested iPhone,no builds killed. No changed-source Swift warnings/errors; unrelated AppIntents warning only. Red run had post-test simctl cleanup warning; green run did not. No app launch/live audit integration. Other platforms/full iOS suites skipped: only iOS UI-test code changed,no target/resource changes or XcodeGen required. No thresholds, fixtures, blends or ratio calculation loosened; documented dominant-background/5-bit/sub2%/tiny-component limits unchanged.
+Guard self-test and focused93f71274...7d15f3c5 passed(no guardedchanges);main...7d15f3c5 unapproved failedasexpected(exit1),actualPR1007 body approved passed(exit0). Logs /tmp/task-71-cross-core-test-guard-{self,focused,unapproved,pr-body}.log. gitdiff93f71274--check passed. Detailed evidence and per-test table in docs/testing/task-71-measured-contrast.md. Independent reviewer gate and PR CI still required.
+Per-test final results:
+- testAntialiased15PointBoldEdgeCoverageAt3x: PASS (4.675s)
+- testAntialiased15PointBoldMixedContrastLinesFailAt3x: PASS (0.180s)
+- testAntialiased15PointLowContrastTextStillFails: PASS (0.165s)
+- testAntialiased15PointTextMeasuresExpectedContrast: PASS (0.156s)
+- testBlackOffscreenBandDoesNotRescueMidGreyText: PASS (0.075s)
+- testChainedBlendsCannotUseAnExcludedCore: PASS (0.082s)
+- testContrastMeasurementRejectsInvisibleFrames: PASS (0.065s)
+- testDarkIconDoesNotRescueMidGreyText: PASS (0.169s)
+- testDifferentCoreBlendsCannotBridgeInsetDarkStrokesToBackground: PASS (0.072s)
+- testDisconnectedDarkBlockCannotRescueInsetLowContrastText: PASS (0.072s)
+- testEqualLargeTonesAreUnmeasurable: PASS (0.069s)
+- testExportedCorrectFeedbackDarkPasses: PASS (0.222s)
+- testExportedCorrectFeedbackLightPasses: PASS (0.195s)
+- testExportedTryItParagraphLightPasses: PASS (4.660s)
+- testFourPixelInsetGlyphCannotBorrowAnotherComponentsBoundary: PASS (0.351s)
+- testInsetPanelCannotUseTheSurroundingCreamAsTextBackground: PASS (1.040s)
+- testInterleavedNearIdenticalGreysCannotHideEachOtherBesideDarkText: PASS (0.079s)
+- testMidGreyOnCreamFails: PASS (0.077s)
+- testNearBlackOnCreamPasses: PASS (0.068s)
+- testOnlyTinyForegroundIsUnmeasurable: PASS (0.071s)
+- testPaleOnDarkGreenPasses: PASS (0.080s)
+- testPartiallyOverlappingStrokesCannotPassAgainstCream: PASS (0.068s)
+- testSignificantAntialiasedEdgeBandsMeasureCoreContrast: PASS (0.082s)
+- testSignificantNearBackgroundNoiseIsUnmeasurable: PASS (0.068s)
+- testSignificantNearBlackAndMidGreyBlocksDoNotPass: PASS (0.079s)
+- testSolidBlendColourIsNotMistakenForAntialiasing: PASS (0.073s)
+- testSubthresholdAntialiasedPanelEdgeCannotSupportInsetDarkStrokes: PASS (0.071s)
+- testTinyHighContrastTailDoesNotRescueLowContrastText: PASS (0.084s)
+- testTransparentImageIsUnmeasurable: PASS (0.070s)
+- testTwoTonePanelWithDarkTextIsUnmeasurable: PASS (0.071s)
+- testUniformImageIsUnmeasurable: PASS (0.074s)
+
+PR#1007 updated with latest command, all31 per-test results and red/green evidence. Source commit7d15f3c5f15be76da02fe9ba1a9171d03cc77f0e pushed successfully. Replied to assigned thread via GraphQL at https://github.com/djensenius/canadian-ham/pull/1007#discussion_r4360494374; resolveReviewThread returned isResolved:true for PRRT_kwDOUxZq_M6von_z. Only follow-up bookkeeping changed after green tests; independent review and CI remain required.
+<!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Cross-core reachability fix: each flood-fill step stays within blends assigned to the same retained-core key; boundary endpoints still require their own core. Exact two-core fixture failed14.426790204267782:1 on93f71274 and now asserts nil. iPhone17Pro full class31/31pass,0fail/skip,13.365s;all30 prior tests unchanged,all3 real screenshot ratios non-nil/unchanged. Source7d15f3c5f15be76da02fe9ba1a9171d03cc77f0e pushed;guard self/focused/approved wholePR pass. nohup/grep used,no builds killed,no thresholds or audit scope loosened. PR1007 body has all31 per-test results; assigned Copilot thread replied/resolved via GraphQL. Existing heuristic limits unchanged. Await independent reviewer gate and CI.
+<!-- SECTION:FINAL_SUMMARY:END -->

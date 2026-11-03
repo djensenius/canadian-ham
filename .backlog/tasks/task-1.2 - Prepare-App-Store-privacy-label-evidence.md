@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-02 04:47'
+updated_date: '2026-10-16 08:04'
 labels:
   - release
   - apple
@@ -53,6 +53,8 @@ Assemble the evidence for the App Store privacy label 'Data Not Collected' and t
 Prepared docs/release/privacy-label-evidence.md and linked it from docs/privacy.md. Updated apps/web Settings privacy copy in English and French to match docs/privacy.md, including no accounts/analytics/third-party requests/server-side progress storage and static-host log caveat. Validation snapshot on commit 788b49f95f8387525da42bacb4b7c81d2cbb4331: plutil parsed PrivacyInfo.xcprivacy with no collected data/tracking/required-reason APIs; pnpm check:apple-network passed; pnpm test:apple-network passed; pnpm --filter @canadian-ham/web test passed (10 files, 81 tests); pnpm build:web passed with a non-fatal chunk-size warning; pnpm --filter @canadian-ham/web audit:urls passed. AC #3 remains unchecked because the release commit does not exist yet; rerun required commands on the release commit before checking it.
 
 Also stays In Progress because it depends on task-1.1 (ISED permission), which is not done. Review fixes: added visionOS Body and Surroundings rows, documented the RBR-4 citation link (opens in the system browser on tap) in the evidence and docs/privacy.md, removed a local path, and aligned the French privacy copy ('L’application', 'fichiers').
+
+Blocked (2026-10-16): the remaining criteria run on the release commit or need the recorded ISED permission (task-1.1). Nothing to do until permission arrives.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary

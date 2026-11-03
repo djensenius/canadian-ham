@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-001-015-008",
+  "questionId": "B-001-015-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "A band’s name is roughly its wavelength. Convert with f (MHz) ≈ 300 / λ (m).",
+      "fr": "Le nom d’une bande correspond approximativement à sa longueur d’onde. Convertissez avec f (MHz) ≈ 300 / λ (m)."
+    },
+    {
+      "level": 2,
+      "en": "300 ÷ 20 gives the frequency the name suggests, but band names are rounded. Use the 40 m lower edge from the band table and the doubling pattern of HF lower edges: as the band name halves from 40 m to 20 m, the lower edge doubles. Find the 20 m lower edge that way and look for the range that starts there.",
+      "fr": "300 ÷ 20 donne la fréquence suggérée par le nom, mais les noms de bande sont arrondis. Utilisez la limite inférieure de la bande de 40 m dans le tableau des bandes et la régularité de doublement des limites inférieures HF : quand le nom passe de 40 m à 20 m, la limite inférieure double. Trouvez ainsi la limite inférieure de la bande de 20 m et cherchez la plage qui commence à cette valeur."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-04",
+    "sectionAnchor": "reference-facts-band-edges-contain-the-whole-signal"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

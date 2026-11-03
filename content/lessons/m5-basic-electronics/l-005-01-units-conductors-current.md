@@ -22,7 +22,7 @@ status: draft
 ---
 # Units, conductors, and current
 
-Radio starts with a few simple measurements. A receiver dial, a power supply label, a capacitor value, and a battery current reading all use the same metric-prefix idea: a prefix moves the decimal point by a known amount.
+Radio starts with a few simple measurements. A receiver dial, a power supply label, a capacitor value, and a battery current reading all use metric prefixes. A prefix moves the decimal point by a known amount.
 
 Do not try to memorize every possible conversion as a separate fact. Learn the common prefixes, keep the unit attached to the number, and ask whether the answer should become larger or smaller when you change units.
 
@@ -50,44 +50,112 @@ A prefix tells you how many base units are being counted. In Basic exam electron
 | micro | µ | a millionth | 4 mH = 4 000 µH |
 | pico | p | a trillionth | 0.47 µF = 470 000 pF |
 
+::figure metric-prefix-ladder
+Alt text: Metric prefix ladder from giga to pico showing multiply or divide direction arrows and a skipped nano marker between micro and pico.
+Text equivalent:
+- Prefix order in the lesson table: G giga, M mega, k kilo, base unit, m milli, µ micro, p pico; the figure marks nano as skipped between micro and pico.
+- Moving toward smaller units multiplies by 1 000 for each adjacent active step through micro; moving toward larger units divides by 1 000 for those same steps.
+- The micro-to-pico step is x 1 000 000 toward pico, or ÷ 1 000 000 toward micro, because nano is only shown as a skipped marker and is not included in this table.
+- Example: 14.230 MHz = 14 230 kHz.
+::
+
 When you change from a large unit to a smaller unit, the number gets larger. When you change from a small unit to a larger unit, the number gets smaller.
+
+### Memory trick: prefix ladder
+
+- Helps remember: the usual electronics prefix order from large to small.
+- Trick: giga, mega, kilo, base, milli, micro, nano, pico can be remembered as "Great Mighty Kings Make Micro Nano Pico."
+- Limit: the sentence skips the base unit and still has several M words, so use it with the table rather than by itself. This lesson's table skips nano; most adjacent rows differ by 1 000, but micro to pico is a jump of 1 000 000 when nano is not shown.
 
 ### Worked example: MHz to kHz
 
-A frequency is 14.230 MHz. Mega is the next larger prefix above kilo, and each step here is a factor of 1 000.
+A frequency is 14.230 MHz.
 
-- Mega to kilo is a single prefix step, so multiply the MHz value by 1 000.
-- 14.230 MHz = 14.230 x 1 000 kHz.
-- 14.230 x 1 000 = 14 230.
-
-So 14.230 MHz is 14 230 kHz.
+- Given: frequency = 14.230 MHz; mega is 1 000 times kilo.
+- Find: the frequency in kilohertz.
+- Formula: kHz = MHz x 1 000.
+- Substitute: 14.230 x 1 000 = 14 230.
+- Answer: 14.230 MHz = 14 230 kHz.
+- Sanity check: kilohertz is the smaller unit, so the number is larger.
 
 ### Worked example: mA to A
 
-A receiver accessory draws 450 mA. Milli means a thousandth of an ampere.
+A receiver accessory draws 450 mA.
 
-- Milli is a thousandth of the base unit.
-- To convert milliamperes to amperes, divide by 1 000.
-- 450 mA / 1 000 = 0.45 A.
-
-So 450 mA is 0.45 amperes.
+- Given: current = 450 mA; milli means a thousandth of the base unit.
+- Find: current in amperes.
+- Formula: amperes = milliamperes / 1 000.
+- Substitute: 450 / 1 000 = 0.45.
+- Answer: 450 mA = 0.45 A.
+- Sanity check: amperes are larger units, so the number is smaller.
 
 ### Worked example: pF to µF
 
-A small bypass capacitor is marked 470 000 pF. Pico is much smaller than micro.
+A small bypass capacitor is marked 470 000 pF.
 
-- A microfarad contains a million picofarads.
-- 470 000 pF is 0.47 of that amount, so it is 0.47 µF.
+- Given: capacitance = 470 000 pF; a microfarad contains a million picofarads.
+- Find: capacitance in microfarads.
+- Formula: µF = pF / 1 000 000.
+- Substitute: 470 000 / 1 000 000 = 0.47.
+- Answer: 470 000 pF = 0.47 µF.
+- Sanity check: picofarads are tiny, so the number is much smaller in microfarads.
 
-This is a good reminder that capacitor values may look huge in picofarads but ordinary in microfarads.
+### Faded practice: finish a prefix change
+
+A coil label gives millihenries, but your parts list uses microhenries.
+
+- Given: L = 2.7 mH; 1 mH = 1 000 µH.
+- Find: the same inductance in microhenries.
+- Formula: µH = mH x 1 000.
+- Complete: 2.7 x ___ = ___ µH.
+- Sanity check: Should smaller units give a larger number?
+
+Fill the gaps before checking below.
+
+### Check your work: finish a prefix change
+
+2.7 x 1 000 = 2 700 µH. The coil value stayed the same; only its unit changed.
+
+### In the real world: reading a charger label
+
+A phone charger may say 9.0 V at 3.0 A. The volts tell the electrical pressure. The amperes tell the current the charger can supply under that rating.
+
+The same label might also list watts. If it says 27 W, that matches P = I x E because 3.0 A x 9.0 V = 27 W. You will use that power formula in the next lesson.
+
+### Faded practice: finish a label power check
+
+A different charger label lists its output voltage and current.
+
+- Given: E = 8.0 V; I = 2.2 A.
+- Find: rated output power P.
+- Formula: P = I x E.
+- Complete: P = ___ A x 8.0 V = ___ W.
+- Sanity check: Should the power exceed 8 W when current exceeds 1 A?
+
+Fill the gaps before checking below.
+
+### Check your work: finish a label power check
+
+P = 2.2 x 8.0 = 17.6 W. This checks the label relationship, not a promise that every connected device draws that power.
+
+### Analogy: electrical pressure and voltage
+
+- Helpful part: pressure can push water through a pipe, like voltage can push charge through a circuit.
+- Limit: a cut water pipe can spill water, but a broken wire usually stops current because air is an insulator.
 
 ## Conductors, insulators, and semiconductors
 
-A conductor lets electric charge move easily. Copper, silver, gold, and aluminum are good conductors. Copper is widely used in radio equipment and house wiring because it conducts well and is practical to use.
+A conductor lets electric charge move easily. Silver, copper, gold, and aluminum are all good conductors. Copper conducts better than aluminum, and it is common in radio gear, power cables, and house wiring because it conducts well and is practical to use.
 
 An insulator resists current flow. Glass, air, porcelain, many plastics, Teflon, mica, and dry wood are common insulating materials. Insulators hold conductors apart so current goes where the circuit designer intended.
 
-A semiconductor is between those two behaviours. Silicon is the everyday semiconductor example. Carbon can appear in resistive materials, so treat it separately from both good metal conductors and common insulators. Semiconductors become very important in diodes and transistors, but this lesson is about the basic material categories.
+A semiconductor is between those two behaviours. Silicon is the everyday semiconductor example. Carbon conducts, but much worse than good metals. That is why carbon can be useful in resistive materials, but it is neither a good conductor nor a good insulator.
+
+### In the real world: a coax cable cross-section
+
+A coaxial cable is a good parts lesson in one object. The centre conductor carries signal current. Plastic insulation keeps it from touching the shield. The shield provides a return path and helps keep unwanted fields out.
+
+If the centre conductor touches the shield, the cable can become a short circuit. If the centre conductor breaks, the cable can become an open circuit. The conductor and insulator jobs both matter.
 
 ## Current, resistance, and conductance
 
@@ -95,31 +163,62 @@ Current is charge moving through a complete circuit path. The symbol for current
 
 Resistance is opposition to current flow. Its symbol is R, and its unit is the ohm. Low resistance means current can flow easily. High resistance means current has a harder path.
 
-Conductance is the inverse of resistance. If resistance is high, conductance is low. If resistance is low, conductance is high. For the Basic exam, the important word is inverse: conductance is the opposite way of describing how easy a path is.
+Conductance is the inverse of resistance. It describes how easily current can flow. If resistance is high, conductance is low. If resistance is low, conductance is high.
+
+### Misconception: current can cross any gap
+
+- Mistaken idea: current can keep flowing through a simple broken wire because voltage is still present.
+- Correction: current in an ordinary low-voltage circuit needs a complete conductive path. Air is normally an insulator.
 
 ## Voltage drop and polarity
 
-Voltage is electrical pressure or potential difference. When current flows through a resistance, some voltage is used across that resistance. That is a voltage drop.
+Voltage is electrical pressure or potential difference. When current flows through a resistance, some voltage appears across that resistance. That is a voltage drop.
 
-In a DC circuit, polarity names the direction or sign of the voltage and current path: positive and negative. Many radio accessories care about polarity. Reversing DC polarity can damage equipment.
+In a DC circuit, polarity names the positive and negative direction of the connection. Many radio accessories care about polarity. Reversing DC polarity can damage equipment.
 
 Temperature can change the resistance of a conductor. In many metal conductors, resistance rises as the conductor gets hotter. That is one reason hot wires and hot resistors deserve attention.
 
 ## Try it
 
-Do these in your head before checking the answer.
+Try these before reading the feedback below.
 
-1. A trail radio beacon produces 750 mW. Since milli means a thousandth, 750 mW is 0.75 W.
-2. A resistor is marked 4.7 kilohms. Kilo means 1 000, so 4.7 kilohms is 4 700 ohms.
-3. A frequency is 21 375 kHz. Divide by 1 000 to get megahertz: 21.375 MHz.
-4. A current is 0.18 A. An ampere is 1 000 mA, so 0.18 A is 180 mA.
-5. A supply is 13.8 V. Each volt is 1 000 mV, so 13.8 V is 13 800 mV.
+1. A trail radio beacon produces 750 mW. Express that in watts.
+
+:::answer
+750 / 1 000 = 0.75 W.
+:::
+
+2. Express 4.7 kilohms in ohms.
+
+:::answer
+4.7 x 1 000 = 4 700 ohms.
+:::
+
+3. Convert 21 375 kHz to megahertz.
+
+:::answer
+21 375 / 1 000 = 21.375 MHz.
+:::
+
+4. Express 0.18 A in milliamperes.
+
+:::answer
+0.18 x 1 000 = 180 mA.
+:::
+
+5. Express 13.8 V in millivolts.
+
+:::answer
+13.8 x 1 000 = 13 800 mV.
+:::
 
 ## Radio connection
 
 A real station uses these conversions all the time. HF frequencies may be written as 14.230 MHz in a logging program and as 14 230 kHz in a band plan. A handheld may advertise 750 mW on low power, which is 0.75 W. A small accessory may draw 180 mA, which is 0.18 A from the battery.
 
-Conductors and insulators are just as practical. Coaxial cable works because the centre conductor carries RF current, an insulator keeps it separated from the shield, and the shield provides the return path and shielding. If the insulator fails or a conductor touches where it should not, the circuit behaviour changes immediately.
+Conductors and insulators are just as practical. Coaxial cable works because each layer has a job. The centre conductor carries RF current. The insulator keeps it separated from the shield. The shield provides the return path and shielding.
+
+If the insulator fails or a conductor touches where it should not, the circuit behaviour changes immediately.
 
 ## Common mistakes
 
@@ -133,7 +232,7 @@ Conductors and insulators are just as practical. Coaxial cable works because the
 
 Alt text: A horizontal metric-prefix ladder from giga to pico, with arrows showing when to multiply or divide by 1 000.
 
-Description: Draw a simple ink-brush ladder with labelled steps: G, M, k, base, m, µ, p. Add a small radio dial labelled 14.230 MHz beside the MHz step and 14 230 kHz beside the kHz step. Use arrows that say "multiply by 1 000" when moving toward smaller units and "divide by 1 000" when moving toward larger units.
+Description: Draw a simple ink-brush ladder with labelled steps: G, M, k, base, m, µ, p. Add a small radio dial labelled 14.230 MHz beside the MHz step and 14 230 kHz beside the kHz step. Use arrows that say "multiply by 1 000" when moving toward smaller units and "divide by 1 000" when moving toward larger units for adjacent rows through micro; label the micro-to-pico jump as x 1 000 000 or ÷ 1 000 000 because nano is skipped.
 
 ## Summary
 

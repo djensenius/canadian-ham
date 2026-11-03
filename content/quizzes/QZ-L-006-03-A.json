@@ -13,36 +13,174 @@
   "conceptChecks": [
     {
       "id": "QZ-L-006-03-A-C1",
-      "prompt": { "en": "A local VHF station uses a vertical whip. Which receiving antenna orientation is usually the better first choice?", "fr": null },
+      "prompt": {
+        "en": "Two nearby portable Yagis point their booms at each other, but one has upright elements and the other has level elements. Which change aligns their polarizations while keeping their aim?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "Horizontal, because it rejects all ground-wave signals", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Vertical, because the polarizations match", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Any orientation, because polarization only applies to feedlines", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Circular, because all whips are circularly polarized", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Rotate one antenna about its boom by a quarter turn.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "A quarter turn changes that element orientation by 90 degrees, aligning it with the other antenna.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Rotate both antennas about their booms by a quarter turn.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Both orientations change together, so they remain perpendicular to each other.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Rotate one antenna about its boom by a half turn.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "A half turn leaves the element axis with the same upright or level orientation, so the mismatch remains.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Turn both booms in azimuth while keeping one set of elements upright and the other level.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Changing compass aim does not align the element orientations, and it can reduce directional gain toward each other.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "For local VHF/UHF paths, matching polarization usually improves received signal strength.", "fr": null }
+      "explanation": {
+        "en": "Keep aim and element orientation separate. Rotating a single antenna about its boom can change polarization without changing the main pointing direction.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-006-03-A-C2",
-      "prompt": { "en": "A wire antenna resonates below the frequency you want. What adjustment moves resonance upward?", "fr": null },
+      "prompt": {
+        "en": "Two dipoles cut to the same dimensions resonate at different frequencies after installation. One is close to metal siding. What should be investigated first?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "Add more wire to both ends", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Bury the feedline deeper", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Make the radiating wire a little shorter", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Replace the end insulators with longer rope", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "The analyzer calibration, because equal wire dimensions should give the same resonant frequency in both locations.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "A calibration check may be useful, but equal physical dimensions do not establish equal installed resonance. The nearby metal is a known difference worth investigating first.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The effect of nearby objects and end conditions on electrical length.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "Equal physical cuts can behave differently in different surroundings.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The coax length, because its electrical length sets the dipole wire's resonant frequency.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Cable length can alter the impedance seen at the radio under mismatch. It does not set the wire's own resonance or remove the influence of nearby metal.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "The conductor diameter, because wire thickness controls installed resonance more strongly than nearby metal.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Wire diameter can affect antenna behaviour, but that does not make it the leading cause here. The known difference is nearby metal, which can change the installed electrical length.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "Shorter antennas resonate higher; longer antennas resonate lower.", "fr": null }
+      "explanation": {
+        "en": "Keep the model limits in view when applying a wire-length estimate to real installations.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-006-03-A-C3",
-      "prompt": { "en": "Using λ = 300 / f(MHz), what is the free-space wavelength of a 60 MHz signal?", "fr": null },
+      "prompt": {
+        "en": "A calculator entry uses 300 / 0.92 to estimate wavelength at 0.92 GHz. Which repair makes the shortcut valid?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "18 m", "fr": null }, "isCorrect": false },
-        { "text": { "en": "10 m", "fr": null }, "isCorrect": false },
-        { "text": { "en": "0.5 m", "fr": null }, "isCorrect": false },
-        { "text": { "en": "5 m", "fr": null }, "isCorrect": true }
+        {
+          "text": {
+            "en": "Keep the entry and label the result metres because all frequency prefixes work.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The 300 shortcut requires MHz. A GHz number makes the result a thousand times too large.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Multiply the result by 1 000 because GHz is a larger unit.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "That moves the answer in the wrong direction. Higher frequency gives a shorter wavelength.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Convert to 920 MHz, then calculate 300 / 920 ≈ 0.326 m.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "Converting GHz to MHz gives the correct input unit for this free-space shortcut.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Use 143 / 0.92 because it already includes the GHz conversion.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "143 is a practical dipole factor with MHz input, not a conversion for GHz.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "300 divided by 60 is 5, so the wavelength is about 5 metres.", "fr": null }
+      "explanation": {
+        "en": "Units are part of a formula. The free-space wavelength shortcut uses metres and megahertz together.",
+        "fr": null
+      }
     }
   ]
 }

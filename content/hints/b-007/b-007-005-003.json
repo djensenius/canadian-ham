@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-007-005-003",
+  "questionId": "B-007-005-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the solar-flux definition in the solar-activity section.",
+      "fr": "Revoyez la définition du flux solaire dans la section sur l’activité solaire."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-007-02",
+    "sectionAnchor": "solar-activity-and-the-solar-cycle"
+  },
+  "singleLevelReason": "Definition recall: a second hint would paraphrase the measurement or eliminate options; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

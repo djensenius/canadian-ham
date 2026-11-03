@@ -1,6 +1,7 @@
-import { farnsworthTiming, profileForName, type MorseTimingProfile } from "@canadian-ham/morse-engine";
+import { farnsworthTiming, profileForName, type MorseOutputMode, type MorseTimingProfile } from "@canadian-ham/morse-engine";
 
 export type WebMorseTimingProfileName = "isedParis" | "ric1Literal" | "general";
+export type WebMorseOutputMode = Exclude<MorseOutputMode, "haptics">;
 
 export interface WebMorsePreferences {
   readonly toneHz: number;
@@ -8,6 +9,7 @@ export interface WebMorsePreferences {
   readonly effectiveWpm: number;
   readonly timingProfile: WebMorseTimingProfileName;
   readonly volume: number;
+  readonly outputMode: WebMorseOutputMode;
 }
 
 export const defaultMorsePreferences: WebMorsePreferences = Object.freeze({
@@ -16,6 +18,7 @@ export const defaultMorsePreferences: WebMorsePreferences = Object.freeze({
   effectiveWpm: 5,
   timingProfile: "isedParis",
   volume: 0.6,
+  outputMode: "audio",
 });
 
 type StoredWebMorsePreferences = Partial<WebMorsePreferences> & { readonly enabled?: unknown };
@@ -28,6 +31,7 @@ export function normalizeMorsePreferences(value: StoredWebMorsePreferences = {})
     effectiveWpm: clampInteger(value.effectiveWpm, 5, characterWpm, Math.min(defaultMorsePreferences.effectiveWpm, characterWpm)),
     timingProfile: isTimingProfile(value.timingProfile) ? value.timingProfile : defaultMorsePreferences.timingProfile,
     volume: clampNumber(value.volume, 0, 1, defaultMorsePreferences.volume),
+    outputMode: isOutputMode(value.outputMode) ? value.outputMode : defaultMorsePreferences.outputMode,
   };
 }
 
@@ -45,6 +49,10 @@ export function morseTimingFromPreferences(preferences: WebMorsePreferences): Mo
 
 function isTimingProfile(value: unknown): value is WebMorseTimingProfileName {
   return value === "isedParis" || value === "ric1Literal" || value === "general";
+}
+
+function isOutputMode(value: unknown): value is WebMorseOutputMode {
+  return value === "audio" || value === "visualBeacon" || value === "visualTape";
 }
 
 function clampInteger(value: unknown, min: number, max: number, fallback: number): number {

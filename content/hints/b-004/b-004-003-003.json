@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-004-003-003",
+  "questionId": "B-004-003-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the three terminal names in the bipolar device list.",
+      "fr": "Revoyez les trois noms de bornes dans la liste du composant bipolaire."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-004-02",
+    "sectionAnchor": "bipolar-transistors-current-controlled-devices"
+  },
+  "singleLevelReason": "Name-list recall: a second hint would list or eliminate the terminal sets.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

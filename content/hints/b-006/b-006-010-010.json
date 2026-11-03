@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-010-010",
+  "questionId": "B-006-010-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review why short HF mobile whips use loading coils.",
+      "fr": "Revoyez pourquoi les fouets mobiles HF courts utilisent une bobine de charge."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-04",
+    "sectionAnchor": "mobile-verticals-and-loading-coils"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Definition item: a second hint would paraphrase the definition or name the correct term; topic pointer and lesson link only."
+}

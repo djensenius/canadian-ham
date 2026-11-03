@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-006-009-011",
+  "questionId": "B-006-009-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Recall the dipole's gain over an isotropic source from the lesson; dBd = dBi − that offset.",
+      "fr": "Rappelez-vous le gain du dipôle par rapport à une source isotrope dans le cours; dBd = dBi − cet écart."
+    },
+    {
+      "level": 2,
+      "en": "Subtract that offset from 4.1 dBi.",
+      "fr": "Soustrayez cet écart de 4,1 dBi."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-04",
+    "sectionAnchor": "worked-example-dbi-and-dbd"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

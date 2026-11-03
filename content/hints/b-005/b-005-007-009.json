@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-005-007-009",
+  "questionId": "B-005-007-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the AC word for timing between waveforms that repeat at the same rate.",
+      "fr": "Revoyez le mot CA qui décrit une différence de synchronisation entre des formes d'onde qui se répètent au même rythme."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-04",
+    "sectionAnchor": "ac-basics"
+  },
+  "singleLevelReason": "Pure term recall: a second hint would name the timing-difference concept.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

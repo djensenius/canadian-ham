@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-012-002",
+  "questionId": "B-005-012-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "At resonance in a parallel tuned circuit, the L and C branch currents are equal and opposite. Think about what that means for the current taken from the source.",
+      "fr": "À la résonance d’un circuit accordé parallèle, les courants des branches L et C sont égaux et opposés. Pensez à ce que cela signifie pour le courant fourni par la source."
+    },
+    {
+      "level": 2,
+      "en": "Use Z = E / I as seen by the source, with the source current you reasoned out from Hint 1.",
+      "fr": "Utilisez Z = E / I vu par la source, avec le courant de source que vous avez déduit de l’indice 1."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-05",
+    "sectionAnchor": "resonance-and-tuned-circuits"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

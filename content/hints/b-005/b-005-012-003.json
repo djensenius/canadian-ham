@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-005-012-003",
+  "questionId": "B-005-012-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the tuned-circuit terms near the end of the resonance section.",
+      "fr": "Revoyez les termes des circuits accordés près de la fin de la section sur la résonance."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-05",
+    "sectionAnchor": "resonance-and-tuned-circuits"
+  },
+  "singleLevelReason": "Pure term recall: a second hint would name the frequency range term.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

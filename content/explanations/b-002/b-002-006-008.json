@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-002-006-008.\n\nWhy the correct answer is right: To raise the meter one S-unit under the 6 dB convention, transmitter power must increase by a factor of four.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"5 times\": Five times is more than the 6 dB power step used in the simplified model.\n- sourceIndex 2: \"3 times\": Three times is not enough for the full 6 dB increase.\n- sourceIndex 3: \"2 times\": Two times is about 3 dB, which is only half of the stated S-unit step.",
+    "en": "Question B-002-006-008.\n\nWhy the correct answer is right: To raise the meter one S-unit under the 6 decibel (dB) convention, transmitter power must increase by a factor of four.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"5 times\": Five times is more than the 6 dB power step used in this model.\n- sourceIndex 2: \"3 times\": Three times is not enough for the full 6 dB increase.\n- sourceIndex 3: \"2 times\": Two times is about 3 dB, which is only half of the stated S-unit step.",
     "fr": null
   },
   "citations": [

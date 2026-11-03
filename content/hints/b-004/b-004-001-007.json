@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-004-001-007",
+  "questionId": "B-004-001-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the name used for a stage's increase in useful signal level.",
+      "fr": "Revoyez le nom donné à l’augmentation du niveau utile d’un signal par un étage."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-004-01",
+    "sectionAnchor": "amplifiers-raise-signal-level"
+  },
+  "singleLevelReason": "Term recall: a second hint would state or eliminate the term.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

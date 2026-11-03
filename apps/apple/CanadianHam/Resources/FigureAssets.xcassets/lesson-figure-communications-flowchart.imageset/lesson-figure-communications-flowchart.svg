@@ -1,0 +1,22 @@
+<svg id="communications-flowchart" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 320" role="img">
+  <title>Communications choices flowchart</title>
+  <desc>Two labelled lanes for interference and distress relief plus station identification timing at the start, end, and maximum thirty-minute intervals.</desc>
+  <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="150" y1="120" x2="570" y2="120" stroke-width="6"/><polygon points="570,120 550,108 550,132" fill="currentColor" stroke="none"/>
+    <line x1="150" y1="248" x2="570" y2="248" stroke-width="6"/><polygon points="570,248 550,236 550,260" fill="currentColor" stroke="none"/>
+    <circle cx="96" cy="120" r="28" stroke-width="5"/><path d="M80 120 L112 120" stroke-width="5"/>
+    <path d="M78 248 L96 224 L114 248 L96 272 Z" stroke-width="5"/>
+    <path d="M242 100 L274 120 L242 140" stroke-width="5"/><path d="M398 100 L430 120 L398 140" stroke-width="5"/>
+    <path d="M242 228 L274 248 L242 268" stroke-width="5"/><path d="M398 228 L430 248 L398 268" stroke-width="5"/>
+    <circle cx="536" cy="60" r="28" stroke-width="5"/><line x1="536" y1="60" x2="536" y2="42" stroke-width="4"/><line x1="536" y1="60" x2="552" y2="70" stroke-width="4"/>
+  </g>
+  <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
+    <text x="96" y="76" font-size="24" font-weight="700">interf</text>
+    <text x="282" y="90" font-size="24">listen</text>
+    <text x="416" y="74" font-size="24">change/stop</text>
+    <text x="96" y="204" font-size="24" font-weight="700">distress</text>
+    <text x="286" y="218" font-size="24">exception</text>
+    <text x="444" y="218" font-size="24">stand by</text>
+    <text x="360" y="42" font-size="24">ID start/end/30</text>
+  </g>
+</svg>

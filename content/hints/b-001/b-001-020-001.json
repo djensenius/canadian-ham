@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-001-020-001",
+  "questionId": "B-001-020-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review message categories for foreign amateur contacts.",
+      "fr": "Revoyez les catégories de messages pour les contacts radioamateurs étrangers."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-05",
+    "sectionAnchor": "reference-facts-international-permission-includes-purpose"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}

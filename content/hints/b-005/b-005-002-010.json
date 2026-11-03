@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-005-002-010",
+  "questionId": "B-005-002-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the note about what can change a conductor's resistance in ordinary circuit work.",
+      "fr": "Revoyez la note sur ce qui peut changer la résistance d'un conducteur dans un circuit ordinaire."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-01",
+    "sectionAnchor": "voltage-drop-and-polarity"
+  },
+  "singleLevelReason": "Pure fact recall: a second hint would directly name the factor being asked for.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

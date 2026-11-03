@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-004-005-005",
+  "questionId": "B-004-005-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the tube-and-semiconductor similarity paragraph.",
+      "fr": "Revoyez le paragraphe sur la ressemblance entre tube et semi-conducteur."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-004-02",
+    "sectionAnchor": "tube-and-fet-similarity"
+  },
+  "singleLevelReason": "Comparison recall: a second hint would name the matching semiconductor family.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

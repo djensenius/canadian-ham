@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-017-007.\n\nWhy the correct answer is right: Advanced Qualification allows 1000 watts DC input to the final RF stage.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"250 watts\": That is the Basic final-stage DC input amount; Advanced DC input is higher.\n- sourceIndex 2: \"1500 watts\": 1500 watts is higher than the Advanced DC input value recorded for this rule and would exceed it.\n- sourceIndex 3: \"560 watts\": 560 watts is a Basic SSB PEP value, not Advanced DC input power.",
+    "en": "Question B-001-017-007.\n\nWhy the correct answer is right: Advanced Qualification allows 1 000 watts direct-current (DC) input to the final radio-frequency (RF) stage.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"250 watts\": That is the Basic final-stage DC input amount; Advanced DC input is higher.\n- sourceIndex 2: \"1500 watts\": 1 500 watts is higher than the Advanced DC input value for this rule and would exceed it.\n- sourceIndex 3: \"560 watts\": 560 watts is a Basic single-sideband (SSB) peak-envelope power (PEP) value, not Advanced DC input power.",
     "fr": null
   },
   "citations": [

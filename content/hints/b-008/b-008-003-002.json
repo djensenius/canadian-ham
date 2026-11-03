@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-008-003-002",
+  "questionId": "B-008-003-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review transmitter problems that affect nearby frequencies.",
+      "fr": "Revoyez les problèmes d'émetteur qui touchent les fréquences voisines."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-02",
+    "sectionAnchor": "spurious-emissions-and-intermodulation"
+  },
+  "singleLevelReason": "Classification recall: another hint would name the transmitter-output category.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

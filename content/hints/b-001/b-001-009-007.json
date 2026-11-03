@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-001-009-007",
+  "questionId": "B-001-009-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review supervision and qualification rules for unqualified family members at an amateur station.",
+      "fr": "Revoyez les règles de supervision et de compétence applicables aux membres de la famille non certifiés dans une station de radioamateur."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-02",
+    "sectionAnchor": "reference-facts-control-stays-with-responsible-people"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Pure recall: any content hint identifies or eliminates an option; topic pointer and lesson link only."
+}

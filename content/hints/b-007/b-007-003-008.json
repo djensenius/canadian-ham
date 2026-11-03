@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-007-003-008",
+  "questionId": "B-007-003-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the distance terms in the hop discussion.",
+      "fr": "Revoyez les termes de distance dans l’explication des sauts."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-007-01",
+    "sectionAnchor": "skip-distance-and-skip-zone"
+  },
+  "singleLevelReason": "Definition recall: a second hint would restate the distance definition or eliminate options; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

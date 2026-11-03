@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-006-004-009",
+  "questionId": "B-006-004-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Feedline loss in dB is specified per unit length, so for the same cable and frequency the total dB loss is proportional to length.",
+      "fr": "La perte d'une ligne en dB est donnée par unité de longueur; pour le même câble et la même fréquence, la perte totale en dB est proportionnelle à la longueur."
+    },
+    {
+      "level": 2,
+      "en": "Find how many times longer the new run is, then express the added loss as a percentage of the original loss.",
+      "fr": "Trouvez combien de fois la nouvelle longueur dépasse l'ancienne, puis exprimez la perte ajoutée en pourcentage de la perte initiale."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-02",
+    "sectionAnchor": "feedline-loss"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

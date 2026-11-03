@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-011-008",
+  "questionId": "B-005-011-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "In an ideal step-up transformer, current changes in the opposite direction to voltage.",
+      "fr": "Dans un transformateur élévateur idéal, le courant varie dans le sens opposé à la tension."
+    },
+    {
+      "level": 2,
+      "en": "A 1:5 turns ratio makes the secondary voltage five times the primary, so set primary current as 50 mA x 5.",
+      "fr": "Un rapport de spires 1:5 rend la tension secondaire cinq fois celle du primaire; posez donc le courant primaire comme 50 mA x 5."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-06",
+    "sectionAnchor": "transformer-power-calculations"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-002-001",
+  "questionId": "B-006-002-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the feedline construction styles before matching the described cross-section to a name.",
+      "fr": "Revoyez les types de construction des lignes de transmission avant d’associer la coupe décrite à un nom."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-01",
+    "sectionAnchor": "coaxial-cable"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Definition item: a second hint would paraphrase the definition or name the correct term; topic pointer and lesson link only."
+}

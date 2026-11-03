@@ -10,21 +10,30 @@ import { StrictMode } from "react";
 import { IDBFactory } from "fake-indexeddb";
 import { afterEach, beforeEach, describe, it, vi } from "vitest";
 
-import { generateMorseExamText, profileForName } from "@canadian-ham/morse-engine";
+import { type QuestionProgressRecord } from "@canadian-ham/engine-ts";
+import { MORSE_BEACON_AREA_CSS_PIXELS, MORSE_LIGHT_ACCENT_RGB, MORSE_LIGHT_PAPER_INSET_RGB, evaluateMorseBeaconFlashSafety, generateMorseExamText, maxMorseFlashesPerSecond, morseBeaconPalette, morseSignalEvents, profileForName, textToTimedMorse } from "@canadian-ham/morse-engine";
 
 import { App, AppErrorBoundary, CitationLink, ExplanationPanel } from "./App";
 import { answerMorseCourseSession, morseCourseSummaryMessage, type SessionState } from "./morse/course/MorseCoursePanel";
+import * as bankData from "./data/bank";
 import { ADVANCED_BANK_ID, advancedBank, bankId, categories, loadQuestions, loadQuestionsFromUrl, manifest, type Answer, type Category, type Question } from "./data/bank";
+import { lessonHeadingAnchors, parseMarkdownBlocks } from "./components/MarkdownContent";
 import { explanationForQuestion, parseChoiceNotes } from "./data/explanations";
+import { basicQuestionHints, basicQuestionHintsByQuestionId, hintForQuestion, type QuestionHint } from "./data/hints";
+import { lessonsById } from "./data/lessons";
 import { lessonQuizzesById, buildLessonQuizItems } from "./data/quizzes";
 import { ProgressStore, defaultPreferences, type ExamAttempt, type ProgressExportV1, type WebPreferences } from "./lib/progressStore";
-import { INTERFACE_LANGUAGE_STORAGE_KEY } from "./lib/i18n";
+import { INTERFACE_LANGUAGE_STORAGE_KEY, interfaceLanguageTag, t } from "./lib/i18n";
+import { MorseOutputView, morseOutputSafetyNote } from "./lib/morseOutput";
 import { applyThemePreference, readStoredThemePreference, THEME_COLORS, THEME_STORAGE_KEY } from "./lib/theme";
-import { buildExamAttempt, createMockExam } from "./lib/studyEngine";
+import { applyPracticeAnswer, buildExamAttempt, createMockExam } from "./lib/studyEngine";
 import { buildMorseLessonExercises, parseMorseCourseFixture } from "@canadian-ham/morse-engine";
 import courseFixture from "../../../fixtures/morse/course.json";
 
 const fixedNow = "2026-01-02T03:04:05.000Z";
+const lessonRenderAsyncTimeoutMs = 5_000;
+const appFlowTestTimeoutMs = 10_000;
+const lessonRenderWaitOptions = { timeout: lessonRenderAsyncTimeoutMs };
 const referenceSheetNote = "In the real exam you are given ISED's reference sheet of formulas and block diagrams. The lessons teach everything on it.";
 let stores: ProgressStore[] = [];
 let testQuestions: readonly Question[] = [];
@@ -43,6 +52,7 @@ beforeEach(async () => {
 
 afterEach(async () => {
   cleanup();
+  vi.useRealTimers();
   vi.unstubAllGlobals();
   vi.restoreAllMocks();
   for (const store of stores) {
@@ -54,6 +64,46 @@ function createStore(name: string): ProgressStore {
   const store = new ProgressStore(name);
   stores.push(store);
   return store;
+}
+
+async function setAppHash(hash: string): Promise<void> {
+  await act(async () => {
+    window.location.hash = hash;
+    window.dispatchEvent(new HashChangeEvent("hashchange"));
+  });
+}
+
+async function dispatchAppHashChange(): Promise<void> {
+  await act(async () => {
+    window.dispatchEvent(new HashChangeEvent("hashchange"));
+  });
+}
+
+function getMain(container: HTMLElement): HTMLElement {
+  const main = container.querySelector("main#main");
+  assert.ok(main instanceof HTMLElement);
+  return main;
+}
+
+function setViewportWidth(width: number): void {
+  Object.defineProperty(window, "innerWidth", { value: width, configurable: true });
+  window.dispatchEvent(new Event("resize"));
+}
+
+function stubReducedMotion(matches: boolean): void {
+  Object.defineProperty(window, "matchMedia", {
+    value: (query: string) => ({
+      matches: query === "(prefers-reduced-motion: reduce)" ? matches : false,
+      media: query,
+      onchange: null,
+      addListener: () => {},
+      removeListener: () => {},
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      dispatchEvent: () => false,
+    }),
+    configurable: true,
+  });
 }
 
 function createMemoryStorage(): Storage {
@@ -76,6 +126,60 @@ function localDateString(value: string): string {
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
+}
+
+function currentPracticeQuestionId(): string {
+  const questionMeta = document.querySelector(".question-meta")?.textContent ?? "";
+  const questionId = questionMeta.match(/B-\d{3}-\d{3}-\d{3}/)?.[0];
+  assert.ok(questionId);
+  return questionId;
+}
+
+function correctAnswerChoiceForCurrentQuestion(): HTMLElement {
+  const questionId = currentPracticeQuestionId();
+  const displayedQuestion = testQuestions.find((question) => question.id === questionId);
+  assert.ok(displayedQuestion);
+  const correctAnswerText = displayedQuestion.answers.find((answer) => answer.sourceIndex === 0)?.text.en;
+  assert.ok(correctAnswerText);
+  const correctChoice = screen.getAllByTestId("answer-choice").find((choice) => choice.querySelector("span[lang]")?.textContent === correctAnswerText);
+  assert.ok(correctChoice);
+  return correctChoice;
+}
+
+async function startDueReviewForQuestion(questionId: string): Promise<void> {
+  const user = userEvent.setup();
+  await user.selectOptions(screen.getByLabelText("Practice scope"), "due");
+  await user.click(screen.getByRole("button", { name: "Start set" }));
+  await waitFor(() => assert.equal(currentPracticeQuestionId(), questionId));
+}
+
+function weakDueProgressRecord(questionId: string): QuestionProgressRecord {
+  return {
+    questionId,
+    bankId: "basic-2025-07-15",
+    attempts: 3,
+    correctAttempts: 2,
+    lastAttemptedAt: "2026-01-01T00:00:00.000Z",
+    lastResult: "incorrect",
+    lastAnsweredWithHelp: false,
+    recentResults: [true, true, false],
+    recentAnsweredWithHelp: [false, false, false],
+    leitner: { box: 0, dueAt: fixedNow },
+    notes: null,
+  };
+}
+
+function lessonHeadingTextForHintLink(hint: QuestionHint): string | null {
+  const sectionAnchor = hint.lessonLink.sectionAnchor;
+  if (sectionAnchor === undefined) {
+    return null;
+  }
+  const lesson = lessonsById.get(hint.lessonLink.lessonId);
+  assert.ok(lesson);
+  const anchors = lessonHeadingAnchors(lesson.body, lesson.title.en);
+  const headingBlocks = parseMarkdownBlocks(lesson.body, lesson.title.en).filter((block): block is Extract<ReturnType<typeof parseMarkdownBlocks>[number], { readonly type: "heading" }> => block.type === "heading");
+  const headingIndex = anchors.indexOf(sectionAnchor);
+  return headingIndex === -1 ? null : headingBlocks[headingIndex]?.text ?? null;
 }
 
 class DelayedInitialPreferencesStore extends ProgressStore {
@@ -298,6 +402,37 @@ function webIndexHtml(): string {
   return readFileSync(join(dirname(modulePath), "../index.html"), "utf8");
 }
 
+function webStylesCss(): string {
+  const moduleUrl = new URL(import.meta.url);
+  const modulePath = moduleUrl.protocol === "file:"
+    ? fileURLToPath(moduleUrl)
+    : join(process.cwd(), moduleUrl.pathname.replace(/^\/+/, ""));
+  return readFileSync(join(dirname(modulePath), "styles.css"), "utf8");
+}
+
+function cssRuleBlocks(css: string, selector: string): string[] {
+  const escapedSelector = selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const openingPattern = new RegExp(`^(?<indent>\\s*)${escapedSelector}\\s*{\\s*$`);
+  const lines = css.split("\n");
+  const blocks: string[] = [];
+  for (let openingIndex = 0; openingIndex < lines.length; openingIndex += 1) {
+    const openingMatch = openingPattern.exec(lines[openingIndex]!);
+    if (openingMatch === null) {
+      continue;
+    }
+    const indent = openingMatch.groups?.indent ?? "";
+    const closingIndex = lines.findIndex((line, index) => index > openingIndex && line === `${indent}}`);
+    if (closingIndex >= 0) {
+      blocks.push(lines.slice(openingIndex + 1, closingIndex).join("\n"));
+    }
+  }
+  return blocks;
+}
+
+function cssRuleBlock(css: string, selector: string): string {
+  return cssRuleBlocks(css, selector)[0] ?? "";
+}
+
 function extractInlineThemeScript(html: string): string {
   const match = html.match(/<script>([\s\S]*?)<\/script>/);
   assert.ok(match?.[1]);
@@ -448,7 +583,7 @@ function progressExport(): ProgressExportV1 {
   };
 }
 
-describe("App accessibility and flows", () => {
+describe("App accessibility and flows", { timeout: appFlowTestTimeoutMs }, () => {
   it("offers a localized skip link as the first focus stop and keeps route focus management", async () => {
     const store = createStore("skip-link");
     const user = userEvent.setup();
@@ -526,8 +661,7 @@ describe("App accessibility and flows", () => {
     await user.click(within(primaryNav).getByRole("button", { name: "Apprendre" }));
     await screen.findByRole("heading", { name: "Apprendre" });
 
-    window.location.hash = "#/learn/M5/L-005-01";
-    window.dispatchEvent(new HashChangeEvent("hashchange"));
+    await setAppHash("#/learn/M5/L-005-01");
     await screen.findByText("Leçon offerte en anglais seulement.");
     assert.ok(container.querySelector('.lesson-article h2[lang="en"]'));
     assert.ok(container.querySelector('.lesson-article div[lang="en"]'));
@@ -538,8 +672,7 @@ describe("App accessibility and flows", () => {
     await user.click(within(primaryNav).getByRole("button", { name: "Examen simulé" }));
     await screen.findByRole("heading", { name: "Examen simulé" });
 
-    window.location.hash = "#/results";
-    window.dispatchEvent(new HashChangeEvent("hashchange"));
+    await setAppHash("#/results");
     await screen.findByRole("heading", { name: "Résultats de l’examen simulé" });
     assert.ok(screen.getByText(/Brouillage et suppression/));
 
@@ -569,34 +702,35 @@ describe("App accessibility and flows", () => {
     await expectNoAxeViolations(container);
   });
 
-  it("defaults the interface to French from navigator and keeps it out of progress exports", async () => {
+  it("defaults language to French from navigator and exports the Settings override", async () => {
     const originalLanguage = navigator.language;
     const originalLanguages = navigator.languages;
     Object.defineProperty(navigator, "language", { value: "fr-CA", configurable: true });
     Object.defineProperty(navigator, "languages", { value: ["fr-CA", "en-CA"], configurable: true });
     try {
-      const store = createStore("french-default-localstorage");
+      const store = createStore("french-default-language-setting");
       const user = userEvent.setup();
       render(<App store={store} now={() => fixedNow} seedFactory={() => "fr-default-seed"} />);
 
       await screen.findByRole("heading", { name: "Prêt pour la compétence de base avec distinction?" });
       const primaryNav = screen.getByRole("navigation", { name: "Principale" });
       await user.click(within(primaryNav).getByRole("button", { name: "Réglages" }));
-      const interfaceLanguageGroup = await screen.findByRole("group", { name: "Langue de l’interface" });
-      await user.click(within(interfaceLanguageGroup).getByRole("radio", { name: "English" }));
+      const languageGroup = await screen.findByRole("group", { name: "Langue" });
+      await user.click(within(languageGroup).getByRole("radio", { name: "English" }));
 
       assert.equal(window.localStorage.getItem(INTERFACE_LANGUAGE_STORAGE_KEY), "en");
+      await screen.findByRole("heading", { name: "Settings and local data" });
       const exported = await store.exportData(fixedNow);
-      assert.equal("interfaceLanguage" in exported.preferences, false);
+      assert.equal(exported.preferences.language, "en");
     } finally {
       Object.defineProperty(navigator, "language", { value: originalLanguage, configurable: true });
       Object.defineProperty(navigator, "languages", { value: originalLanguages, configurable: true });
     }
   });
 
-  it("does not re-read IndexedDB when switching interface language", async () => {
+  it("does not re-read IndexedDB when switching the Language setting", async () => {
     window.location.hash = "#/settings";
-    const store = createStore("interface-switch-no-indexeddb");
+    const store = createStore("language-switch-no-indexeddb");
     const readSpies = [
       vi.spyOn(store, "getQuestionProgress"),
       vi.spyOn(store, "getExamAttempts"),
@@ -612,36 +746,37 @@ describe("App accessibility and flows", () => {
       spy.mockClear();
     }
 
-    const interfaceLanguageGroup = screen.getByRole("group", { name: "Interface language" });
-    await user.click(within(interfaceLanguageGroup).getByRole("radio", { name: "Français" }));
+    const languageGroup = screen.getByRole("group", { name: "Language" });
+    await user.click(within(languageGroup).getByRole("radio", { name: "Français" }));
     await screen.findByRole("heading", { name: "Réglages et données locales" });
+    assert.equal(window.localStorage.getItem(INTERFACE_LANGUAGE_STORAGE_KEY), "fr");
 
     for (const spy of readSpies) {
       assert.equal(spy.mock.calls.length, 0);
     }
   });
 
-  it("keeps the question-language toggle independent from interface language", async () => {
-    window.localStorage.setItem(INTERFACE_LANGUAGE_STORAGE_KEY, "fr");
+  it("keeps the language picker out of practice and changes language through Settings", async () => {
     window.location.hash = "#/practice";
-    const store = createStore("question-language-independent");
+    const store = createStore("language-setting-practice");
     const user = userEvent.setup();
-    render(<App store={store} now={() => fixedNow} seedFactory={() => "question-language-seed"} />);
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "language-setting-seed"} />);
 
-    await screen.findByRole("heading", { name: "Exercices" });
+    await screen.findByRole("heading", { name: "Practice" });
+    await screen.findByText(/Question 1 of/);
+    assert.equal(screen.queryByRole("group", { name: "Question language" }), null);
+
+    const primaryNav = screen.getByRole("navigation", { name: "Primary" });
+    await user.click(within(primaryNav).getByRole("button", { name: "Settings" }));
+    const languageGroup = await screen.findByRole("group", { name: "Language" });
+    await user.click(within(languageGroup).getByRole("radio", { name: "Français" }));
+    await screen.findByRole("heading", { name: "Réglages et données locales" });
+    await user.click(within(screen.getByRole("navigation", { name: "Principale" })).getByRole("button", { name: "Exercices" }));
     await screen.findByText(/Question 1 sur/);
-    const frenchQuestionRadio = within(screen.getByRole("group", { name: "Langue des questions" })).getByRole("radio", { name: "Français" }) as HTMLInputElement;
-    await user.click(frenchQuestionRadio);
-    assert.equal(frenchQuestionRadio.checked, true);
+    assert.equal(screen.queryByRole("group", { name: "Langue des questions" }), null);
     assert.ok(document.querySelector(".question-text[lang='fr-CA']"));
-
-    const primaryNav = screen.getByRole("navigation", { name: "Principale" });
-    await user.click(within(primaryNav).getByRole("button", { name: "Réglages" }));
-    const interfaceLanguageGroup = await screen.findByRole("group", { name: "Langue de l’interface" });
-    await user.click(within(interfaceLanguageGroup).getByRole("radio", { name: "English" }));
-    await screen.findByRole("heading", { name: "Settings and local data" });
-    const questionLanguageGroup = screen.getByRole("group", { name: "Question language" });
-    assert.equal((within(questionLanguageGroup).getByRole("radio", { name: "Français" }) as HTMLInputElement).checked, true);
+    assert.equal((await store.getPreferences()).language, "fr");
+    assert.equal(window.localStorage.getItem(INTERFACE_LANGUAGE_STORAGE_KEY), "fr");
   });
 
   it("shows the French explanation notice only when no French explanation body exists", () => {
@@ -680,7 +815,9 @@ describe("App accessibility and flows", () => {
         correctAttempts: 0,
         lastAttemptedAt: "2026-01-01T00:00:00.000Z",
         lastResult: "incorrect",
+        lastAnsweredWithHelp: false,
         recentResults: [false],
+        recentAnsweredWithHelp: [false],
         leitner: { box: 0, dueAt: "2026-01-01T00:00:00.000Z" },
         notes: null,
       });
@@ -722,6 +859,27 @@ describe("App accessibility and flows", () => {
     await expectNoAxeViolations(container);
   });
 
+  it("shows Exam day guidance in Learn and opens L-001-01 without rendering or fetching an ISED link", async () => {
+    window.location.hash = "#/learn";
+    const store = createStore("learn-exam-day");
+    const user = userEvent.setup();
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+    const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "learn-exam-day-seed"} />);
+
+    await screen.findByRole("heading", { name: "Learn" });
+    assert.ok(screen.getByRole("heading", { name: "Exam day" }));
+    assert.equal(container.querySelector('a[href*="ised-isde.canada.ca"]'), null);
+
+    await user.click(screen.getByRole("button", { name: "Read exam-day guidance" }));
+
+    await screen.findByRole("heading", { name: "Authority, certificates, and exams" });
+    assert.equal(window.location.hash, "#/learn/M1/L-001-01");
+    assert.equal(container.querySelector('a[href*="ised-isde.canada.ca"]'), null);
+    assert.equal(document.querySelector('link[href*="ised-isde.canada.ca"][rel~="preload"], link[href*="ised-isde.canada.ca"][rel~="prefetch"]'), null);
+    assert.equal(fetchMock.mock.calls.length, 0);
+  });
+
   it("renders lesson Markdown, stores read progress, and has no axe violations", async () => {
     window.location.hash = "#/learn/M5/L-005-01";
     const store = createStore("lesson");
@@ -729,11 +887,24 @@ describe("App accessibility and flows", () => {
     const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "lesson-seed"} />);
 
     await screen.findByRole("heading", { name: "Units, conductors, and current" });
-    assert.ok(screen.getByRole("img", { name: /horizontal metric-prefix ladder/i }));
+    assert.equal(screen.queryByText("Illustration placeholder"), null);
+    assert.equal(screen.queryByText(/Draw a simple ink-brush ladder/u), null);
     assert.ok(container.querySelector("table th[scope='col']"));
     await user.click(screen.getByRole("button", { name: "Mark lesson read" }));
     await waitFor(async () => assert.equal((await store.getLessonProgress()).length, 1));
     await expectNoAxeViolations(container);
+
+    cleanup();
+    window.location.hash = "#/learn/M5/L-005-02";
+    const figureStore = createStore("lesson-figures");
+    const figureRender = render(<App store={figureStore} now={() => fixedNow} seedFactory={() => "lesson-figure-seed"} />);
+
+    await screen.findByRole("heading", { name: "Power and Ohm’s law" });
+    assert.ok(screen.getByRole("img", { name: /Power triangle with P above I and E/i }));
+    assert.ok(screen.getByRole("img", { name: /Ohm’s law triangle with E above I and R/i }));
+    assert.ok(screen.getByRole("img", { name: /Ohm’s law and power wheel/i }));
+    assert.ok(screen.getByText("Figure text equivalent"));
+    await expectNoAxeViolations(figureRender.container);
 
     cleanup();
     window.location.hash = "#/learn/M6/L-006-03";
@@ -749,26 +920,66 @@ describe("App accessibility and flows", () => {
     await expectNoAxeViolations(codeRender.container);
   });
 
+  it("renders lesson prerequisites as localized accessible links", async () => {
+    window.location.hash = "#/learn/M4/L-004-01";
+    const store = createStore("lesson-prerequisites");
+    const user = userEvent.setup();
+    const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "lesson-prerequisites-seed"} />);
+
+    await screen.findByRole("heading", { name: "Amplifiers and diodes" });
+    const prerequisites = screen.getByRole("region", { name: "Before this lesson" });
+    const prerequisiteLink = within(prerequisites).getByRole("link", { name: "Power and Ohm’s law" });
+    assert.equal(prerequisiteLink.getAttribute("href"), "#/learn/M5/L-005-02");
+    assert.ok(within(prerequisites).getByRole("link", { name: "AC and decibels" }));
+    await expectNoAxeViolations(container);
+
+    fireEvent.click(prerequisiteLink, { ctrlKey: true });
+    assert.equal(window.location.hash, "#/learn/M4/L-004-01");
+    assert.ok(screen.getByRole("heading", { name: "Amplifiers and diodes" }));
+
+    await user.click(prerequisiteLink);
+    await screen.findByRole("heading", { name: "Power and Ohm’s law" });
+    assert.equal(window.location.hash, "#/learn/M5/L-005-02");
+
+    cleanup();
+    window.localStorage.setItem(INTERFACE_LANGUAGE_STORAGE_KEY, "fr");
+    window.location.hash = "#/learn/M5/L-005-02";
+    const frenchStore = createStore("lesson-prerequisites-fr");
+    const frenchRender = render(<App store={frenchStore} now={() => fixedNow} seedFactory={() => "lesson-prerequisites-fr-seed"} />);
+
+    await screen.findByRole("heading", { name: "Power and Ohm’s law" });
+    const frenchPrerequisites = screen.getByRole("region", { name: "Avant cette leçon" });
+    assert.ok(within(frenchPrerequisites).getByRole("link", { name: "Units, conductors, and current" }));
+    assert.ok(frenchRender.container.querySelector(".lesson-prerequisites a span[lang='en']"));
+    await expectNoAxeViolations(frenchRender.container);
+  });
+
   it("automatically includes M4 and M6 lessons from content and renders them", async () => {
     window.location.hash = "#/learn";
     const store = createStore("m4-m6-lessons");
-    const user = userEvent.setup();
-    render(<App store={store} now={() => fixedNow} seedFactory={() => "m4-m6-seed"} />);
+    const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "m4-m6-seed"} />);
+    const main = getMain(container);
+    const mainView = within(main);
 
-    await screen.findByRole("heading", { name: "Learn" });
-    assert.ok(screen.getByRole("heading", { name: "Circuit Components" }));
-    assert.ok(screen.getByRole("heading", { name: "Feedlines and Antenna Systems" }));
+    await mainView.findByRole("heading", { name: "Learn" }, lessonRenderWaitOptions);
+    assert.ok(mainView.getByRole("heading", { name: "Circuit Components" }));
+    assert.ok(mainView.getByRole("heading", { name: "Feedlines and Antenna Systems" }));
 
-    window.location.hash = "#/learn/M4/L-004-01";
-    window.dispatchEvent(new HashChangeEvent("hashchange"));
-    await screen.findByRole("heading", { name: "Amplifiers and diodes" });
-    await screen.findByRole("heading", { name: "QZ-L-004-01-A" });
+    await setAppHash("#/learn/M4/L-004-01");
+    await mainView.findByRole("heading", { name: "Amplifiers and diodes" }, lessonRenderWaitOptions);
+    const m4Quiz = await mainView.findByRole("heading", { name: "QZ-L-004-01-A" }, lessonRenderWaitOptions);
+    const m4QuizSection = m4Quiz.closest("section");
+    assert.ok(m4QuizSection instanceof HTMLElement);
+    const m4Choices = await within(m4QuizSection).findByRole("group", { name: "Answer choices" }, lessonRenderWaitOptions);
+    assert.equal(within(m4Choices).getAllByRole("button").length, 4);
 
-    await user.click(screen.getByRole("button", { name: "Learn" }));
-    window.location.hash = "#/learn/M6/L-006-01";
-    window.dispatchEvent(new HashChangeEvent("hashchange"));
-    await screen.findByRole("heading", { name: "Feedline basics and types" });
-    await screen.findByRole("heading", { name: "QZ-L-006-01-A" });
+    await setAppHash("#/learn/M6/L-006-01");
+    await mainView.findByRole("heading", { name: "Feedline basics and types" }, lessonRenderWaitOptions);
+    const m6Quiz = await mainView.findByRole("heading", { name: "QZ-L-006-01-A" }, lessonRenderWaitOptions);
+    const m6QuizSection = m6Quiz.closest("section");
+    assert.ok(m6QuizSection instanceof HTMLElement);
+    const m6Choices = await within(m6QuizSection).findByRole("group", { name: "Answer choices" }, lessonRenderWaitOptions);
+    assert.equal(within(m6Choices).getAllByRole("button").length, 4);
   });
 
   it("updates lesson navigation state for next, previous, sidebar, and browser history", async () => {
@@ -794,14 +1005,18 @@ describe("App accessibility and flows", () => {
 
     await user.click(screen.getByRole("button", { name: /^Next:/ }));
     await screen.findByRole("heading", { name: "Power and Ohm’s law" });
-    window.history.back();
+    await act(async () => {
+      window.history.back();
+    });
     await waitFor(() => assert.equal(window.location.hash, "#/learn/M5/L-005-01"));
-    window.dispatchEvent(new HashChangeEvent("hashchange"));
+    await dispatchAppHashChange();
     await screen.findByRole("heading", { name: "Units, conductors, and current" });
 
-    window.history.forward();
+    await act(async () => {
+      window.history.forward();
+    });
     await waitFor(() => assert.equal(window.location.hash, "#/learn/M5/L-005-02"));
-    window.dispatchEvent(new HashChangeEvent("hashchange"));
+    await dispatchAppHashChange();
     await screen.findByRole("heading", { name: "Power and Ohm’s law" });
   });
 
@@ -907,6 +1122,377 @@ describe("App accessibility and flows", () => {
     await expectNoAxeViolations(quizSection);
   });
 
+  for (const language of ["en", "fr"] as const) {
+    for (const theme of ["light", "dark"] as const) {
+      for (const correct of [true, false]) {
+        it(`shows only the chosen concept option feedback with focus and axe in ${language} ${theme} (${correct ? "correct" : "incorrect"})`, async () => {
+          const original = lessonQuizzesById.get("QZ-L-004-01-A")!;
+          const source = original.conceptChecks[0]!;
+          const concept = {
+            ...source,
+            choices: source.choices.map((choice, index) => ({
+              ...choice,
+              feedback: { en: `Feedback for source option ${index}.`, fr: choice.isCorrect ? `Rétroaction du choix source ${index}.` : null },
+            })),
+          };
+          const fixtureQuiz = { ...original, officialQuestionIds: [], conceptChecks: [concept] };
+          const sourceIndex = concept.choices.findIndex((choice) => choice.isCorrect === correct);
+          const nowValue = Array.from({ length: 32 }, (_, index) => 1_000 + index).find((value) => {
+            const item = buildLessonQuizItems(fixtureQuiz, `${original.id}:${value.toString(36)}`)[0]!;
+            return item.type === "concept" && item.choicePermutation.indexOf(sourceIndex) !== sourceIndex;
+          });
+          assert.ok(nowValue !== undefined, "fixture must move the selected source option to another display position");
+          lessonQuizzesById.set(original.id, fixtureQuiz);
+          try {
+            vi.spyOn(Date, "now").mockReturnValue(nowValue);
+            window.location.hash = "#/learn/M4/L-004-01";
+            window.localStorage.setItem(INTERFACE_LANGUAGE_STORAGE_KEY, language);
+            const store = createStore(`concept-feedback-${language}-${theme}-${correct}`);
+            await store.putPreferences({ ...defaultPreferences, language, theme });
+            const user = userEvent.setup();
+            const { container } = render(<App store={store} now={() => fixedNow} />);
+            await screen.findByRole("heading", { name: original.id });
+            const section = getLessonQuizSection();
+            const choice = concept.choices[sourceIndex]!;
+            const buttons = within(section).getAllByTestId("lesson-quiz-choice");
+            const button = buttons.find((item) => item.textContent?.includes(choice.text.en))!;
+            assert.ok(button);
+            assert.notEqual(buttons.indexOf(button), sourceIndex, "feedback must follow source identity, not displayed letter");
+            assert.equal(within(section).queryByRole("status"), null);
+            assert.equal(section.textContent?.includes("Feedback for source option"), false);
+            assert.equal(section.textContent?.includes("Rétroaction du choix source"), false);
+            button.focus();
+            await user.keyboard("{Enter}");
+            const status = within(section).getByRole("status");
+            await waitFor(() => assert.equal(document.activeElement, status));
+            const expected = choice.feedback[language] ?? choice.feedback.en;
+            assert.ok(status.textContent?.includes(expected));
+            const feedback = status.querySelector("span[lang]");
+            assert.equal(feedback?.getAttribute("lang"), language === "fr" && correct ? "fr-CA" : "en");
+            assert.ok(within(section).getByText(concept.explanation.en));
+            for (const other of concept.choices.filter((item) => item !== choice)) {
+              assert.equal(section.textContent?.includes(other.feedback.en), false);
+              if (other.feedback.fr !== null) assert.equal(section.textContent?.includes(other.feedback.fr), false);
+            }
+            assert.equal(button.getAttribute("aria-pressed"), "true");
+            assert.ok(buttons.every((item) => item.hasAttribute("disabled")));
+            assert.equal(document.documentElement.dataset.theme, theme);
+            await expectNoAxeViolations(container);
+          } finally {
+            lessonQuizzesById.set(original.id, original);
+          }
+        });
+      }
+    }
+  }
+
+  it("keeps the generic concept explanation for legacy choices without feedback", async () => {
+    const original = lessonQuizzesById.get("QZ-L-004-01-A")!;
+    const source = original.conceptChecks[0]!;
+    const concept = { ...source, choices: source.choices.map(({ text, isCorrect }) => ({ text, isCorrect })) };
+    lessonQuizzesById.set(original.id, { ...original, officialQuestionIds: [], conceptChecks: [concept] });
+    try {
+      window.location.hash = "#/learn/M4/L-004-01";
+      render(<App store={createStore("legacy-concept-feedback")} now={() => fixedNow} />);
+      await screen.findByRole("heading", { name: original.id });
+      const section = getLessonQuizSection();
+      fireEvent.click(within(section).getAllByTestId("lesson-quiz-choice")[0]!);
+      assert.ok(within(section).getByText(concept.explanation.en));
+      assert.equal(within(section).getByRole("status").querySelector("span[lang]"), null);
+    } finally {
+      lessonQuizzesById.set(original.id, original);
+    }
+  });
+
+  it("freezes lesson quiz help at choice, preserves scores and applies existing progress semantics", async () => {
+    window.location.hash = "#/learn/M5/L-005-01";
+    const store = createStore("lesson-quiz-help-progress");
+    const quiz = lessonQuizzesById.get("QZ-L-005-01-A")!;
+    await store.putQuestionProgressMany(quiz.officialQuestionIds.map((questionId) => ({
+      ...weakDueProgressRecord(questionId), leitner: { box: 3, dueAt: fixedNow },
+    })));
+    render(<App store={store} now={() => fixedNow} />);
+    await screen.findByRole("heading", { name: quiz.id });
+    const section = getLessonQuizSection();
+    const officialIds: string[] = [];
+    let helpedCorrectId = "";
+    let helpedIncorrectId = "";
+    for (let index = 0; index < 11; index += 1) {
+      if (within(section).queryAllByTestId("answer-choice").length > 0) {
+        const id = currentPracticeQuestionId();
+        officialIds.push(id);
+        const ordinal = officialIds.length;
+        if (ordinal <= 3) {
+          vi.useFakeTimers();
+          try {
+            if (within(section).getByRole("button", { name: "Hint" }).getAttribute("aria-expanded") !== "true") {
+              fireEvent.click(within(section).getByRole("button", { name: "Hint" }));
+            }
+            await act(async () => { await vi.advanceTimersByTimeAsync(0); });
+            fireEvent.click(within(section).getByRole("button", { name: "Show Hint 1" }));
+            await act(async () => { await vi.advanceTimersByTimeAsync(ordinal === 1 ? 499 : 500); });
+            const correct = correctAnswerChoiceForCurrentQuestion();
+            const chosen = ordinal === 3 ? within(section).getAllByTestId("answer-choice").find((choice) => choice !== correct)! : correct;
+            fireEvent.click(chosen);
+            // Post-score time cannot convert an early, unaided answer to a helped one.
+            await act(async () => { await vi.advanceTimersByTimeAsync(1000); });
+          } finally { vi.useRealTimers(); }
+          if (ordinal === 2) helpedCorrectId = id;
+          if (ordinal === 3) helpedIncorrectId = id;
+          assert.equal(within(section).getByRole("status").textContent?.includes("With help"), ordinal !== 1);
+        } else {
+          fireEvent.click(correctAnswerChoiceForCurrentQuestion());
+          if (ordinal === 4) {
+            vi.useFakeTimers();
+            try {
+              if (within(section).getByRole("button", { name: "Hint" }).getAttribute("aria-expanded") !== "true") fireEvent.click(within(section).getByRole("button", { name: "Hint" }));
+              fireEvent.click(within(section).getByRole("button", { name: "Show Hint 1" }));
+              await act(async () => { await vi.advanceTimersByTimeAsync(500); });
+            } finally { vi.useRealTimers(); }
+            assert.doesNotMatch(within(section).getByRole("status").textContent ?? "", /With help/);
+          }
+        }
+      } else {
+        assert.equal(within(section).queryByRole("button", { name: "Hint" }), null);
+        const meta = section.querySelector(".question-meta")?.textContent ?? "";
+        const concept = quiz.conceptChecks.find((item) => meta.includes(item.id))!;
+        const correct = concept.choices.find((choice) => choice.isCorrect)!;
+        fireEvent.click(within(section).getByRole("button", { name: new RegExp(correct.text.en.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "u") }));
+      }
+      if (index < 10) fireEvent.click(within(section).getByRole("button", { name: "Next" }));
+    }
+    assert.equal(officialIds.length, 8);
+    fireEvent.click(within(section).getByRole("button", { name: "Submit lesson quiz" }));
+    await waitFor(async () => assert.equal((await store.getLessonQuizAttempts()).length, 1));
+    const attempt = (await store.getLessonQuizAttempts())[0]!;
+    assert.equal(attempt.correct, 10);
+    assert.equal(attempt.total, 11);
+    assert.deepEqual(attempt.answeredWithHelpIds, [helpedCorrectId, helpedIncorrectId].sort());
+    assert.deepEqual(attempt.incorrectOfficialQuestionIds, [helpedIncorrectId]);
+    assert.ok(within(section).getByText("Answers with help: 2."));
+    const records = await store.getQuestionProgress();
+    const correct = records.find((record) => record.questionId === helpedCorrectId)!;
+    const incorrect = records.find((record) => record.questionId === helpedIncorrectId)!;
+    assert.equal(correct.attempts, 4);
+    assert.equal(correct.correctAttempts, 3);
+    assert.equal(correct.lastResult, "correct");
+    assert.deepEqual(correct.recentResults, [true, true, false, true]);
+    assert.deepEqual(correct.recentAnsweredWithHelp, [false, false, false, true]);
+    assert.equal(correct.leitner.box, 3);
+    assert.equal(correct.leitner.dueAt, fixedNow);
+    assert.equal(incorrect.lastResult, "incorrect");
+    assert.equal(incorrect.lastAnsweredWithHelp, true);
+    assert.equal(incorrect.leitner.box, 0);
+    assert.equal(incorrect.leitner.dueAt, fixedNow);
+    assert.equal(records.find((record) => record.questionId === officialIds[0])?.lastAnsweredWithHelp, false);
+    assert.equal(records.find((record) => record.questionId === officialIds[3])?.lastAnsweredWithHelp, false);
+    assert.deepEqual(await store.getLessonProgress(), []);
+    // The marker is still present when reviewing a submitted item.
+    for (let index = 0; index < 10; index += 1) fireEvent.click(within(section).getByRole("button", { name: "Previous" }));
+    for (let index = 0; index < 11; index += 1) {
+      if ((section.querySelector(".question-meta")?.textContent ?? "").includes(helpedCorrectId)) break;
+      fireEvent.click(within(section).getByRole("button", { name: "Next" }));
+    }
+    assert.match(within(section).getByRole("status").textContent ?? "", /With help/);
+    fireEvent.click(within(section).getByRole("button", { name: "Retry quiz" }));
+    assert.equal(section.querySelector('[aria-pressed="true"]'), null);
+  });
+
+  for (const language of ["en", "fr"] as const) {
+    for (const theme of ["light", "dark"] as const) {
+      it(`supports lesson quiz hint keyboard flow and axe in ${language} ${theme}`, async () => {
+        window.location.hash = "#/learn/M5/L-005-01";
+        window.localStorage.setItem(INTERFACE_LANGUAGE_STORAGE_KEY, language);
+        const store = createStore(`lesson-hint-axe-${language}-${theme}`);
+        await store.putPreferences({ ...defaultPreferences, language, theme });
+        const user = userEvent.setup();
+        const { container } = render(<App store={store} now={() => fixedNow} />);
+        await screen.findByRole("heading", { name: "QZ-L-005-01-A" });
+        const section = getLessonQuizSection();
+        const next = language === "fr" ? "Suivante" : "Next";
+        // Select a sheet-pointer hint deliberately: lesson quizzes remain hint-only.
+        while (within(section).queryAllByTestId("answer-choice").length === 0
+          || hintForQuestion(currentPracticeQuestionId(), bankId)?.referenceSheetSection == null) {
+          fireEvent.click(within(section).getByRole("button", { name: next }));
+        }
+        assert.equal(within(section).queryByRole("button", { name: /Calculator|Calculatrice/ }), null);
+        assert.equal(within(section).queryByRole("button", { name: /Reference sheet|Feuille de référence/ }), null);
+        const hint = hintForQuestion(currentPracticeQuestionId(), bankId)!;
+        const button = within(section).getByRole("button", { name: language === "fr" ? "Indice" : "Hint" });
+        button.focus();
+        await user.keyboard("{Enter}");
+        await waitFor(() => assert.equal(button.getAttribute("aria-expanded"), "true"));
+        await user.click(within(section).getByRole("button", { name: language === "fr" ? "Afficher l’indice 1" : "Show Hint 1" }));
+        await waitFor(() => assert.match(document.activeElement?.textContent ?? "", /Indice 1|Hint 1/));
+        assert.ok(within(section).getByText(hint.hints[0]![language]));
+        if (hint.hints.length === 2) await user.click(within(section).getByRole("button", { name: language === "fr" ? "Afficher l’indice 2" : "Show Hint 2" }));
+        assert.ok(within(section).getByRole("link", { name: language === "fr" ? "Revoir dans la leçon" : "Review in lesson" }));
+        if (language === "fr") assert.ok(within(section).getByText(/Leçon offerte en anglais seulement/));
+        assert.equal(document.documentElement.dataset.theme, theme);
+        assert.equal(section.querySelector(".hint-reference-pointer"), null);
+        await expectNoAxeViolations(container);
+        await waitFor(() => assert.match(within(section).getByTestId("hint-live-status").textContent ?? "", /recorded with help|enregistrée avec aide/));
+        await user.keyboard("{Escape}");
+        await waitFor(() => assert.equal(document.activeElement, button));
+        assert.equal(within(section).queryByRole("region", { name: language === "fr" ? "Indice" : "Hint" }), null);
+        const question = testQuestions.find((item) => item.id === hint.questionId)!;
+        fireEvent.click(within(section).getAllByTestId("answer-choice").find((choice) => choice.querySelector("span[lang]")?.textContent === question.answers[0]!.text[language])!);
+        assert.match(within(section).getByRole("status").textContent ?? "", language === "fr" ? /Avec aide/ : /With help/);
+        await expectNoAxeViolations(container);
+        // Complete the quiz and check the translated persisted results summary.
+        for (let index = 0; index < 10; index += 1) {
+          const previous = within(section).getByRole("button", { name: language === "fr" ? "Précédente" : "Previous" });
+          if (!previous.hasAttribute("disabled")) fireEvent.click(previous);
+        }
+        for (let index = 0; index < 11; index += 1) {
+          const choices = [...within(section).queryAllByTestId("answer-choice"), ...within(section).queryAllByTestId("lesson-quiz-choice")];
+          if (!choices[0]?.hasAttribute("disabled")) fireEvent.click(choices[0]!);
+          if (index < 10) fireEvent.click(within(section).getByRole("button", { name: next }));
+        }
+        fireEvent.click(within(section).getByRole("button", { name: language === "fr" ? "Soumettre le questionnaire de leçon" : "Submit lesson quiz" }));
+        await waitFor(async () => assert.equal((await store.getLessonQuizAttempts()).length, 1));
+        assert.ok(within(section).getByText(language === "fr" ? "Réponses avec aide : 1." : "Answers with help: 1."));
+        await expectNoAxeViolations(container);
+      });
+    }
+  }
+
+  it("keeps lesson quiz answers and qualified hints through current-lesson and other-lesson links", async () => {
+    window.location.hash = "#/learn/M5/L-005-01";
+    const store = createStore("lesson-quiz-hint-navigation");
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} />);
+    await screen.findByRole("heading", { name: "QZ-L-005-01-A" });
+    let section = getLessonQuizSection();
+    const seen: string[] = [];
+    for (let index = 0; index < 11; index += 1) {
+      if (within(section).queryAllByTestId("answer-choice").length > 0) {
+        const id = currentPracticeQuestionId();
+        const hint = hintForQuestion(id, bankId)!;
+        if (seen.length === 0 && hint.lessonLink.lessonId === "L-005-01") {
+          seen.push(id);
+          await user.click(within(section).getByRole("button", { name: "Hint" }));
+          await user.click(within(section).getByRole("button", { name: "Show Hint 1" }));
+          if (hint.hints.length === 2) await user.click(within(section).getByRole("button", { name: "Show Hint 2" }));
+          await waitFor(() => assert.match(within(section).getByTestId("hint-live-status").textContent ?? "", /recorded with help/));
+          const link = within(section).getByRole("link", { name: "Review in lesson" });
+          assert.equal(link.getAttribute("href"), "#/learn/M5/L-005-01");
+          await user.click(link);
+          if (hint.lessonLink.sectionAnchor !== undefined) await waitFor(() => assert.equal(document.activeElement?.id, hint.lessonLink.sectionAnchor));
+          assert.equal(currentPracticeQuestionId(), id);
+          fireEvent.click(correctAnswerChoiceForCurrentQuestion());
+          assert.match(within(section).getByRole("status").textContent ?? "", /With help/);
+          // Route to another lesson and back: answer, permutation, hint level and help survive.
+          await act(async () => { window.location.hash = "#/learn/M5/L-005-02"; });
+          await screen.findByRole("heading", { name: "QZ-L-005-02-A" });
+          await act(async () => { window.location.hash = "#/learn/M5/L-005-01"; });
+          await screen.findByRole("heading", { name: "QZ-L-005-01-A" });
+          section = getLessonQuizSection();
+          assert.equal(currentPracticeQuestionId(), id);
+          assert.match(within(section).getByRole("status").textContent ?? "", /With help/);
+          await user.click(within(section).getByRole("button", { name: "Hint" }));
+          assert.ok(within(section).getByRole("link", { name: "Review in lesson" }));
+          break;
+        }
+      }
+      fireEvent.click(within(section).getByRole("button", { name: "Next" }));
+    }
+    assert.equal(seen.length, 1);
+  });
+
+  it("handles a one-level lesson hint and cancels qualification when it closes early", async () => {
+    window.location.hash = "#/learn/M5/L-005-01";
+    render(<App store={createStore("lesson-one-level-hint")} now={() => fixedNow} />);
+    await screen.findByRole("heading", { name: "QZ-L-005-01-A" });
+    const section = getLessonQuizSection();
+    while (!(section.querySelector(".question-meta")?.textContent ?? "").includes("B-005-002-003")) fireEvent.click(within(section).getByRole("button", { name: "Next" }));
+    vi.useFakeTimers();
+    try {
+      fireEvent.click(within(section).getByRole("button", { name: "Hint" }));
+      fireEvent.click(within(section).getByRole("button", { name: "Show Hint 1" }));
+      assert.equal(within(section).queryByRole("button", { name: "Show Hint 2" }), null);
+      assert.ok(within(section).getByRole("link", { name: "Review in lesson" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(499); });
+      fireEvent.click(within(section).getByRole("button", { name: "Close tool" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(1000); });
+      fireEvent.click(correctAnswerChoiceForCurrentQuestion());
+      assert.doesNotMatch(within(section).getByRole("status").textContent ?? "", /With help/);
+    } finally { vi.useRealTimers(); }
+  });
+
+  it("stops unqualified help timing when a hint opens the current lesson", async () => {
+    window.location.hash = "#/learn/M5/L-005-01";
+    render(<App store={createStore("lesson-hint-link-timer")} now={() => fixedNow} />);
+    await screen.findByRole("heading", { name: "QZ-L-005-01-A" });
+    const section = getLessonQuizSection();
+    while (!(section.querySelector(".question-meta")?.textContent ?? "").includes("B-005-002-003")) fireEvent.click(within(section).getByRole("button", { name: "Next" }));
+    vi.useFakeTimers();
+    try {
+      fireEvent.click(within(section).getByRole("button", { name: "Hint" }));
+      fireEvent.click(within(section).getByRole("button", { name: "Show Hint 1" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(499); });
+      fireEvent.click(within(section).getByRole("link", { name: "Review in lesson" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(1000); });
+      assert.equal(within(section).queryByRole("region", { name: "Hint" }), null);
+      fireEvent.click(correctAnswerChoiceForCurrentQuestion());
+      assert.doesNotMatch(within(section).getByRole("status").textContent ?? "", /With help/);
+    } finally { vi.useRealTimers(); }
+  });
+
+  it("moves focus to the lesson title when an anchorless hint links to the current lesson", async () => {
+    const quiz = lessonQuizzesById.get("QZ-L-005-01-A")!;
+    const originals = quiz.officialQuestionIds.map((id) => hintForQuestion(id, bankId)!);
+    for (const hint of originals) basicQuestionHintsByQuestionId.set(hint.questionId, { ...hint, lessonLink: { lessonId: "L-005-01" } });
+    try {
+      window.location.hash = "#/learn/M5/L-005-01";
+      const user = userEvent.setup();
+      render(<App store={createStore("lesson-anchorless-hint-link")} now={() => fixedNow} />);
+      await screen.findByRole("heading", { name: quiz.id });
+      const section = getLessonQuizSection();
+      while (!(section.querySelector(".question-meta")?.textContent ?? "").includes("B-005-002-003")) fireEvent.click(within(section).getByRole("button", { name: "Next" }));
+      await user.click(within(section).getByRole("button", { name: "Hint" }));
+      await user.click(within(section).getByRole("button", { name: "Show Hint 1" }));
+      await user.click(within(section).getByRole("link", { name: "Review in lesson" }));
+      await waitFor(() => assert.equal(document.activeElement?.id, "lesson-title"));
+      assert.equal(window.location.hash, "#/learn/M5/L-005-01");
+    } finally {
+      for (const hint of originals) basicQuestionHintsByQuestionId.set(hint.questionId, hint);
+    }
+  });
+
+  it("preserves the quiz when a hint links to a different lesson", async () => {
+    // Current content links each hint to its own lesson; exercise the supported other-lesson route.
+    const quiz = lessonQuizzesById.get("QZ-L-005-01-A")!;
+    const originals = quiz.officialQuestionIds.map((id) => hintForQuestion(id, bankId)!);
+    for (const hint of originals) basicQuestionHintsByQuestionId.set(hint.questionId, { ...hint, lessonLink: { lessonId: "L-005-02" } });
+    try {
+      window.location.hash = "#/learn/M5/L-005-01";
+      const user = userEvent.setup();
+      render(<App store={createStore("lesson-other-hint-link")} now={() => fixedNow} />);
+      await screen.findByRole("heading", { name: quiz.id });
+      let section = getLessonQuizSection();
+      while (within(section).queryAllByTestId("answer-choice").length === 0) fireEvent.click(within(section).getByRole("button", { name: "Next" }));
+      const id = currentPracticeQuestionId();
+      const hint = hintForQuestion(id, bankId)!;
+      await user.click(within(section).getByRole("button", { name: "Hint" }));
+      await user.click(within(section).getByRole("button", { name: "Show Hint 1" }));
+      if (hint.hints.length === 2) await user.click(within(section).getByRole("button", { name: "Show Hint 2" }));
+      await waitFor(() => assert.match(within(section).getByTestId("hint-live-status").textContent ?? "", /recorded with help/));
+      await user.click(within(section).getByRole("link", { name: "Review in lesson" }));
+      await screen.findByRole("heading", { name: "QZ-L-005-02-A" });
+      await act(async () => { window.location.hash = "#/learn/M5/L-005-01"; });
+      await screen.findByRole("heading", { name: quiz.id });
+      section = getLessonQuizSection();
+      assert.equal(currentPracticeQuestionId(), id);
+      fireEvent.click(correctAnswerChoiceForCurrentQuestion());
+      assert.match(within(section).getByRole("status").textContent ?? "", /With help/);
+      await user.click(within(section).getByRole("button", { name: "Hint" }));
+      assert.ok(within(section).getByRole("link", { name: "Review in lesson" }));
+    } finally {
+      for (const hint of originals) basicQuestionHintsByQuestionId.set(hint.questionId, hint);
+    }
+  });
+
   it("renders Practice with immediate feedback, progress persistence, and no axe violations", async () => {
     window.location.hash = "#/practice";
     const store = createStore("practice");
@@ -923,7 +1509,7 @@ describe("App accessibility and flows", () => {
     const correctAnswerText = displayedQuestion.answers.find((answer) => answer.sourceIndex === 0)?.text.en;
     assert.ok(correctAnswerText);
     const choices = screen.getAllByTestId("answer-choice");
-    const wrongChoice = choices.find((choice) => !(choice.textContent ?? "").includes(correctAnswerText));
+    const wrongChoice = choices.find((choice) => choice.querySelector("span[lang]")?.textContent !== correctAnswerText);
     assert.ok(wrongChoice);
     fireEvent.click(wrongChoice);
     await screen.findByRole("status");
@@ -936,6 +1522,646 @@ describe("App accessibility and flows", () => {
     assert.equal(incorrectChoice.querySelector(".answer-state-icon")?.textContent, "✕");
     assert.equal(incorrectChoice.querySelector(".answer-state-icon")?.getAttribute("aria-hidden"), "true");
     await waitFor(async () => assert.equal((await store.getQuestionProgress()).length, 1));
+  });
+
+  it("bundles Basic hints offline and exposes the Hint tool in practice but never mock exams", async () => {
+    assert.equal(basicQuestionHints.length, testQuestions.length);
+
+    window.location.hash = "#/practice";
+    const practiceStore = createStore("practice-hint-availability");
+    const practiceUser = userEvent.setup();
+    render(<App store={practiceStore} now={() => fixedNow} seedFactory={() => "practice-hint-availability"} />);
+
+    await screen.findByRole("heading", { name: "Practice" });
+    await screen.findByText(/Question 1 of/);
+    const hint = hintForQuestion(currentPracticeQuestionId(), "basic-2025-07-15");
+    assert.ok(hint);
+    await practiceUser.click(screen.getByRole("button", { name: "Hint" }));
+    await screen.findByRole("heading", { name: "Hint" });
+    await practiceUser.click(screen.getByRole("button", { name: "Show Hint 1" }));
+    assert.match(screen.getByRole("region", { name: "Hint" }).textContent ?? "", new RegExp(hint.hints[0]!.en.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "u"));
+
+    cleanup();
+    window.location.hash = "#/practice";
+    const reviewStore = createStore("review-hint-availability");
+    await reviewStore.putQuestionProgressMany(applyPracticeAnswer([], testQuestions[0]!.id, 1, fixedNow));
+    render(<App store={reviewStore} now={() => fixedNow} seedFactory={() => "review-hint-availability"} />);
+    await screen.findByRole("heading", { name: "Practice" });
+    await practiceUser.selectOptions(screen.getByLabelText("Practice scope"), "due");
+    await practiceUser.click(screen.getByRole("button", { name: "Start set" }));
+    await screen.findByText(/Scope: Due review/);
+    assert.ok(screen.getByRole("button", { name: "Hint" }));
+
+    cleanup();
+    window.location.hash = "#/mock";
+    const mockStore = createStore("mock-hint-availability");
+    render(<App store={mockStore} now={() => fixedNow} seedFactory={() => "mock-hint-availability"} />);
+
+    await screen.findByRole("heading", { name: "Mock exam" });
+    await practiceUser.click(await screen.findByRole("button", { name: "Start mock exam" }));
+    await screen.findByText(/Question 1 of/);
+    assert.equal(screen.queryByRole("button", { name: "Hint" }), null);
+  });
+
+  it("records answered-with-help only after a hint is visible for 0.5 seconds and keeps helped correct answers due now", async () => {
+    window.location.hash = "#/practice";
+    const earlyStore = createStore("hint-progress-early");
+    render(<App store={earlyStore} now={() => fixedNow} seedFactory={() => "hint-progress-seed"} />);
+
+    await screen.findByRole("heading", { name: "Practice" });
+    await screen.findByText(/Question 1 of/);
+    vi.useFakeTimers();
+    try {
+      fireEvent.click(screen.getByRole("button", { name: "Hint" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(0); });
+      fireEvent.click(screen.getByRole("button", { name: "Show Hint 1" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(499); });
+      fireEvent.click(correctAnswerChoiceForCurrentQuestion());
+    } finally {
+      vi.useRealTimers();
+    }
+    await waitFor(async () => assert.equal((await earlyStore.getQuestionProgress()).length, 1));
+    const earlyRecord = (await earlyStore.getQuestionProgress())[0]!;
+    assert.equal(earlyRecord.lastAnsweredWithHelp, false);
+    assert.equal(earlyRecord.leitner.box, 1);
+    assert.notEqual(earlyRecord.leitner.dueAt, fixedNow);
+
+    cleanup();
+    window.location.hash = "#/practice";
+    const helpedQuestionId = "B-005-004-002";
+    const helpedStore = createStore("hint-progress-helped");
+    await helpedStore.putQuestionProgressMany([weakDueProgressRecord(helpedQuestionId)]);
+    render(<App store={helpedStore} now={() => fixedNow} seedFactory={() => "hint-progress-seed"} />);
+
+    await screen.findByRole("heading", { name: "Practice" });
+    await screen.findByText(/Question 1 of/);
+    await startDueReviewForQuestion(helpedQuestionId);
+    vi.useFakeTimers();
+    try {
+      fireEvent.click(screen.getByRole("button", { name: "Hint" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(0); });
+      fireEvent.click(screen.getByRole("button", { name: "Show Hint 1" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(500); });
+      fireEvent.click(correctAnswerChoiceForCurrentQuestion());
+    } finally {
+      vi.useRealTimers();
+    }
+    await waitFor(async () => assert.equal((await helpedStore.getQuestionProgress())[0]?.attempts, 4));
+    const helpedRecord = (await helpedStore.getQuestionProgress()).find((record) => record.questionId === helpedQuestionId)!;
+    assert.equal(helpedRecord.lastAnsweredWithHelp, true);
+    assert.deepEqual(helpedRecord.recentAnsweredWithHelp, [false, false, false, true]);
+    assert.equal(helpedRecord.leitner.box, 0);
+    assert.equal(helpedRecord.leitner.dueAt, fixedNow);
+
+    fireEvent.click(screen.getByRole("button", { name: "Home" }));
+    await screen.findByRole("heading", { name: "Ready for Basic with Honours?" });
+    fireEvent.click(screen.getByText("Weak subsections"));
+    assert.ok(screen.getByText(new RegExp(testQuestions.find((question) => question.id === helpedQuestionId)?.subsectionId ?? "^$", "u")));
+  });
+
+  it("does not restart hint qualification on re-render and does not count hints closed or left before 0.5 seconds", async () => {
+    const stableTimerQuestionId = "B-005-004-002";
+    window.location.hash = "#/practice";
+    const stableStore = createStore("hint-stable-rerender");
+    await stableStore.putQuestionProgressMany(applyPracticeAnswer([], stableTimerQuestionId, 1, fixedNow));
+    render(<App store={stableStore} now={() => fixedNow} seedFactory={() => "hint-stable-rerender"} />);
+
+    await screen.findByRole("heading", { name: "Practice" });
+    await startDueReviewForQuestion(stableTimerQuestionId);
+    vi.useFakeTimers();
+    try {
+      fireEvent.click(screen.getByRole("button", { name: "Hint" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(0); });
+      fireEvent.click(screen.getByRole("button", { name: "Show Hint 1" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(300); });
+      fireEvent.click(screen.getByRole("button", { name: "Show Hint 2" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(300); });
+      fireEvent.click(correctAnswerChoiceForCurrentQuestion());
+    } finally {
+      vi.useRealTimers();
+    }
+    await waitFor(async () => assert.equal((await stableStore.getQuestionProgress()).find((record) => record.questionId === stableTimerQuestionId)?.lastAnsweredWithHelp, true));
+
+    cleanup();
+    window.location.hash = "#/practice";
+    const closedStore = createStore("hint-closed-before-qualified");
+    render(<App store={closedStore} now={() => fixedNow} seedFactory={() => "hint-closed-before-qualified"} />);
+
+    await screen.findByRole("heading", { name: "Practice" });
+    await screen.findByText(/Question 1 of/);
+    vi.useFakeTimers();
+    try {
+      fireEvent.click(screen.getByRole("button", { name: "Hint" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(0); });
+      fireEvent.click(screen.getByRole("button", { name: "Show Hint 1" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(499); });
+      fireEvent.click(screen.getByRole("button", { name: "Close tool" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(100); });
+      fireEvent.click(correctAnswerChoiceForCurrentQuestion());
+    } finally {
+      vi.useRealTimers();
+    }
+    await waitFor(async () => assert.equal((await closedStore.getQuestionProgress())[0]?.lastAnsweredWithHelp, false));
+
+    cleanup();
+    window.location.hash = "#/practice";
+    const changedStore = createStore("hint-question-changed-before-qualified");
+    render(<App store={changedStore} now={() => fixedNow} seedFactory={() => "hint-question-changed-before-qualified"} />);
+
+    await screen.findByRole("heading", { name: "Practice" });
+    await screen.findByText(/Question 1 of/);
+    const firstQuestionId = currentPracticeQuestionId();
+    vi.useFakeTimers();
+    try {
+      fireEvent.click(screen.getByRole("button", { name: "Hint" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(0); });
+      fireEvent.click(screen.getByRole("button", { name: "Show Hint 1" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(499); });
+      fireEvent.click(screen.getByRole("button", { name: "Next" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(100); });
+      fireEvent.click(screen.getByRole("button", { name: "Previous" }));
+      fireEvent.click(correctAnswerChoiceForCurrentQuestion());
+    } finally {
+      vi.useRealTimers();
+    }
+    await waitFor(async () => assert.equal((await changedStore.getQuestionProgress()).find((record) => record.questionId === firstQuestionId)?.lastAnsweredWithHelp, false));
+  });
+
+  it("opens the generic lesson link at the anchored heading without discarding helped practice state", async () => {
+    window.location.hash = "#/practice";
+    const store = createStore("hint-lesson-link");
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "hint-lesson-link"} />);
+
+    await screen.findByRole("heading", { name: "Practice" });
+    await screen.findByText(/Question 1 of/);
+    const questionId = currentPracticeQuestionId();
+    const hint = hintForQuestion(questionId, "basic-2025-07-15");
+    assert.ok(hint);
+    assert.ok(hint.lessonLink.sectionAnchor);
+    const linkedLesson = lessonsById.get(hint.lessonLink.lessonId);
+    assert.ok(linkedLesson);
+    const linkedHeadingText = lessonHeadingTextForHintLink(hint);
+    assert.ok(linkedHeadingText);
+
+    fireEvent.click(screen.getByRole("button", { name: "Hint" }));
+    const hintPanel = await screen.findByRole("region", { name: "Hint" });
+    vi.useFakeTimers();
+    try {
+      await act(async () => { await vi.advanceTimersByTimeAsync(0); });
+      fireEvent.click(within(hintPanel).getByRole("button", { name: "Show Hint 1" }));
+      if (hint.hints.length === 2) {
+        fireEvent.click(within(hintPanel).getByRole("button", { name: "Show Hint 2" }));
+      }
+      await act(async () => { await vi.advanceTimersByTimeAsync(500); });
+    } finally {
+      vi.useRealTimers();
+    }
+    assert.equal((hintPanel.textContent ?? "").includes(linkedLesson.title.en), false);
+    assert.equal((hintPanel.textContent ?? "").includes(linkedHeadingText), false);
+    const lessonLink = within(hintPanel).getByRole("link", { name: "Review in lesson" }) as HTMLAnchorElement;
+    assert.equal(lessonLink.getAttribute("href")?.endsWith(`/${hint.lessonLink.lessonId}`), true);
+    for (const attribute of Array.from(lessonLink.attributes)) {
+      assert.equal(attribute.value.includes(hint.lessonLink.sectionAnchor), false, `${attribute.name} leaked the section anchor`);
+      assert.equal(attribute.value.includes(linkedHeadingText), false, `${attribute.name} leaked the linked heading text`);
+    }
+
+    fireEvent.click(lessonLink);
+    await screen.findByRole("heading", { name: linkedLesson.title.en });
+    await waitFor(() => assert.equal(document.activeElement?.id, hint.lessonLink.sectionAnchor));
+
+    fireEvent.click(screen.getByRole("button", { name: "Practice" }));
+    await screen.findByText(new RegExp(questionId));
+    fireEvent.click(correctAnswerChoiceForCurrentQuestion());
+    await waitFor(async () => assert.equal((await store.getQuestionProgress())[0]?.lastAnsweredWithHelp, true));
+  });
+
+  it("keeps helped state across the lesson link in review-later mode", async () => {
+    const questionId = "B-005-004-002";
+    const store = createStore("hint-lesson-link-review-later");
+    await store.putPreferences({ ...defaultPreferences, practiceMode: "review-later" });
+    await store.putQuestionProgressMany(applyPracticeAnswer([], questionId, 1, fixedNow));
+    window.location.hash = "#/practice";
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "hint-lesson-link-review-later"} />);
+
+    await screen.findByRole("heading", { name: "Practice" });
+    await startDueReviewForQuestion(questionId);
+    const hint = hintForQuestion(questionId, "basic-2025-07-15");
+    assert.ok(hint);
+    assert.ok(hint.lessonLink.sectionAnchor);
+    const linkedLesson = lessonsById.get(hint.lessonLink.lessonId);
+    assert.ok(linkedLesson);
+
+    fireEvent.click(screen.getByRole("button", { name: "Hint" }));
+    const hintPanel = await screen.findByRole("region", { name: "Hint" });
+    vi.useFakeTimers();
+    try {
+      await act(async () => { await vi.advanceTimersByTimeAsync(0); });
+      fireEvent.click(within(hintPanel).getByRole("button", { name: "Show Hint 1" }));
+      fireEvent.click(within(hintPanel).getByRole("button", { name: "Show Hint 2" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(500); });
+    } finally {
+      vi.useRealTimers();
+    }
+    fireEvent.click(within(hintPanel).getByRole("link", { name: "Review in lesson" }));
+    await screen.findByRole("heading", { name: linkedLesson.title.en });
+
+    fireEvent.click(screen.getByRole("button", { name: "Practice" }));
+    await screen.findByText(new RegExp(questionId));
+    fireEvent.click(correctAnswerChoiceForCurrentQuestion());
+    fireEvent.click(screen.getByRole("button", { name: "Submit practice set" }));
+    await waitFor(async () => assert.equal((await store.getQuestionProgress()).find((record) => record.questionId === questionId)?.lastAnsweredWithHelp, true));
+  });
+
+  it("counts review-later hints viewed after selection but does not change immediate answers already scored", async () => {
+    const reviewLaterQuestionId = "B-005-004-002";
+    const reviewLaterStore = createStore("hint-review-later-after-selection");
+    await reviewLaterStore.putPreferences({ ...defaultPreferences, practiceMode: "review-later" });
+    await reviewLaterStore.putQuestionProgressMany(applyPracticeAnswer([], reviewLaterQuestionId, 1, fixedNow));
+    window.location.hash = "#/practice";
+    render(<App store={reviewLaterStore} now={() => fixedNow} seedFactory={() => "hint-review-later-after-selection"} />);
+
+    await screen.findByRole("heading", { name: "Practice" });
+    await startDueReviewForQuestion(reviewLaterQuestionId);
+    fireEvent.click(correctAnswerChoiceForCurrentQuestion());
+    vi.useFakeTimers();
+    try {
+      fireEvent.click(screen.getByRole("button", { name: "Hint" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(0); });
+      fireEvent.click(screen.getByRole("button", { name: "Show Hint 1" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(500); });
+    } finally {
+      vi.useRealTimers();
+    }
+    fireEvent.click(screen.getByRole("button", { name: "Submit practice set" }));
+    await waitFor(async () => assert.equal((await reviewLaterStore.getQuestionProgress()).find((record) => record.questionId === reviewLaterQuestionId)?.lastAnsweredWithHelp, true));
+
+    cleanup();
+    window.location.hash = "#/practice";
+    const immediateStore = createStore("hint-immediate-after-scored");
+    render(<App store={immediateStore} now={() => fixedNow} seedFactory={() => "hint-immediate-after-scored"} />);
+
+    await screen.findByRole("heading", { name: "Practice" });
+    await screen.findByText(/Question 1 of/);
+    fireEvent.click(correctAnswerChoiceForCurrentQuestion());
+    await waitFor(async () => assert.equal((await immediateStore.getQuestionProgress())[0]?.lastAnsweredWithHelp, false));
+    vi.useFakeTimers();
+    try {
+      fireEvent.click(screen.getByRole("button", { name: "Hint" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(0); });
+      fireEvent.click(screen.getByRole("button", { name: "Show Hint 1" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(500); });
+    } finally {
+      vi.useRealTimers();
+    }
+    assert.equal(screen.getByTestId("hint-live-status").textContent?.includes("This answer will be recorded with help."), false);
+    assert.equal((await immediateStore.getQuestionProgress())[0]?.lastAnsweredWithHelp, false);
+  });
+
+  it("shows localized French hint content in the App without panel-styled lesson notes", async () => {
+    window.localStorage.setItem(INTERFACE_LANGUAGE_STORAGE_KEY, "fr");
+    window.location.hash = "#/practice";
+    const store = createStore("hint-french-app-display");
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "hint-french-app-display"} />);
+
+    await screen.findByRole("heading", { name: "Exercices" });
+    await screen.findByText(/Question 1 sur/u);
+    const hint = hintForQuestion(currentPracticeQuestionId(), "basic-2025-07-15");
+    assert.ok(hint);
+    fireEvent.click(screen.getByRole("button", { name: "Indice" }));
+    const hintPanel = await screen.findByRole("region", { name: "Indice" });
+    fireEvent.click(within(hintPanel).getByRole("button", { name: "Afficher l’indice 1" }));
+    assert.match(hintPanel.textContent ?? "", new RegExp(hint.hints[0]!.fr.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "u"));
+    if (hint.hints.length === 2) {
+      fireEvent.click(within(hintPanel).getByRole("button", { name: "Afficher l’indice 2" }));
+    }
+    assert.ok(within(hintPanel).getByRole("link", { name: "Revoir dans la leçon" }));
+    const notice = screen.getByText(/Leçon offerte en anglais seulement/u);
+    assert.equal(notice.classList.contains("hint-lesson-link__notice"), true);
+    assert.equal(notice.classList.contains("reference-note"), false);
+  });
+
+  it("keeps practice questions and answers operable with calculator or reference tools open at phone, tablet, and desktop widths", async () => {
+    for (const width of [320, 768, 1280]) {
+      for (const toolName of ["Calculator", "Reference sheet"]) {
+        cleanup();
+        setViewportWidth(width);
+        window.location.hash = "#/practice";
+        const store = createStore(`practice-tools-${width}-${toolName}`);
+        const user = userEvent.setup();
+        render(<App store={store} now={() => fixedNow} seedFactory={() => `practice-tools-${width}-${toolName}`} />);
+
+        await screen.findByRole("heading", { name: "Practice" });
+        await screen.findByText(/Question 1 of/);
+        const toolButton = screen.getByRole("button", { name: toolName });
+        await user.click(toolButton);
+        await screen.findByRole("heading", { name: toolName });
+        assert.ok(document.querySelector(".question-panel")?.textContent?.includes("Question"));
+        const answer = screen.getAllByTestId("answer-choice")[0]!;
+        assert.equal((answer as HTMLButtonElement).disabled, false);
+        await user.click(answer);
+        assert.equal(answer.getAttribute("aria-pressed"), "true");
+        assert.equal(screen.getAllByTestId("answer-choice").length, 4);
+      }
+    }
+  });
+
+  it("opens and closes practice calculator with focus return, scoped keyboard input, spoken live output, and light/dark axe coverage", async () => {
+    for (const theme of ["light", "dark"] as const) {
+      cleanup();
+      setViewportWidth(1280);
+      window.location.hash = "#/practice";
+      const store = createStore(`practice-calculator-${theme}`);
+      await store.putPreferences({ ...defaultPreferences, theme });
+      const user = userEvent.setup();
+      const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => `practice-calculator-${theme}`} />);
+
+      await screen.findByRole("heading", { name: "Practice" });
+      await screen.findByText(/Question 1 of/);
+      const calculatorButton = screen.getByRole("button", { name: "Calculator" });
+      await user.click(calculatorButton);
+      const calculator = await screen.findByRole("region", { name: "Calculator" });
+      await waitFor(() => assert.equal(document.activeElement, calculator));
+
+      await user.keyboard("1+2{Enter}");
+      assert.equal(screen.getByLabelText("Calculator display: 3").getAttribute("aria-live"), "off");
+      assert.equal(screen.getByLabelText("Calculator display: 3").textContent, "3");
+      assert.equal(screen.getByTestId("calculator-live-result").textContent, "Calculator result: 3");
+
+      const firstAnswer = screen.getAllByTestId("answer-choice")[0]!;
+      firstAnswer.focus();
+      await user.keyboard("9+9");
+      assert.equal(screen.getByLabelText("Calculator display: 3").textContent, "3");
+      assert.equal((firstAnswer as HTMLButtonElement).disabled, false);
+      await user.click(firstAnswer);
+      assert.equal(firstAnswer.getAttribute("aria-pressed"), "true");
+
+      await expectNoAxeViolations(container);
+      await user.click(screen.getByRole("button", { name: "Close tool" }));
+      await waitFor(() => assert.equal(document.activeElement, calculatorButton));
+    }
+  });
+
+  it("lets focused calculator buttons act as buttons and ignores modified shortcut keys", async () => {
+    window.location.hash = "#/practice";
+    const store = createStore("calculator-button-keyboard");
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "calculator-button-keyboard"} />);
+
+    await screen.findByRole("heading", { name: "Practice" });
+    await screen.findByText(/Question 1 of/);
+    await user.click(screen.getByRole("button", { name: "Calculator" }));
+    await screen.findByRole("heading", { name: "Calculator" });
+
+    const sevenButton = () => screen.getByRole("button", { name: "Digit 7" });
+    let seven = sevenButton();
+    seven.focus();
+    await user.keyboard("{Enter}");
+    seven = sevenButton();
+    assert.equal(document.activeElement, seven);
+    assert.equal(screen.getByLabelText("Calculator display: 7").textContent, "7");
+    await user.keyboard(" ");
+    seven = sevenButton();
+    assert.equal(document.activeElement, seven);
+
+    await user.click(screen.getByRole("button", { name: "All clear" }));
+    seven = sevenButton();
+    seven.focus();
+    fireEvent.click(seven, { detail: 1 });
+    seven = sevenButton();
+    assert.equal(document.activeElement, seven);
+    assert.equal(screen.getByLabelText("Calculator display: 7").textContent, "7");
+
+    seven = sevenButton();
+    seven.focus();
+    fireEvent.keyDown(seven, { key: "+" });
+    seven = sevenButton();
+    fireEvent.keyDown(seven, { key: "2" });
+    seven = sevenButton();
+    assert.equal(document.activeElement, seven);
+    assert.equal(screen.getByLabelText("Calculator display: 2").textContent, "2");
+    fireEvent.keyDown(seven, { key: "Enter" });
+    fireEvent.keyUp(seven, { key: "Enter" });
+    fireEvent.click(seven);
+    seven = sevenButton();
+    assert.equal(document.activeElement, seven);
+    assert.equal(document.querySelector<HTMLElement>(".calculator-display")?.textContent, "7");
+    await user.keyboard("{Escape}");
+    assert.equal(document.querySelector<HTMLElement>(".calculator-display")?.textContent, "0");
+
+    const calculator = screen.getByRole("region", { name: "Calculator" });
+    calculator.focus();
+    fireEvent.keyDown(calculator, { key: "1", ctrlKey: true });
+    fireEvent.keyDown(calculator, { key: "+", metaKey: true });
+    fireEvent.keyDown(calculator, { key: "x", altKey: true });
+    assert.equal(screen.getByLabelText("Calculator display: 0").textContent, "0");
+  });
+
+  it("keeps calculator state when switching tools or closing, then clears it for a new practice set", async () => {
+    window.location.hash = "#/practice";
+    const store = createStore("calculator-state-retention");
+    const seeds = ["calculator-state-a", "calculator-state-b"];
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} seedFactory={() => seeds.shift() ?? "calculator-state-c"} />);
+
+    await screen.findByRole("heading", { name: "Practice" });
+    await screen.findByText(/Question 1 of/);
+    const calculatorButton = screen.getByRole("button", { name: "Calculator" });
+    await user.click(calculatorButton);
+    await user.keyboard("4+5{Enter}");
+    assert.equal(screen.getByLabelText("Calculator display: 9").textContent, "9");
+
+    await user.click(screen.getByRole("button", { name: "Reference sheet" }));
+    await screen.findByRole("heading", { name: "Reference sheet" });
+    await user.click(calculatorButton);
+    assert.equal(screen.getByLabelText("Calculator display: 9").textContent, "9");
+
+    await user.click(screen.getByRole("button", { name: "Close tool" }));
+    await user.click(calculatorButton);
+    assert.equal(screen.getByLabelText("Calculator display: 9").textContent, "9");
+
+    await user.click(screen.getByRole("button", { name: "Start set" }));
+    await screen.findByText(/Seed calculator-state-b/);
+    await user.click(screen.getByRole("button", { name: "Calculator" }));
+    assert.equal(screen.getByLabelText("Calculator display: 0").textContent, "0");
+
+    await user.click(screen.getByRole("button", { name: "Start set" }));
+    await screen.findByText(/Seed calculator-state-c/);
+    await user.click(screen.getByRole("button", { name: "Calculator" }));
+    await user.keyboard("6");
+    assert.equal(screen.getByLabelText("Calculator display: 6").textContent, "6");
+    await user.click(screen.getByRole("button", { name: "Start set" }));
+    await screen.findByText(/Seed calculator-state-c/);
+    await user.click(screen.getByRole("button", { name: "Calculator" }));
+    assert.equal(screen.getByLabelText("Calculator display: 0").textContent, "0");
+  });
+
+  it("uses real drawer/side-panel states without reserving an empty tool column and keeps DOM order visual", async () => {
+    const css = webStylesCss();
+    const panelRules = cssRuleBlocks(css, ".exam-tool-panel");
+    assert.match(panelRules[0] ?? "", /position: sticky;/);
+    assert.match(panelRules[0] ?? "", /bottom: 0;/);
+    assert.match(panelRules[0] ?? "", /max-height: min\(24rem, 48svh\);/);
+    assert.match(panelRules[1] ?? "", /max-height: calc\(100svh - \(2 \* var\(--ch-space-lg\)\)\);/);
+    assert.equal(cssRuleBlock(css, ".exam-tools-shell--open .exam-tools-content"), "");
+    assert.match(cssRuleBlock(css, "html:has(.exam-tools-shell--open)"), /scroll-padding-block-end: calc\(min\(24rem, 48svh\) \+ var\(--ch-space-lg\)\);/);
+    assert.match(cssRuleBlock(css, ".exam-tools-shell--practice.exam-tools-shell--open"), /grid-template-columns: minmax\(0, 1fr\) minmax\(18rem, 0\.42fr\);/);
+    assert.match(cssRuleBlock(css, ".mock-exam-body"), /grid-template-columns: minmax\(0, 1fr\) minmax\(12rem, 0\.3fr\);/);
+    assert.match(cssRuleBlock(css, ".exam-tools-shell--mock.exam-tools-shell--open .mock-exam-body"), /grid-template-columns: 1fr;/);
+    assert.doesNotMatch(cssRuleBlock(css, ".mock-exam-body"), /gap:/);
+    assert.match(cssRuleBlocks(css, ".calculator-help").at(-1) ?? "", /display: none;/);
+    assert.doesNotMatch(cssRuleBlock(css, ".exam-tools-shell"), /grid-template-columns/);
+
+    window.location.hash = "#/practice";
+    const store = createStore("exam-tools-dom-order");
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "exam-tools-dom-order"} />);
+
+    await screen.findByRole("heading", { name: "Practice" });
+    await screen.findByText(/Question 1 of/);
+    const shell = screen.getByTestId("practice-exam-tools");
+    assert.equal(shell.classList.contains("exam-tools-shell--open"), false);
+    await user.click(screen.getByRole("button", { name: "Reference sheet" }));
+    assert.equal(shell.classList.contains("exam-tools-shell--open"), true);
+
+    const toolbar = document.querySelector(".exam-tools-toolbar");
+    const questionPanel = document.querySelector(".question-panel");
+    const panel = screen.getByTestId("exam-tool-panel");
+    assert.ok(toolbar);
+    assert.ok(questionPanel);
+    assert.ok(toolbar.compareDocumentPosition(questionPanel) & Node.DOCUMENT_POSITION_FOLLOWING);
+    assert.ok(questionPanel.compareDocumentPosition(panel) & Node.DOCUMENT_POSITION_FOLLOWING);
+
+    cleanup();
+    window.location.hash = "#/mock";
+    const mockStore = createStore("mock-tools-dom-order");
+    render(<App store={mockStore} now={() => fixedNow} seedFactory={() => "mock-tools-dom-order"} />);
+    await user.click(await screen.findByRole("button", { name: "Start mock exam" }));
+    const mockQuestionPanel = document.querySelector(".mock-question-stack .question-panel");
+    const navigator = screen.getByRole("navigation", { name: "Question navigator" });
+    assert.ok(mockQuestionPanel);
+    assert.ok(mockQuestionPanel.compareDocumentPosition(navigator) & Node.DOCUMENT_POSITION_FOLLOWING);
+    const mockShell = screen.getByTestId("mock-exam-tools");
+    assert.equal(mockShell.classList.contains("exam-tools-shell--open"), false);
+    await user.click(screen.getByRole("button", { name: "Calculator" }));
+    assert.equal(mockShell.classList.contains("exam-tools-shell--open"), true);
+  });
+
+  it("disables the Basic reference sheet in Advanced mock exams", async () => {
+    window.location.hash = "#/mock";
+    const store = createStore("advanced-tools-disabled");
+    await store.putPreferences({ ...defaultPreferences, activeBankId: ADVANCED_BANK_ID });
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "advanced-tools-disabled"} />);
+
+    await screen.findByRole("heading", { name: "Mock exam" });
+    await user.click(await screen.findByRole("button", { name: "Start mock exam" }));
+    await screen.findByText(/Question 1 of 50/);
+    const referenceButton = screen.getByRole("button", { name: "Reference sheet" }) as HTMLButtonElement;
+    assert.equal(referenceButton.disabled, true);
+    assert.equal(referenceButton.getAttribute("aria-disabled"), "true");
+  });
+
+  it("localizes calculator decimal input and live announcements in French", async () => {
+    setViewportWidth(768);
+    window.localStorage.setItem(INTERFACE_LANGUAGE_STORAGE_KEY, "fr");
+    window.location.hash = "#/practice";
+    const store = createStore("practice-calculator-fr");
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "practice-calculator-fr"} />);
+
+    await screen.findByRole("heading", { name: "Exercices" });
+    await screen.findByText(/Question 1 sur/);
+    await user.click(screen.getByRole("button", { name: "Calculatrice" }));
+    await screen.findByRole("heading", { name: "Calculatrice" });
+    await user.click(screen.getByRole("button", { name: "Chiffre 1" }));
+    await user.click(screen.getByRole("button", { name: "Virgule décimale" }));
+    await user.click(screen.getByRole("button", { name: "Chiffre 5" }));
+
+    const display = document.querySelector<HTMLElement>(".calculator-display");
+    assert.equal(display?.textContent, "1,5");
+    assert.match(display?.getAttribute("aria-label") ?? "", /1,5/);
+    assert.equal(screen.getByTestId("calculator-live-result").textContent, "Résultat de la calculatrice : 1,5");
+  });
+
+  it("keeps French reference sheet labels localized while marking sheet content English", async () => {
+    window.localStorage.setItem(INTERFACE_LANGUAGE_STORAGE_KEY, "fr");
+    window.location.hash = "#/practice";
+    const store = createStore("reference-sheet-fr-labels");
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "reference-sheet-fr-labels"} />);
+
+    await screen.findByRole("heading", { name: "Exercices" });
+    await screen.findByText(/Question 1 sur/);
+    await user.click(screen.getByRole("button", { name: "Feuille de référence" }));
+    const referencePanel = await screen.findByRole("region", { name: "Feuille de référence" });
+    assert.equal(referencePanel.getAttribute("lang"), null);
+    await user.selectOptions(within(referencePanel).getByRole("combobox", { name: "Version de la feuille" }), "study");
+    const ohmsHeading = within(referencePanel).getByRole("heading", { level: 3, name: "Ohm's law" });
+    assert.equal(ohmsHeading.getAttribute("lang"), "en");
+    const tableRegion = within(referencePanel).getByRole("region", { name: "Tableau de la feuille de référence 1" });
+    assert.equal(tableRegion.getAttribute("lang"), null);
+    assert.equal(tableRegion.querySelector("table")?.getAttribute("lang"), "en");
+  });
+
+  it("opens the Basic reference sheet with focus return and passes axe in light and dark", async () => {
+    for (const theme of ["light", "dark"] as const) {
+      cleanup();
+      setViewportWidth(theme === "light" ? 320 : 1280);
+      window.location.hash = "#/practice";
+      const store = createStore(`practice-reference-${theme}`);
+      await store.putPreferences({ ...defaultPreferences, theme });
+      const user = userEvent.setup();
+      const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => `practice-reference-${theme}`} />);
+
+      await screen.findByRole("heading", { name: "Practice" });
+      await screen.findByText(/Question 1 of/);
+      const referenceButton = screen.getByRole("button", { name: "Reference sheet" });
+      await user.click(referenceButton);
+      const referencePanel = await screen.findByRole("region", { name: "Reference sheet" });
+      await waitFor(() => assert.equal(document.activeElement, referencePanel));
+      assert.ok(within(referencePanel).getByRole("img", { name: /Official sheet, page 1 of 5/ }));
+      await user.selectOptions(within(referencePanel).getByRole("combobox", { name: "Sheet version" }), "study");
+      assert.equal(within(referencePanel).queryByRole("heading", { name: "Original Basic formula and reference study aid" }), null);
+      assert.ok(within(referencePanel).getByRole("heading", { level: 3, name: "Ohm's law" }));
+      assert.match(referencePanel.textContent ?? "", /E = I x R/);
+      assert.match(referencePanel.textContent ?? "", /143 \/ f\(MHz\)/);
+      assert.ok(within(referencePanel).getByRole("region", { name: "Reference sheet table 1" }));
+      await expectNoAxeViolations(container);
+      if (theme === "light") {
+        await user.keyboard("{Escape}");
+      } else {
+        await user.click(screen.getByRole("button", { name: "Close tool" }));
+      }
+      await waitFor(() => assert.equal(document.activeElement, referenceButton));
+    }
+  });
+
+  it("keeps mock exam tools non-modal while the timer continues", async () => {
+    setViewportWidth(1280);
+    window.location.hash = "#/mock";
+    const store = createStore("mock-tools-timer");
+    const user = userEvent.setup();
+    const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "mock-tools-timer"} />);
+
+    await screen.findByRole("heading", { name: "Mock exam" });
+    await user.click(screen.getByLabelText("Enable optional timer"));
+    await user.click(screen.getByRole("button", { name: "Start mock exam" }));
+    await screen.findByText(/Question 1 of 100/);
+    await user.click(screen.getByRole("button", { name: "Calculator" }));
+    await screen.findByRole("heading", { name: "Calculator" });
+
+    await waitFor(() => assert.match(screen.getByRole("timer").textContent ?? "", /00:01/), { timeout: 1500 });
+    const firstAnswer = screen.getAllByTestId("answer-choice")[0]!;
+    await user.click(firstAnswer);
+    assert.equal(firstAnswer.getAttribute("aria-pressed"), "true");
+    await expectNoAxeViolations(container);
+
+    await user.click(screen.getByRole("button", { name: "Reference sheet" }));
+    await screen.findByRole("heading", { name: "Reference sheet" });
+    const referencePanel = screen.getByRole("region", { name: "Reference sheet" });
+    assert.ok(within(referencePanel).getByRole("img", { name: /Official sheet, page 1 of 5/ }));
+    await user.selectOptions(within(referencePanel).getByRole("combobox", { name: "Sheet version" }), "study");
+    assert.match(referencePanel.textContent ?? "", /Metric prefixes/);
   });
 
   it("switches to Advanced, persists the course, hides lessons, and generates a 50-question no-Honours mock", async () => {
@@ -1045,7 +2271,92 @@ describe("App accessibility and flows", () => {
     await waitFor(async () => assert.equal((await store.getPreferences()).activeBankId, ADVANCED_BANK_ID));
   });
 
-  it("renders the French interface with Advanced selected and tags Advanced category names as English", async () => {
+  it("confirms before a course switch discards a partially answered immediate-practice session", async () => {
+    window.location.hash = "#/practice";
+    const store = createStore("course-switch-answered-immediate-practice");
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "course-switch-answered-immediate-practice-seed"} />);
+
+    await screen.findByRole("heading", { name: "Practice" });
+    await user.click(screen.getByRole("button", { name: "Start set" }));
+    await user.click((await screen.findAllByTestId("answer-choice"))[0]!);
+    await screen.findByRole("status");
+
+    await user.click(screen.getByRole("radio", { name: "Advanced" }));
+    let dialog = await screen.findByRole("alertdialog", { name: "Switch course?" });
+    assert.match(dialog.textContent ?? "", /discard the unfinished practice or mock exam session/);
+
+    await user.click(within(dialog).getByRole("button", { name: "Cancel course switch" }));
+    assert.equal(screen.queryByRole("alertdialog", { name: "Switch course?" }), null);
+    assert.equal((screen.getByRole("radio", { name: "Basic" }) as HTMLInputElement).checked, true);
+    assert.ok(screen.getByRole("status").textContent?.trim(), "Cancel should keep the answered immediate-practice feedback");
+
+    await user.click(screen.getByRole("radio", { name: "Advanced" }));
+    dialog = await screen.findByRole("alertdialog", { name: "Switch course?" });
+    await user.click(within(dialog).getByRole("button", { name: "Switch course" }));
+    await waitFor(async () => assert.equal((await store.getPreferences()).activeBankId, ADVANCED_BANK_ID));
+    await waitFor(() => assert.match(document.querySelector(".question-meta")?.textContent ?? "", /A-00[1-7]-/));
+  });
+
+  it("confirms before a course switch discards a fully answered unsubmitted review-later practice session", async () => {
+    window.location.hash = "#/practice";
+    const store = createStore("course-switch-review-later-unsubmitted");
+    await store.putPreferences({ ...defaultPreferences, practiceMode: "review-later" });
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "course-switch-review-later-unsubmitted-seed"} />);
+
+    await screen.findByRole("heading", { name: "Practice" });
+    await user.click(screen.getByRole("button", { name: "Start set" }));
+    await answerEveryReviewLaterQuestion(user);
+    assert.equal((screen.getByRole("button", { name: "Submit practice set" }) as HTMLButtonElement).disabled, false);
+
+    await user.click(screen.getByRole("radio", { name: "Advanced" }));
+    let dialog = await screen.findByRole("alertdialog", { name: "Switch course?" });
+    assert.match(dialog.textContent ?? "", /discard the unfinished practice or mock exam session/);
+
+    await user.click(within(dialog).getByRole("button", { name: "Cancel course switch" }));
+    assert.equal(screen.queryByRole("alertdialog", { name: "Switch course?" }), null);
+    assert.equal((screen.getByRole("radio", { name: "Basic" }) as HTMLInputElement).checked, true);
+    assert.equal((screen.getByRole("button", { name: "Submit practice set" }) as HTMLButtonElement).disabled, false);
+
+    await user.click(screen.getByRole("radio", { name: "Advanced" }));
+    dialog = await screen.findByRole("alertdialog", { name: "Switch course?" });
+    await user.click(within(dialog).getByRole("button", { name: "Switch course" }));
+    await waitFor(async () => assert.equal((await store.getPreferences()).activeBankId, ADVANCED_BANK_ID));
+    await waitFor(() => assert.match(document.querySelector(".question-meta")?.textContent ?? "", /A-00[1-7]-/));
+  });
+
+  it("does not confirm a course switch after a review-later practice session is submitted", async () => {
+    window.location.hash = "#/practice";
+    const store = createStore("course-switch-review-later-submitted");
+    await store.putPreferences({ ...defaultPreferences, practiceMode: "review-later" });
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "course-switch-review-later-submitted-seed"} />);
+
+    await screen.findByRole("heading", { name: "Practice" });
+    await user.click(screen.getByRole("button", { name: "Start set" }));
+    await answerEveryReviewLaterQuestion(user);
+    await user.click(screen.getByRole("button", { name: "Submit practice set" }));
+    await screen.findByRole("heading", { name: "Practice set review" });
+
+    await user.click(screen.getByRole("radio", { name: "Advanced" }));
+
+    assert.equal(screen.queryByRole("alertdialog", { name: "Switch course?" }), null);
+    await waitFor(async () => assert.equal((await store.getPreferences()).activeBankId, ADVANCED_BANK_ID));
+  });
+
+  async function answerEveryReviewLaterQuestion(user: ReturnType<typeof userEvent.setup>): Promise<void> {
+    for (;;) {
+      await user.click((await screen.findAllByTestId("answer-choice"))[0]!);
+      const next = screen.getByRole("button", { name: "Next" }) as HTMLButtonElement;
+      if (next.disabled) {
+        return;
+      }
+      await user.click(next);
+    }
+  }
+
+  it("renders the French interface with Advanced selected and tags verified Advanced category names as French", async () => {
     window.localStorage.setItem(INTERFACE_LANGUAGE_STORAGE_KEY, "fr");
     window.location.hash = "#/home";
     const store = createStore("advanced-french-ui");
@@ -1057,10 +2368,10 @@ describe("App accessibility and flows", () => {
     const courseGroup = screen.getByRole("group", { name: "Sélection du cours" });
     assert.equal((within(courseGroup).getByRole("radio", { name: "Compétence supérieure" }) as HTMLInputElement).value, ADVANCED_BANK_ID);
 
-    const advancedCategoryName = advancedBank.categories[0]?.name.en;
+    const advancedCategoryName = advancedBank.categories[0]?.name.fr;
     assert.ok(advancedCategoryName);
-    const categoryFallback = await screen.findByText(advancedCategoryName);
-    assert.equal(categoryFallback.getAttribute("lang"), "en");
+    const categoryName = await screen.findByText(advancedCategoryName);
+    assert.equal(categoryName.getAttribute("lang"), "fr-CA");
 
     const primaryNav = screen.getByRole("navigation", { name: "Principale" });
     await user.click(within(primaryNav).getByRole("button", { name: "Examen simulé" }));
@@ -1120,7 +2431,7 @@ describe("App accessibility and flows", () => {
     const mapButton = screen.getByRole("button", { name: "Jump to question map" });
     const navigator = screen.getByRole("navigation", { name: "Question navigator" });
     const questionPanel = document.querySelector(".question-panel");
-    const actionRow = document.querySelector(".mock-exam--running > .action-row");
+    const actionRow = document.querySelector(".mock-question-stack > .action-row");
     assert.ok(questionPanel);
     assert.ok(actionRow);
     assert.equal(mapButton.tagName, "BUTTON");
@@ -1194,7 +2505,7 @@ describe("App accessibility and flows", () => {
     await screen.findByRole("heading", { name: "Practice" });
     await user.click(screen.getByLabelText("Review later"));
     for (let index = 0; index < 10; index += 1) {
-      await user.click(screen.getAllByTestId("answer-choice")[0]!);
+      await user.click((await screen.findAllByTestId("answer-choice"))[0]!);
       const next = screen.getByRole("button", { name: "Next" });
       if (!next.hasAttribute("disabled")) {
         await user.click(next);
@@ -1420,12 +2731,74 @@ describe("App accessibility and flows", () => {
     const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-visual-start-seed"} />);
 
     await screen.findByRole("heading", { name: "Quick listen" });
-    await user.click(screen.getByRole("button", { name: "Play Morse practice audio" }));
+    await user.click(screen.getByRole("button", { name: "Play Morse practice output" }));
 
     assert.match(container.querySelector(".morse-playback-status")?.textContent ?? "", /Morse playback started\./);
     assert.equal(container.querySelector(".morse-live-status")?.textContent, "");
-    await user.click(screen.getByRole("button", { name: "Stop Morse practice audio" }));
+    await user.click(screen.getByRole("button", { name: "Stop Morse practice output" }));
     assert.match(container.querySelector(".morse-live-status")?.textContent ?? "", /Morse playback stopped\./);
+  });
+
+  it("runs visual beacon playback with fake timers", async () => {
+    window.location.hash = "#/morse";
+    const store = createStore("morse-beacon-fake-timer");
+    await store.putPreferences({ ...morsePreferences(true), morse: { ...defaultPreferences.morse, outputMode: "visualBeacon" } });
+    stubReducedMotion(false);
+    const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-beacon-seed"} />);
+
+    await screen.findByRole("heading", { name: "Quick listen" });
+    vi.useFakeTimers();
+    try {
+      fireEvent.click(screen.getByRole("button", { name: "Play Morse practice output" }));
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(1);
+      });
+      assert.ok(container.querySelector(".morse-beacon-lamp.active"), "Beacon should be active for the first Morse element");
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(120_000);
+      });
+      assert.equal(container.querySelector(".morse-beacon-lamp.active"), null, "Beacon should be inactive after playback finishes");
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("uses the non-flashing Morse tape when reduced motion is requested", async () => {
+    window.location.hash = "#/morse";
+    const store = createStore("morse-reduced-motion-tape");
+    await store.putPreferences({ ...morsePreferences(true), morse: { ...defaultPreferences.morse, outputMode: "visualBeacon" } });
+    stubReducedMotion(true);
+    const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-reduced-motion-seed"} />);
+
+    await screen.findByRole("heading", { name: "Quick listen" });
+    vi.useFakeTimers();
+    try {
+      fireEvent.click(screen.getByRole("button", { name: "Play Morse practice output" }));
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(1);
+      });
+      assert.equal(container.querySelector(".morse-beacon-lamp"), null);
+      assert.match(container.querySelector(".morse-visual-tape")?.textContent ?? "", /[.\-·]/);
+      assert.match(container.querySelector(".morse-output-view")?.textContent ?? "", /Reduced-motion preference is on/);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("passes axe on static Morse beacon and tape output states", async () => {
+    const sequence = textToTimedMorse("5", profileForName("isedParis"));
+    const flashesPerSecond = maxMorseFlashesPerSecond(morseSignalEvents(sequence));
+    const safety = evaluateMorseBeaconFlashSafety({ palette: morseBeaconPalette({ accent: MORSE_LIGHT_ACCENT_RGB, background: MORSE_LIGHT_PAPER_INSET_RGB }), flashesPerSecond });
+    const safetyNote = morseOutputSafetyNote("en", false, safety, flashesPerSecond);
+    const beacon = render(<MorseOutputView interfaceLanguage="en" state={{ mode: "visualBeacon", beaconActive: true, tape: "", safetyNote }} />);
+    assert.ok(beacon.container.textContent?.includes(safetyNote));
+    assert.ok(safetyNote.includes(new Intl.NumberFormat(interfaceLanguageTag("en")).format(MORSE_BEACON_AREA_CSS_PIXELS)));
+    await expectNoAxeViolations(beacon.container);
+    beacon.unmount();
+
+    const tape = render(<MorseOutputView interfaceLanguage="fr" state={{ mode: "visualTape", beaconActive: false, tape: ".-.", safetyNote: t("fr", "morseOutputReducedMotionTape") }} />);
+    assert.match(tape.container.textContent ?? "", /\.\-\./);
+    await expectNoAxeViolations(tape.container);
   });
 
   it("announces Morse finish after playback completes", async () => {
@@ -1438,7 +2811,7 @@ describe("App accessibility and flows", () => {
     await screen.findByRole("heading", { name: "Quick listen" });
     vi.useFakeTimers();
     try {
-      fireEvent.click(screen.getByRole("button", { name: "Play Morse practice audio" }));
+      fireEvent.click(screen.getByRole("button", { name: "Play Morse practice output" }));
       assert.match(container.querySelector(".morse-playback-status")?.textContent ?? "", /Morse playback started\./);
 
       await act(async () => {
@@ -1528,8 +2901,8 @@ describe("App accessibility and flows", () => {
     const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-course-one-player-seed"} />);
 
     await screen.findByRole("heading", { name: "Quick listen" });
-    const quickPlay = screen.getByRole("button", { name: "Play Morse practice audio" }) as HTMLButtonElement;
-    const quickStop = screen.getByRole("button", { name: "Stop Morse practice audio" }) as HTMLButtonElement;
+    const quickPlay = screen.getByRole("button", { name: "Play Morse practice output" }) as HTMLButtonElement;
+    const quickStop = screen.getByRole("button", { name: "Stop Morse practice output" }) as HTMLButtonElement;
     fireEvent.click(quickPlay);
     await waitFor(() => assert.equal(quickStop.disabled, false));
     const quickOscillator = audio.oscillators().at(-1);
@@ -1564,8 +2937,8 @@ describe("App accessibility and flows", () => {
     const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-one-player-seed"} />);
 
     await screen.findByRole("heading", { name: "Quick listen" });
-    const quickPlay = screen.getByRole("button", { name: "Play Morse practice audio" }) as HTMLButtonElement;
-    const quickStop = screen.getByRole("button", { name: "Stop Morse practice audio" }) as HTMLButtonElement;
+    const quickPlay = screen.getByRole("button", { name: "Play Morse practice output" }) as HTMLButtonElement;
+    const quickStop = screen.getByRole("button", { name: "Stop Morse practice output" }) as HTMLButtonElement;
     fireEvent.click(quickPlay);
     await waitFor(() => assert.equal(quickStop.disabled, false));
 
@@ -1706,14 +3079,16 @@ describe("App accessibility and flows", () => {
     await waitFor(async () => assert.equal((await store.getPreferences()).morse.characterWpm, 20));
   });
 
-  it("reverts empty or invalid Morse number drafts and does not save unchanged values", async () => {
+  it("reverts empty or invalid Morse number drafts with a polite explanation and does not save unchanged values", async () => {
     window.location.hash = "#/morse";
     const store = new CountingPreferencesStore("morse-invalid-drafts");
     stores.push(store);
     const user = userEvent.setup();
-    render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-invalid-seed"} />);
+    const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-invalid-seed"} />);
 
-    await screen.findByRole("heading", { name: "Morse settings" });
+    const settingsHeading = await screen.findByRole("heading", { name: "Morse settings" });
+    const settingsSection = settingsHeading.closest("section");
+    assert.ok(settingsSection);
     const tone = screen.getByLabelText("Tone") as HTMLInputElement;
     await user.clear(tone);
     fireEvent.blur(tone);
@@ -1727,12 +3102,14 @@ describe("App accessibility and flows", () => {
     assert.equal(tone.value, "650");
     assert.equal((await store.getPreferences()).morse.toneHz, 650);
     assert.equal(store.putPreferencesCount, 0);
+    assert.equal(within(settingsSection).getByRole("status").textContent, "Tone reverted to the saved value. Enter a whole number from 400 to 900.");
 
     await user.clear(tone);
     await user.type(tone, "650");
     await user.keyboard("{Enter}");
     assert.equal(store.putPreferencesCount, 0);
-    assert.equal(screen.queryByText("Morse settings saved."), null);
+    assert.equal(screen.queryByText("Morse trainer settings saved locally."), null, "an unchanged commit must not report a save");
+    await expectNoAxeViolations(container);
   });
 
   it("renders Settings theme controls and no axe violations", async () => {
@@ -1940,18 +3317,22 @@ describe("App accessibility and flows", () => {
     assert.equal(document.documentElement.dataset.theme, "dark");
   });
 
-  it("keeps the root language stable and marks only question content as French", async () => {
-    window.location.hash = "#/practice";
+  it("sets the root and question language from the Settings language preference", async () => {
+    window.location.hash = "#/settings";
     const store = createStore("language-scope");
     const user = userEvent.setup();
     render(<App store={store} now={() => fixedNow} seedFactory={() => "language-seed"} />);
 
-    await screen.findByRole("heading", { name: "Practice" });
-    await screen.findByText(/Question 1 of/);
-    await user.click(screen.getByLabelText("Français"));
+    await screen.findByRole("heading", { name: "Settings and local data" });
+    const languageGroup = screen.getByRole("group", { name: "Language" });
+    await user.click(within(languageGroup).getByRole("radio", { name: "Français" }));
 
+    await screen.findByRole("heading", { name: "Réglages et données locales" });
     assert.equal(screen.getByText("Français").getAttribute("lang"), "fr");
-    assert.equal(document.documentElement.lang, "en-CA");
+    assert.equal(document.documentElement.lang, "fr-CA");
+
+    await user.click(within(screen.getByRole("navigation", { name: "Principale" })).getByRole("button", { name: "Exercices" }));
+    await screen.findByText(/Question 1 sur/);
     assert.ok(document.querySelector(".question-text[lang='fr-CA']"));
   });
 
@@ -2087,7 +3468,7 @@ describe("App accessibility and flows", () => {
     assert.match(screen.getByText(/unanswered questions will be scored incorrect/).textContent ?? "", /99/);
     await user.click(screen.getByRole("button", { name: "Confirm submit" }));
 
-    await screen.findByRole("heading", { name: "Mock exam results" });
+    await screen.findByRole("heading", { name: "Mock exam results" }, { timeout: 5000 });
     assert.match(screen.getByText(/Pass threshold is 70%; honours threshold is 80%/).textContent ?? "", /70%/);
     assert.equal((await store.getExamAttempts()).length, 1);
     assert.equal(document.activeElement?.tagName, "MAIN");
@@ -2096,5 +3477,305 @@ describe("App accessibility and flows", () => {
     await screen.findByRole("button", { name: "Start mock exam" });
     assert.equal((await store.getExamAttempts()).length, 1);
     await expectNoAxeViolations(container);
+  });
+});
+
+describe("M1 lesson quiz rounds", { timeout: appFlowTestTimeoutMs }, () => {
+  it("focuses round headings only when crossing a round boundary, not on entry or within-round Next/Previous", async () => {
+    window.location.hash = "#/learn/M1/L-001-01";
+    const user = userEvent.setup();
+    render(<App store={createStore("m1-round-focus")} now={() => fixedNow} />);
+    await screen.findByRole("heading", { name: "QZ-L-001-01-A" });
+    const section = getLessonQuizSection();
+    const roundHeading = () => within(section).getByRole("heading", { name: /^Round/ });
+    assert.notEqual(document.activeElement, roundHeading(), "Opening the quiz does not focus the round heading");
+    const next = within(section).getByRole("button", { name: "Next" });
+    const previous = within(section).getByRole("button", { name: "Previous" });
+    await user.click(next);
+    assert.equal(document.activeElement, next, "Next within a round retains normal navigation focus");
+    await user.click(previous);
+    assert.equal(document.activeElement, previous, "Previous within a round retains normal navigation focus");
+    for (let index = 0; index < 5; index++) fireEvent.click(next);
+    assert.equal(document.activeElement, roundHeading(), "A checkpoint receives focus");
+    await user.click(within(section).getByRole("button", { name: "Continue to next round" }));
+    assert.equal(document.activeElement, roundHeading(), "Continue focuses the new round heading");
+    const nextRoundNext = within(section).getByRole("button", { name: "Next" });
+    const nextRoundPrevious = within(section).getByRole("button", { name: "Previous" });
+    await user.click(nextRoundNext);
+    assert.equal(document.activeElement, nextRoundNext);
+    await user.click(nextRoundPrevious);
+    assert.equal(document.activeElement, nextRoundPrevious);
+    await user.click(nextRoundPrevious);
+    assert.equal(document.activeElement, roundHeading(), "Previous crossing into the prior round focuses its heading");
+    assert.match(roundHeading().textContent ?? "", /^Round 1/);
+  });
+  it("reports partial round scores without counting skipped or incorrect answers as correct", async () => {
+    window.location.hash = "#/learn/M1/L-001-01";
+    const store = createStore("m1-round-partial-score");
+    render(<App store={store} now={() => fixedNow} />);
+    await screen.findByRole("heading", { name: "QZ-L-001-01-A" });
+    const section = getLessonQuizSection();
+    fireEvent.click(correctAnswerChoiceForCurrentQuestion());
+    fireEvent.click(within(section).getByRole("button", { name: "Next" }));
+    const correct = correctAnswerChoiceForCurrentQuestion();
+    fireEvent.click(within(section).getAllByTestId("answer-choice").find((choice) => choice !== correct)!);
+    for (let index = 0; index < 4; index++) fireEvent.click(within(section).getByRole("button", { name: "Next" }));
+    assert.ok(within(section).getByText("Score so far: 1 / 5. Answered: 2 / 5."));
+    assert.equal((await store.getLessonQuizAttempts()).length, 0);
+    fireEvent.click(within(section).getByRole("button", { name: "Previous" }));
+    fireEvent.click(within(section).getByRole("button", { name: "Next" }));
+    assert.ok(within(section).getByText("Score so far: 1 / 5. Answered: 2 / 5."));
+  });
+
+  it("keeps one complete scored attempt, frozen help and round position through section and lesson navigation", async () => {
+    window.location.hash = "#/learn/M1/L-001-01";
+    const store = createStore("m1-round-attempt");
+    const quiz = lessonQuizzesById.get("QZ-L-001-01-A")!;
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} />);
+    await screen.findByRole("heading", { name: quiz.id });
+    let section = getLessonQuizSection();
+    const firstId = currentPracticeQuestionId();
+    await user.click(within(section).getByRole("button", { name: "Hint" }));
+    await user.click(within(section).getByRole("button", { name: "Show Hint 1" }));
+    await waitFor(() => assert.match(within(section).getByTestId("hint-live-status").textContent ?? "", /recorded with help/));
+    if (hintForQuestion(firstId, bankId)!.hints.length === 2) await user.click(within(section).getByRole("button", { name: "Show Hint 2" }));
+    await user.click(within(section).getByRole("link", { name: "Review in lesson" }));
+    assert.equal(currentPracticeQuestionId(), firstId);
+    fireEvent.click(correctAnswerChoiceForCurrentQuestion());
+    assert.match(within(section).getByRole("status").textContent ?? "", /With help/);
+    const seen: string[] = [];
+    for (const [roundIndex, round] of quiz.rounds!.entries()) {
+      for (let position = 0; position < round.officialQuestionIds.length; position++) {
+        assert.ok(within(section).getByRole("heading", { name: t("en", "lessonQuizRound", roundIndex + 1, quiz.rounds!.length + 1, round.title.en) }));
+        assert.ok(within(section).getByText(t("en", "questionProgress", position + 1, round.officialQuestionIds.length)));
+        const id = currentPracticeQuestionId();
+        assert.ok(round.officialQuestionIds.includes(id));
+        seen.push(id);
+        if (id !== firstId) fireEvent.click(correctAnswerChoiceForCurrentQuestion());
+        if (position + 1 < round.officialQuestionIds.length || roundIndex < quiz.rounds!.length) {
+          fireEvent.click(within(section).getByRole("button", { name: "Next" }));
+        }
+      }
+      if (roundIndex < quiz.rounds!.length) {
+        const checkpoint = within(section).getByRole("heading", { name: t("en", "lessonQuizRoundCheckpoint", roundIndex + 1, quiz.rounds!.length + 1) });
+        assert.equal(document.activeElement, checkpoint);
+        assert.ok(within(section).getByText(t("en", "lessonQuizRoundScore", round.officialQuestionIds.length, round.officialQuestionIds.length, round.officialQuestionIds.length)));
+        assert.equal((await store.getLessonQuizAttempts()).length, 0, "A checkpoint is not a submitted attempt");
+        fireEvent.click(within(section).getByRole("button", { name: "Continue to next round" }));
+        assert.equal(document.activeElement, within(section).getByRole("heading", { name: /^Round/ }));
+        if (roundIndex === 0) {
+          const resumedId = currentPracticeQuestionId();
+          await setAppHash("#/learn/M1/L-001-02");
+          await screen.findByRole("heading", { name: "QZ-L-001-02-A" });
+          await setAppHash("#/learn/M1/L-001-01");
+          await screen.findByRole("heading", { name: quiz.id });
+          section = getLessonQuizSection();
+          assert.equal(currentPracticeQuestionId(), resumedId);
+          assert.equal(within(section).queryByRole("button", { name: "Continue to next round" }), null);
+          fireEvent.click(within(section).getByRole("button", { name: "Previous" }));
+          assert.equal(currentPracticeQuestionId(), seen[seen.length - 1]);
+          assert.ok(within(section).getAllByTestId("answer-choice").every((choice) => (choice as HTMLButtonElement).disabled));
+          fireEvent.click(within(section).getByRole("button", { name: "Next" }));
+          fireEvent.click(within(section).getByRole("button", { name: "Continue to next round" }));
+          assert.equal(currentPracticeQuestionId(), resumedId);
+        }
+      }
+    }
+    assert.equal(new Set(seen).size, quiz.officialQuestionIds.length);
+    assert.deepEqual(new Set(seen), new Set(quiz.officialQuestionIds));
+    const reviewIds: string[] = [];
+    for (let index = 0; index < 2; index++) {
+      assert.ok(within(section).getByRole("heading", { name: "Round 5 of 5: Review" }));
+      assert.ok(within(section).getByRole("heading", { name: /^Review question from / }));
+      reviewIds.push(currentPracticeQuestionId());
+      fireEvent.click(correctAnswerChoiceForCurrentQuestion());
+      if (index === 0) fireEvent.click(within(section).getByRole("button", { name: "Next" }));
+    }
+    assert.equal(new Set(reviewIds).size, 2);
+    assert.ok(reviewIds.every((id) => !quiz.officialQuestionIds.includes(id)));
+    assert.equal(within(section).queryByRole("button", { name: "Continue to next round" }), null);
+    assert.equal((within(section).getByRole("button", { name: "Next" }) as HTMLButtonElement).disabled, true);
+    fireEvent.click(within(section).getByRole("button", { name: "Submit lesson quiz" }));
+    await waitFor(async () => assert.equal((await store.getLessonQuizAttempts()).length, 1));
+    const attempt = (await store.getLessonQuizAttempts())[0]!;
+    assert.equal(attempt.correct, 35);
+    assert.equal(attempt.total, 35);
+    assert.equal(attempt.percent, 100);
+    assert.deepEqual(new Set(attempt.officialQuestionIds), new Set(quiz.officialQuestionIds));
+    assert.deepEqual(attempt.reviewQuestionIds, [...reviewIds].sort());
+    assert.deepEqual(attempt.answeredWithHelpIds, [firstId]);
+    assert.equal((await store.getQuestionProgress()).length, 35);
+    cleanup();
+    render(<App store={store} now={() => fixedNow} />);
+    await screen.findByRole("heading", { name: quiz.id });
+    assert.ok(within(getLessonQuizSection()).getByText(/Latest score: 35 \/ 35/));
+    assert.ok(within(getLessonQuizSection()).getByText("Answers with help: 1."));
+  });
+
+  for (const language of ["en", "fr"] as const) {
+    for (const theme of ["light", "dark"] as const) {
+      it(`has accessible localized round headers, unanswered boundaries and checkpoints in ${language} ${theme}`, async () => {
+        window.location.hash = "#/learn/M1/L-001-01";
+        window.localStorage.setItem(INTERFACE_LANGUAGE_STORAGE_KEY, language);
+        const store = createStore(`m1-round-axe-${language}-${theme}`);
+        await store.putPreferences({ ...defaultPreferences, language, theme });
+        const { container } = render(<App store={store} now={() => fixedNow} />);
+        await screen.findByRole("heading", { name: "QZ-L-001-01-A" });
+        const section = getLessonQuizSection();
+        const quiz = lessonQuizzesById.get("QZ-L-001-01-A")!;
+        const round = quiz.rounds![0]!;
+        const headingName = t(language, "lessonQuizRound", 1, quiz.rounds!.length + 1, round.title[language]!);
+        assert.ok(within(section).getByRole("heading", { name: headingName }));
+        await expectNoAxeViolations(container);
+        for (let index = 0; index < round.officialQuestionIds.length; index++) {
+          fireEvent.click(within(section).getByRole("button", { name: t(language, "next") }));
+        }
+        const checkpoint = within(section).getByRole("heading", { name: t(language, "lessonQuizRoundCheckpoint", 1, quiz.rounds!.length + 1) });
+        assert.equal(document.activeElement, checkpoint);
+        assert.ok(within(section).getByText(t(language, "lessonQuizRoundScore", 0, round.officialQuestionIds.length, 0)));
+        assert.equal(within(section).queryByTestId("answer-choice"), null);
+        await expectNoAxeViolations(container);
+        fireEvent.click(within(section).getByRole("button", { name: t(language, "previous") }));
+        assert.ok(within(section).getByText(t(language, "questionProgress", 5, 5)));
+        assert.equal(document.activeElement, within(section).getByRole("button", { name: t(language, "next") }), "Dismissing a checkpoint with Previous keeps keyboard focus on the question's Next button");
+        fireEvent.click(within(section).getByRole("button", { name: t(language, "next") }));
+        fireEvent.click(within(section).getByRole("button", { name: t(language, "lessonQuizRoundContinue") }));
+        assert.equal(document.activeElement, within(section).getByRole("heading", { name: new RegExp(language === "fr" ? "^Série 2" : "^Round 2") }));
+        assert.ok(within(section).getByText(t(language, "questionProgress", 1, quiz.rounds![1]!.officialQuestionIds.length)));
+        assert.equal((within(section).getByRole("button", { name: t(language, "lessonQuizSubmit") }) as HTMLButtonElement).disabled, true);
+        await expectNoAxeViolations(container);
+      });
+    }
+  }
+});
+
+describe("lesson quiz review items", { timeout: appFlowTestTimeoutMs }, () => {
+  function shortM1Quiz() {
+    const original = lessonQuizzesById.get("QZ-L-001-01-A")!;
+    const questionId = original.rounds![0]!.officialQuestionIds[0]!;
+    lessonQuizzesById.set(original.id, { ...original, officialQuestionIds: [questionId], rounds: [{ ...original.rounds![0]!, officialQuestionIds: [questionId] }] });
+    return original;
+  }
+  async function enterReview(language: "en" | "fr") {
+    await screen.findByRole("heading", { name: "QZ-L-001-01-A" });
+    const section = getLessonQuizSection();
+    fireEvent.click(within(section).getByRole("button", { name: t(language, "next") }));
+    fireEvent.click(within(section).getByRole("button", { name: t(language, "lessonQuizRoundContinue") }));
+    assert.ok(within(section).getByRole("heading", { name: t(language, "lessonQuizRound", 2, 2, language === "fr" ? "Révision" : "Review") }));
+    return section;
+  }
+  it("keeps two stable review IDs when lesson progress loads before the delayed bank", async () => {
+    const original = shortM1Quiz();
+    const timestamp = 1_800_000_000_000;
+    vi.spyOn(Date, "now").mockReturnValue(timestamp);
+    let releaseBank!: (questions: readonly Question[]) => void;
+    const delayedBank = new Promise<readonly Question[]>((resolve) => { releaseBank = resolve; });
+    const loadBank = vi.spyOn(bankData, "loadQuestions").mockReturnValue(delayedBank);
+    try {
+      window.location.hash = "#/learn/M1/L-001-01";
+      render(<App store={createStore("delayed-review-bank")} now={() => fixedNow} />);
+      let section = await enterReview("en");
+      const quiz = lessonQuizzesById.get(original.id)!;
+      const expectedIds = buildLessonQuizItems(quiz, `${quiz.id}:${timestamp.toString(36)}`)
+        .flatMap((item) => item.type === "official" && item.reviewLessonId !== undefined ? [item.questionId] : []);
+      assert.equal(expectedIds.length, 2);
+      assert.ok(within(section).getByText(t("en", "lessonQuizSummary", 3)));
+      assert.ok(within(section).getByText(t("en", "officialQuestionLoading", expectedIds[0]!)));
+      assert.equal(within(section).queryByTestId("answer-choice"), null);
+      await act(async () => { releaseBank(testQuestions); });
+      await within(section).findAllByTestId("answer-choice");
+      const delayedIds = [currentPracticeQuestionId()];
+      fireEvent.click(within(section).getByRole("button", { name: "Next" }));
+      delayedIds.push(currentPracticeQuestionId());
+      assert.equal((within(section).getByRole("button", { name: "Next" }) as HTMLButtonElement).disabled, true);
+      assert.deepEqual(delayedIds, expectedIds);
+      cleanup();
+      loadBank.mockResolvedValue(testQuestions);
+      render(<App store={createStore("undelayed-review-bank")} now={() => fixedNow} />);
+      section = await enterReview("en");
+      await within(section).findAllByTestId("answer-choice");
+      const undelayedIds = [currentPracticeQuestionId()];
+      fireEvent.click(within(section).getByRole("button", { name: "Next" }));
+      undelayedIds.push(currentPracticeQuestionId());
+      assert.deepEqual(delayedIds, undelayedIds);
+    } finally { lessonQuizzesById.set(original.id, original); }
+  });
+  for (const language of ["en", "fr"] as const) for (const theme of ["light", "dark"] as const) {
+    it(`labels review source, final round, hints and scored feedback accessibly in ${language} ${theme}`, async () => {
+      const original = shortM1Quiz();
+      try {
+        window.location.hash = "#/learn/M1/L-001-01";
+        window.localStorage.setItem(INTERFACE_LANGUAGE_STORAGE_KEY, language);
+        const store = createStore(`review-axe-${language}-${theme}`);
+        await store.putPreferences({ ...defaultPreferences, language, theme });
+        const { container } = render(<App store={store} now={() => fixedNow} />);
+        const section = await enterReview(language);
+        const reviewHeading = within(section).getByRole("heading", { name: language === "fr" ? /^Question de révision de / : /^Review question from / });
+        assert.equal(reviewHeading.querySelector("span")?.getAttribute("lang"), "en", "English-only source titles keep their pronunciation in French headings");
+        const reviewId = currentPracticeQuestionId();
+        assert.ok(!original.officialQuestionIds.includes(reviewId));
+        await expectNoAxeViolations(container);
+        fireEvent.click(within(section).getByRole("button", { name: t(language, "examToolHint") }));
+        fireEvent.click(within(section).getByRole("button", { name: language === "fr" ? "Afficher l’indice 1" : "Show Hint 1" }));
+        await expectNoAxeViolations(container);
+        const question = testQuestions.find((question) => question.id === reviewId)!;
+        const correctText = question.answers.find((answer) => answer.sourceIndex === 0)!.text[language];
+        const correct = within(section).getAllByTestId("answer-choice").find((choice) => choice.querySelector("span[lang]")?.textContent === correctText)!;
+        assert.ok(correct);
+        fireEvent.click(correct);
+        assert.ok(within(section).getByRole("status"));
+        await expectNoAxeViolations(container);
+      } finally { lessonQuizzesById.set(original.id, original); }
+    });
+  }
+  it("keeps review selection, source-lesson hints, help, score and progress through resume and export/import", async () => {
+    const original = shortM1Quiz();
+    try {
+      window.location.hash = "#/learn/M1/L-001-01";
+      const store = createStore("review-resume");
+      render(<App store={store} now={() => fixedNow} />);
+      await screen.findByRole("heading", { name: original.id });
+      fireEvent.click(correctAnswerChoiceForCurrentQuestion());
+      let section = await enterReview("en");
+      const reviewId = currentPracticeQuestionId();
+      const user = userEvent.setup();
+      await user.click(within(section).getByRole("button", { name: "Hint" }));
+      await user.click(within(section).getByRole("button", { name: "Show Hint 1" }));
+      await waitFor(() => assert.match(within(section).getByTestId("hint-live-status").textContent ?? "", /recorded with help/));
+      if (hintForQuestion(reviewId, bankId)!.hints.length === 2) await user.click(within(section).getByRole("button", { name: "Show Hint 2" }));
+      const link = within(section).getByRole("link", { name: "Review in lesson" });
+      const hintLessonId = hintForQuestion(reviewId, bankId)!.lessonLink.lessonId;
+      assert.ok(link.getAttribute("href")?.includes(hintLessonId));
+      await user.click(link);
+      assert.ok(window.location.hash.includes(hintLessonId));
+      await setAppHash("#/learn/M1/L-001-01");
+      await screen.findByRole("heading", { name: original.id });
+      section = getLessonQuizSection();
+      assert.equal(currentPracticeQuestionId(), reviewId);
+      assert.equal(within(section).queryByRole("button", { name: "Continue to next round" }), null);
+      fireEvent.click(correctAnswerChoiceForCurrentQuestion());
+      fireEvent.click(within(section).getByRole("button", { name: "Next" }));
+      const secondReviewId = currentPracticeQuestionId();
+      fireEvent.click(correctAnswerChoiceForCurrentQuestion());
+      fireEvent.click(within(section).getByRole("button", { name: "Submit lesson quiz" }));
+      await waitFor(async () => assert.equal((await store.getLessonQuizAttempts()).length, 1));
+      const attempt = (await store.getLessonQuizAttempts())[0]!;
+      assert.equal(attempt.total, 3);
+      assert.equal(attempt.correct, 3);
+      assert.deepEqual(attempt.reviewQuestionIds, [reviewId, secondReviewId].sort());
+      assert.deepEqual(attempt.answeredWithHelpIds, [reviewId]);
+      const record = (await store.getQuestionProgress()).find((record) => record.questionId === reviewId)!;
+      assert.equal(record.lastAnsweredWithHelp, true);
+      assert.equal(record.leitner.box, 0);
+      assert.equal(record.leitner.dueAt, fixedNow);
+      const target = createStore("review-resume-import");
+      await target.importData(await store.exportData(fixedNow));
+      assert.deepEqual(await target.getLessonQuizAttempts(), [attempt]);
+      cleanup();
+      render(<App store={store} now={() => fixedNow} />);
+      await screen.findByRole("heading", { name: original.id });
+      assert.ok(within(getLessonQuizSection()).getByText(/Latest score: 3 \/ 3/));
+    } finally { lessonQuizzesById.set(original.id, original); }
   });
 });

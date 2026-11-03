@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-004-004-011",
+  "questionId": "B-004-004-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the channel-ends sentence in the FET terminal list.",
+      "fr": "Revoyez la phrase sur les extrémités du canal dans la liste des bornes du FET."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-004-02",
+    "sectionAnchor": "field-effect-transistors-voltage-controlled-channel-devices"
+  },
+  "singleLevelReason": "Name-pair recall: a second hint would list or eliminate the FET terminal pair.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

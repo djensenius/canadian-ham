@@ -4,6 +4,8 @@ import { morseTimingFromPreferences, normalizeMorsePreferences, type WebMorsePre
 
 export const MORSE_AUDIO_RAMP_SECONDS = 0.005;
 export const MORSE_AUDIO_START_DELAY_SECONDS = 0.02;
+export const MORSE_AUDIO_STOP_SCHEDULE_LEAD_SECONDS = 0.005;
+export const MORSE_AUDIO_CLOSE_MARGIN_SECONDS = 0.1;
 
 export interface MorsePlaybackHandle {
   readonly durationSeconds: number;
@@ -20,6 +22,8 @@ export interface WebMorseAudioContextLike {
   readonly currentTime: number;
   readonly destination: AudioNode;
   readonly state?: AudioContextState;
+  readonly baseLatency?: number;
+  readonly outputLatency?: number;
   createOscillator(): OscillatorNode;
   createGain(): GainNode;
   resume?(): Promise<void>;
@@ -31,6 +35,8 @@ export type WebMorseAudioContextFactory = () => WebMorseAudioContextLike;
 export class WebMorsePlayer {
   #context: WebMorseAudioContextLike | null = null;
   #active: MorsePlaybackHandle | null = null;
+  // Set when stop() fades out live audio, so a following close() still waits for the fade and output latency.
+  #drainPending = false;
   #generation = 0;
 
   constructor(private readonly createContext: WebMorseAudioContextFactory = defaultAudioContextFactory) {}
@@ -79,17 +85,21 @@ export class WebMorsePlayer {
 
   stop(): void {
     this.#generation += 1;
+    if (this.#active !== null) {
+      this.#drainPending = true;
+    }
     this.#active?.stop();
     this.#active = null;
   }
 
   async close(): Promise<void> {
-    const hadActivePlayback = this.#active !== null;
     this.stop();
+    const needsDrain = this.#drainPending;
+    this.#drainPending = false;
     const context = this.#context;
     this.#context = null;
-    if (hadActivePlayback) {
-      await sleep(Math.ceil(MORSE_AUDIO_RAMP_SECONDS * 1000));
+    if (needsDrain && context !== null) {
+      await sleep(closeDelayMilliseconds(context));
     }
     await context?.close?.();
   }
@@ -113,7 +123,7 @@ export function scheduleContinuousMorseTone(context: WebMorseAudioContextLike, p
     stop: () => {
       if (stopped) return;
       stopped = true;
-      const stopStartedAt = context.currentTime;
+      const stopStartedAt = stopRampStartSeconds(context);
       const stopAt = stopStartedAt + MORSE_AUDIO_RAMP_SECONDS;
       outputGain.gain.setValueAtTime(normalizedPreferences.volume, stopStartedAt);
       outputGain.gain.linearRampToValueAtTime(0, stopAt);
@@ -125,7 +135,7 @@ export function scheduleContinuousMorseTone(context: WebMorseAudioContextLike, p
       globalThis.setTimeout(() => {
         oscillator.disconnect();
         outputGain.disconnect();
-      }, Math.ceil(MORSE_AUDIO_RAMP_SECONDS * 1000) + 20);
+      }, stopCleanupDelayMilliseconds());
     },
   };
 }
@@ -172,7 +182,7 @@ export function scheduleMorseSequence(context: WebMorseAudioContextLike, sequenc
         return;
       }
       stopped = true;
-      const stopStartedAt = context.currentTime;
+      const stopStartedAt = stopRampStartSeconds(context);
       const stopAt = stopStartedAt + MORSE_AUDIO_RAMP_SECONDS;
       try {
         outputGain.gain.setValueAtTime(1, stopStartedAt);
@@ -185,7 +195,7 @@ export function scheduleMorseSequence(context: WebMorseAudioContextLike, sequenc
         oscillator.disconnect();
         toneGain.disconnect();
         outputGain.disconnect();
-      }, Math.ceil(MORSE_AUDIO_RAMP_SECONDS * 1000) + 20);
+      }, stopCleanupDelayMilliseconds());
     },
   };
 }
@@ -196,6 +206,26 @@ function defaultAudioContextFactory(): WebMorseAudioContextLike {
     throw new Error("Web Audio is not available in this browser.");
   }
   return new AudioContextCtor();
+}
+
+function stopRampStartSeconds(context: WebMorseAudioContextLike): number {
+  return context.currentTime + MORSE_AUDIO_STOP_SCHEDULE_LEAD_SECONDS;
+}
+
+function stopCleanupDelayMilliseconds(): number {
+  return Math.ceil((MORSE_AUDIO_STOP_SCHEDULE_LEAD_SECONDS + MORSE_AUDIO_RAMP_SECONDS) * 1000) + 20;
+}
+
+function closeDelayMilliseconds(context: WebMorseAudioContextLike | null): number {
+  return Math.ceil((MORSE_AUDIO_RAMP_SECONDS + audioContextLatencySeconds(context) + MORSE_AUDIO_CLOSE_MARGIN_SECONDS) * 1000);
+}
+
+function audioContextLatencySeconds(context: WebMorseAudioContextLike | null): number {
+  return nonNegativeFiniteSeconds(context?.baseLatency) + nonNegativeFiniteSeconds(context?.outputLatency);
+}
+
+function nonNegativeFiniteSeconds(value: number | undefined): number {
+  return value !== undefined && Number.isFinite(value) && value > 0 ? value : 0;
 }
 
 function sleep(milliseconds: number): Promise<void> {

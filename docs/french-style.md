@@ -24,8 +24,8 @@ French UI copy follows Canadian federal (Translation Bureau) typography and term
 | Home | Accueil |
 | Learn | Apprendre |
 | Settings | Réglages |
-| Question language | Langue des questions |
-| Interface language | Langue de l’interface |
+| Language (setting) | Langue |
+| System default | Réglage du système |
 | Question | Question |
 | Answer choices | Choix de réponse |
 | Correct answer | Bonne réponse |

@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-008-003",
+  "questionId": "B-005-008-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Break the dB increase into repeated basic doubling steps.",
+      "fr": "Décomposez l'augmentation en dB en étapes de doublement de base répétées."
+    },
+    {
+      "level": 2,
+      "en": "The stated increase is two basic positive steps, so apply the doubling shortcut twice to the original power.",
+      "fr": "L'augmentation indiquée contient deux petits pas positifs; appliquez donc deux fois le raccourci de doublement à la puissance d'origine."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-04",
+    "sectionAnchor": "decibels-as-power-ratios"
+  },
+  "referenceSheetSection": "decibel-power-shortcuts",
+  "licenseClass": "original"
+}

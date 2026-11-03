@@ -1,10 +1,11 @@
+import Accessibility
 import CanadianHamContent
 import CanadianHamEngine
 import SwiftUI
 
 private let rbr4CitationURL = "https://ised-isde.canada.ca/site/spectrum-management-telecommunications/en/licences-and-certificates/regulations-reference-rbr/rbr-4-standards-operation-radio-stations-amateur-radio-service"
 
-private var canadianHamUsesFrenchUI: Bool {
+var canadianHamUsesFrenchUI: Bool {
     Bundle.main.preferredLocalizations.first?.lowercased().hasPrefix("fr") == true
 }
 
@@ -67,7 +68,7 @@ struct LearnView: View {
                         .font(DesignTokens.FontScale.headline.weight(.bold))
                         .foregroundStyle(DesignTokens.Colors.ink)
                         .accessibilityAddTraits(.isHeader)
-                    Text("Advanced lessons are not bundled yet. Use practice by topic and 50-question mock exams while the curriculum is authored.")
+                    Text("Advanced lessons are coming. Use Advanced practice and mock exams in the meantime.")
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
                 }
@@ -87,12 +88,24 @@ struct LearnView: View {
                         .font(DesignTokens.FontScale.headline.weight(.bold))
                         .foregroundStyle(DesignTokens.Colors.ink)
                         .accessibilityAddTraits(.isHeader)
-                    Text("Study the eight modules in order. Lessons are currently authored in English, matching the web app; official practice questions still use the language picker.")
+                    Text("Study the eight modules in order. Lessons are currently authored in English; official practice questions follow your Language setting.")
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
                     Text("In the real exam you are given ISED's reference sheet of formulas and block diagrams. The lessons teach everything on it.")
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
+                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                        Text("Exam day") // l10n: localized
+                            .font(DesignTokens.FontScale.title.weight(.bold))
+                            .foregroundStyle(DesignTokens.Colors.ink)
+                            .accessibilityAddTraits(.isHeader)
+                        Text("Basic exams are closed book. The Authority, certificates, and exams lesson explains what to bring, allowed calculators, virtual exams, and where to download ISED's English unlabelled Basic reference sheet for practice.") // l10n: localized
+                            .font(DesignTokens.FontScale.body)
+                            .foregroundStyle(DesignTokens.Colors.ink)
+                        NavigationLink("Read exam-day guidance", value: RootNavigationRoute.learn(.lesson("L-001-01")))
+                            .buttonStyle(AccessibleSecondaryButtonStyle())
+                    }
+                    .padding(.top, DesignTokens.Spacing.sm)
                     EnglishOnlyLessonNotice()
                 }
                 .paperCard()
@@ -134,10 +147,10 @@ struct LearnView: View {
                 .font(.caption)
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                NavigationLink("Open module", value: LearnRoute.module(module.id))
+                NavigationLink("Open module", value: RootNavigationRoute.learn(.module(module.id)))
                     .tint(DesignTokens.Colors.ink)
                 if let first = lessons.first {
-                    NavigationLink("Start module", value: LearnRoute.lesson(first.id))
+                    NavigationLink("Start module", value: RootNavigationRoute.learn(.lesson(first.id)))
                         .tint(DesignTokens.Colors.ink)
                 }
             }
@@ -159,6 +172,7 @@ struct LearnView: View {
 enum LearnRoute: Hashable {
     case module(String)
     case lesson(String)
+    case lessonSection(String, String)
     case lessonQuiz(String)
 }
 
@@ -169,6 +183,7 @@ struct LearnRouteDestinationView: View {
     @ObservedObject var progressStore: ProgressStoreService
     let language: BankLanguage
     let onDataChanged: () -> Void
+    let onOpenQuizHintLesson: (QuestionHintLessonLink) -> Void
 
     var body: some View {
         switch route {
@@ -186,6 +201,21 @@ struct LearnRouteDestinationView: View {
                     bank: bank,
                     progressStore: progressStore,
                     language: language,
+                    targetSectionAnchor: nil,
+                    onDataChanged: onDataChanged
+                )
+            } else {
+                ContentUnavailableView("Lesson not found", systemImage: "book.closed")
+            }
+        case .lessonSection(let id, let anchor):
+            if let lesson = library.lessonsById[id] {
+                LessonReaderView(
+                    lesson: lesson,
+                    library: library,
+                    bank: bank,
+                    progressStore: progressStore,
+                    language: language,
+                    targetSectionAnchor: anchor,
                     onDataChanged: onDataChanged
                 )
             } else {
@@ -200,7 +230,8 @@ struct LearnRouteDestinationView: View {
                     library: library,
                     progressStore: progressStore,
                     language: language,
-                    onDataChanged: onDataChanged
+                    onDataChanged: onDataChanged,
+                    onOpenHintLesson: onOpenQuizHintLesson
                 )
             } else {
                 ContentUnavailableView("Lesson quiz not found", systemImage: "questionmark.circle")
@@ -240,7 +271,7 @@ private struct ModuleLessonListView: View {
                         .foregroundStyle(DesignTokens.Colors.ink)
                         .accessibilityAddTraits(.isHeader)
                     ForEach(module.lessonIds.compactMap { library.lessonsById[$0] }, id: \.id) { lesson in
-                        NavigationLink(value: LearnRoute.lesson(lesson.id)) {
+                        NavigationLink(value: RootNavigationRoute.learn(.lesson(lesson.id))) {
                             LessonRow(lesson: lesson, isRead: lessonProgress.contains { $0.lessonId == lesson.id })
                         }
                         .buttonStyle(.plain)
@@ -252,6 +283,9 @@ private struct ModuleLessonListView: View {
         }
         .background(DesignTokens.Colors.paper)
         .navigationTitle(Text(english(module.title.en))) // l10n: content(en)
+#if os(iOS)
+        .navigationBarTitleDisplayMode(.inline)
+#endif
     }
 }
 
@@ -289,6 +323,7 @@ private struct LessonReaderView: View {
     let bank: QuestionBank
     @ObservedObject var progressStore: ProgressStoreService
     let language: BankLanguage
+    let targetSectionAnchor: String?
     let onDataChanged: () -> Void
 
     @State private var lessonProgress: LessonProgressRecord?
@@ -296,75 +331,106 @@ private struct LessonReaderView: View {
     @State private var errorMessage: String?
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                    Text("\(lesson.id) · \(lesson.estimatedMinutes) min · \(lesson.covers.joined(separator: ", "))")
-                        .font(DesignTokens.FontScale.caption.weight(.semibold))
-                        .foregroundStyle(DesignTokens.Colors.inkMuted)
-                    Text(localized(lesson.title.en, language: .english)) // l10n: content(en)
-                        .font(DesignTokens.FontScale.headline.weight(.bold))
-                        .foregroundStyle(DesignTokens.Colors.ink)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .accessibilityAddTraits(.isHeader)
-                        .accessibilityIdentifier("lesson-reader-title")
-                    if let lessonProgress {
-                        Text(markedReadText(lessonProgress.readCount)) // l10n: localized
-                            .font(DesignTokens.FontScale.caption)
+        ScrollViewReader { scrollProxy in
+            ScrollView {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
+                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                        Text("\(lesson.id) · \(lesson.estimatedMinutes) min · \(lesson.covers.joined(separator: ", "))")
+                            .font(DesignTokens.FontScale.caption.weight(.semibold))
                             .foregroundStyle(DesignTokens.Colors.inkMuted)
-                    } else {
-                        Text("Not marked read yet.")
-                            .font(DesignTokens.FontScale.caption)
-                            .foregroundStyle(DesignTokens.Colors.inkMuted)
-                    }
-                }
-                .paperCard()
-
-                if let errorMessage {
-                    MessagePanel(title: "Lesson progress unavailable", message: errorMessage, kind: .warning)
-                }
-
-                if lesson.status == .outline {
-                    OutlineLessonView(lesson: lesson, library: library)
-                } else {
-                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
-                        EnglishOnlyLessonNotice()
-                        LessonMarkdownView(markdown: lesson.bodyMarkdown, title: lesson.title.en)
+                        Text(localized(lesson.title.en, language: .english)) // l10n: content(en)
+                            .font(DesignTokens.FontScale.headline.weight(.bold))
+                            .foregroundStyle(DesignTokens.Colors.ink)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .accessibilityAddTraits(.isHeader)
+                            .accessibilityIdentifier("lesson-reader-title")
+                        if let lessonProgress {
+                            Text(markedReadText(lessonProgress.readCount)) // l10n: localized
+                                .font(DesignTokens.FontScale.caption)
+                                .foregroundStyle(DesignTokens.Colors.inkMuted)
+                        } else {
+                            Text("Not marked read yet.")
+                                .font(DesignTokens.FontScale.caption)
+                                .foregroundStyle(DesignTokens.Colors.inkMuted)
+                        }
+                        LessonPrerequisitesSection(prerequisites: prerequisiteLessons)
                     }
                     .paperCard()
-                }
 
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                    Button { markRead() } label: {
-                        lessonActionLabel(Text("Mark lesson read"))
+                    if let errorMessage {
+                        MessagePanel(title: "Lesson progress unavailable", message: errorMessage, kind: .warning)
                     }
-                    .buttonStyle(.plain)
-                    if let firstQuizID = lesson.quizIds.first {
-                        NavigationLink("Go to quiz", value: LearnRoute.lessonQuiz(firstQuizID))
-                            .buttonStyle(AccessiblePrimaryButtonStyle())
-                            .accessibilityIdentifier("go-to-lesson-quiz-button")
+
+                    if lesson.status == .outline {
+                        OutlineLessonView(lesson: lesson, library: library)
+                    } else {
+                        VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+                            EnglishOnlyLessonNotice()
+                            LessonMarkdownView(markdown: lesson.bodyMarkdown, title: lesson.title.en, targetAnchor: targetSectionAnchor)
+                        }
+                        .paperCard()
                     }
-                    if let previous = neighbor(offset: -1) {
-                        NavigationLink(value: LearnRoute.lesson(previous.id)) {
-                            lessonActionLabel(Text(lessonNavigationTitle(prefix: String(localized: "Previous: "), lessonTitle: previous.title.en))) // l10n: localized
+
+                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                        Button { markRead() } label: {
+                            lessonActionLabel(Text("Mark lesson read"))
                         }
                         .buttonStyle(.plain)
-                    }
-                    if let next = neighbor(offset: 1) {
-                        NavigationLink(value: LearnRoute.lesson(next.id)) {
-                            lessonActionLabel(Text(lessonNavigationTitle(prefix: String(localized: "Next: "), lessonTitle: next.title.en))) // l10n: localized
+                        if let firstQuizID = lesson.quizIds.first {
+                            NavigationLink("Go to quiz", value: RootNavigationRoute.learn(.lessonQuiz(firstQuizID)))
+                                .buttonStyle(AccessiblePrimaryButtonStyle())
+                                .accessibilityIdentifier("go-to-lesson-quiz-button")
                         }
-                        .buttonStyle(.plain)
+                        if let previous = neighbor(offset: -1) {
+                            NavigationLink(value: RootNavigationRoute.learn(.lesson(previous.id))) {
+                                lessonActionLabel(Text(lessonNavigationTitle(prefix: String(localized: "Previous: "), lessonTitle: previous.title.en))) // l10n: localized
+                            }
+                            .buttonStyle(.plain)
+                        }
+                        if let next = neighbor(offset: 1) {
+                            NavigationLink(value: RootNavigationRoute.learn(.lesson(next.id))) {
+                                lessonActionLabel(Text(lessonNavigationTitle(prefix: String(localized: "Next: "), lessonTitle: next.title.en))) // l10n: localized
+                            }
+                            .buttonStyle(.plain)
+                        }
                     }
-                }
 
-                quizCards
+                    quizCards
+                }
+                .pagePadding()
             }
-            .pagePadding()
+            .onAppear { focusTargetSection(scrollProxy) }
+            .onChange(of: targetSectionAnchor) { _, _ in focusTargetSection(scrollProxy) }
         }
         .background(DesignTokens.Colors.paper)
-        .navigationTitle(Text(english(lesson.title.en))) // l10n: content(en)
+        .navigationTitle(lessonModuleNavigationTitle) // l10n: localized
+#if os(iOS)
+        .navigationBarTitleDisplayMode(.inline)
+#endif
+        .lessonReaderOpaqueNavigationBar()
         .task { refresh() }
+    }
+
+    private var prerequisiteLessons: [Lesson] {
+        lesson.prerequisites.compactMap { library.lessonsById[$0] }
+    }
+
+    private var lessonModuleNavigationTitle: String {
+        guard let module = library.modulesById[lesson.moduleId] else {
+            return String(localized: "Lesson")
+        }
+        return String(localized: "Module \(module.order)")
+    }
+
+    private func focusTargetSection(_ scrollProxy: ScrollViewProxy) {
+        guard let targetSectionAnchor else { return }
+        Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 150_000_000)
+            withAnimation(.easeInOut(duration: 0.2)) {
+                scrollProxy.scrollTo(targetSectionAnchor, anchor: .top)
+            }
+            AccessibilityNotification.Announcement(String(localized: "Lesson section opened.")).post()
+        }
     }
 
     private func lessonActionLabel(_ text: Text) -> some View {
@@ -395,7 +461,7 @@ private struct LessonReaderView: View {
                     .font(DesignTokens.FontScale.title.weight(.bold))
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .accessibilityAddTraits(.isHeader)
-                Text("\(quiz.officialQuestionIds.count + quiz.conceptChecks.count) questions: official bank questions update practice progress; concept checks do not.") // l10n: localized
+                Text("\((try? buildLessonQuizItems(quiz: quiz, seed: "summary", library: library).count) ?? 0) questions: official bank questions update practice progress; concept checks do not.") // l10n: localized
                     .font(DesignTokens.FontScale.body)
                     .foregroundStyle(DesignTokens.Colors.ink)
                 if let latest = quizAttempts.filter({ $0.quizId == quiz.id }).last {
@@ -404,7 +470,7 @@ private struct LessonReaderView: View {
                         .foregroundStyle(DesignTokens.Colors.inkMuted)
                         .accessibilityIdentifier("lesson-quiz-latest-score")
                 }
-                NavigationLink("Start quiz", value: LearnRoute.lessonQuiz(quiz.id))
+                NavigationLink("Start quiz", value: RootNavigationRoute.learn(.lessonQuiz(quiz.id)))
                     .buttonStyle(AccessiblePrimaryButtonStyle())
             }
             .paperCard()
@@ -447,6 +513,56 @@ private struct LessonReaderView: View {
     }
 }
 
+private struct LessonPrerequisitesSection: View {
+    let prerequisites: [Lesson]
+
+    var body: some View {
+        if !prerequisites.isEmpty {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                Text("Before this lesson") // l10n: localized
+                    .font(DesignTokens.FontScale.title.weight(.bold))
+                    .foregroundStyle(DesignTokens.Colors.ink)
+                    .accessibilityAddTraits(.isHeader)
+                    .accessibilityIdentifier("lesson-prerequisites-heading")
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                    ForEach(prerequisites, id: \.id) { prerequisite in
+                        NavigationLink(value: RootNavigationRoute.learn(.lesson(prerequisite.id))) {
+                            Text(localized(prerequisite.title.en, language: .english)) // l10n: content(en)
+                                .font(DesignTokens.FontScale.body.weight(.semibold))
+                                .foregroundStyle(DesignTokens.Colors.ink)
+                                .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
+                                .padding(.horizontal, DesignTokens.Spacing.md)
+                                .padding(.vertical, DesignTokens.Spacing.sm)
+                                .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous)
+                                        .strokeBorder(DesignTokens.Colors.border, lineWidth: 1)
+                                )
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel(Text("Open lesson \(Text(english(prerequisite.title.en)))")) // l10n: localized
+                        .accessibilityIdentifier("lesson-prerequisite-link-\(prerequisite.id)")
+                    }
+                }
+            }
+            .accessibilityElement(children: .contain)
+            .accessibilityIdentifier("lesson-prerequisites-section")
+        }
+    }
+}
+
+extension View {
+    @ViewBuilder
+    func lessonReaderOpaqueNavigationBar() -> some View {
+#if os(iOS)
+        toolbarBackground(DesignTokens.Colors.paper, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+#else
+        self
+#endif
+    }
+}
+
 private struct OutlineLessonView: View {
     let lesson: Lesson
     let library: ContentLibrary
@@ -485,149 +601,89 @@ private struct OutlineLessonView: View {
     }
 }
 
-private struct LessonMarkdownView: View {
-    let markdown: String
-    let title: String?
+@MainActor
+final class LessonQuizSessionState: ObservableObject {
+    let generation = UUID()
+    @Published var seed: String
+    @Published var items: [LessonQuizRuntimeItem] = []
+    @Published var currentIndex = 0
+    @Published var checkpointVisible = false
+    @Published var selectedByItemId: [String: Int] = [:]
+    @Published var submittedAttemptID: String?
+    @Published var errorMessage: String?
+    @Published var hintLevelsByQuestionId: [String: Int] = [:]
+    @Published var hintQualifiedQuestionIds: Set<String> = []
+    @Published var answeredWithHelpIds: Set<String> = []
 
-    init(markdown: String, title: String? = nil) {
-        self.markdown = markdown
-        self.title = title
-    }
-
-    var body: some View {
-        let rendered = (try? LessonMarkdownRenderer.render(markdown)) ?? RenderedLessonMarkdown(blocks: [.paragraph(AttributedString(markdown))])
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-            ForEach(Array(rendered.blocks.enumerated()), id: \.offset) { _, block in
-                blockView(block)
-            }
+    func next(in quiz: LessonQuiz) {
+        if let round = lessonQuizRoundProgress(quiz: quiz, items: items, currentIndex: currentIndex),
+           currentIndex == round.endIndex, currentIndex + 1 < items.count {
+            checkpointVisible = true
+        } else {
+            currentIndex = min(items.count - 1, currentIndex + 1)
         }
     }
 
-    @ViewBuilder
-    private func blockView(_ block: LessonBlock) -> some View {
-        switch block {
-        case .heading(let level, let text):
-            if !(level == 1 && title != nil && plainString(text) == title) {
-                Text(english(strippingLinks(from: text))) // l10n: content(en)
-                    .font(level <= 2 ? DesignTokens.FontScale.title.weight(.bold) : DesignTokens.FontScale.bodyLarge.weight(.bold))
-                    .foregroundStyle(DesignTokens.Colors.ink)
-                    .accessibilityAddTraits(.isHeader)
-            }
-        case .paragraph(let text):
-            Text(english(strippingLinks(from: text))) // l10n: content(en)
-                .font(DesignTokens.FontScale.body)
-                .foregroundStyle(DesignTokens.Colors.ink)
-        case .list(let ordered, let items):
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                ForEach(Array(items.enumerated()), id: \.offset) { index, item in
-                    HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
-                        Text(ordered ? "\(index + 1)." : "•") // l10n: verbatim
-                            .font(DesignTokens.FontScale.body.weight(.semibold))
-                            .foregroundStyle(DesignTokens.Colors.ink)
-                        Text(english(strippingLinks(from: item))) // l10n: content(en)
-                            .font(DesignTokens.FontScale.body)
-                            .foregroundStyle(DesignTokens.Colors.ink)
-                    }
-                }
-            }
-        case .code(_, let text):
-            ScrollView(.horizontal) {
-                Text(english(text)) // l10n: content(en)
-                    .font(.system(.body, design: .monospaced))
-                    .foregroundStyle(DesignTokens.Colors.ink)
-                    .textSelection(.enabled)
-                    .padding(DesignTokens.Spacing.md)
-            }
-            .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm, style: .continuous))
-        case .table(let table):
-            LessonTableView(table: table)
-        case .illustrationBrief(let brief):
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                Label("Illustration brief", systemImage: "paintbrush")
-                    .font(DesignTokens.FontScale.body.weight(.bold))
-                    .foregroundStyle(DesignTokens.Colors.ink)
-                Text(localized(brief.description, language: .english)) // l10n: content(en)
-                    .font(DesignTokens.FontScale.body)
-                    .foregroundStyle(DesignTokens.Colors.ink)
-                Text(illustrationAltText(brief)) // l10n: localized
-                    .font(DesignTokens.FontScale.caption)
-                    .foregroundStyle(DesignTokens.Colors.inkMuted)
-            }
-            .padding(DesignTokens.Spacing.md)
-            .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
-            .accessibilityElement(children: .combine)
-            .accessibilityLabel(Text(illustrationAccessibilityLabel(brief))) // l10n: localized
-        case .blockquote(let text):
-            Text(english(strippingLinks(from: text))) // l10n: content(en)
-                .font(DesignTokens.FontScale.body.italic())
-                .foregroundStyle(DesignTokens.Colors.ink)
-                .padding(DesignTokens.Spacing.md)
-                .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
+    func continueRound() {
+        guard checkpointVisible, currentIndex + 1 < items.count else { return }
+        checkpointVisible = false
+        currentIndex += 1
+    }
+
+    func previous() {
+        if checkpointVisible {
+            checkpointVisible = false
+        } else {
+            currentIndex = max(0, currentIndex - 1)
         }
     }
 
-    private func illustrationAltText(_ brief: MarkdownIllustrationBrief) -> AttributedString {
-        var text = AttributedString(String(localized: "Alt text: "))
-        text += english(brief.altText)
-        return text
-    }
-
-    private func illustrationAccessibilityLabel(_ brief: MarkdownIllustrationBrief) -> AttributedString {
-        var text = AttributedString(String(localized: "Illustration brief. "))
-        text += english(brief.altText)
-        text += AttributedString(". ")
-        text += english(brief.description)
-        return text
-    }
-
-    private func strippingLinks(from value: AttributedString) -> AttributedString {
-        var copy = value
-        let ranges = copy.runs.map(\.range)
-        for range in ranges {
-            copy[range].link = nil
+    func select(_ sourceOrChoiceIndex: Int, for item: LessonQuizRuntimeItem) {
+        guard selectedByItemId[item.id] == nil, submittedAttemptID == nil else { return }
+        if let questionID = item.questionID {
+            answeredWithHelpIds = PracticeHintRules.answeredWithHelpQuestionIdsAfterSelection(
+                questionID: questionID,
+                qualifiedQuestionIds: hintQualifiedQuestionIds,
+                answeredWithHelpQuestionIds: answeredWithHelpIds
+            )
         }
-        return copy
+        selectedByItemId[item.id] = sourceOrChoiceIndex
     }
 
-    private func plainString(_ value: AttributedString) -> String {
-        String(value.characters)
+    @discardableResult
+    func qualifyHint(for item: LessonQuizRuntimeItem) -> Bool {
+        guard items[safe: currentIndex]?.id == item.id, let questionID = item.questionID,
+              selectedByItemId[item.id] == nil, submittedAttemptID == nil else { return false }
+        return hintQualifiedQuestionIds.insert(questionID).inserted
+    }
+
+    init() {
+#if DEBUG
+        seed = AppLaunchArguments.value(after: "-CanadianHamLessonQuizSeed") ?? "lesson-quiz/\(UUID().uuidString)"
+#else
+        seed = "lesson-quiz/\(UUID().uuidString)"
+#endif
     }
 }
 
-private struct LessonTableView: View {
-    let table: MarkdownTable
+@MainActor
+final class LessonQuizSessionStateCache: ObservableObject {
+    private var states: [String: LessonQuizSessionState] = [:]
 
-    var body: some View {
-        ScrollView(.horizontal) {
-            Grid(alignment: .leading, horizontalSpacing: DesignTokens.Spacing.md, verticalSpacing: DesignTokens.Spacing.sm) {
-                GridRow {
-                    ForEach(Array(table.headers.enumerated()), id: \.offset) { _, header in
-                        Text(english(header)) // l10n: content(en)
-                            .font(DesignTokens.FontScale.caption.weight(.bold))
-                            .foregroundStyle(DesignTokens.Colors.ink)
-                    }
-                }
-                Divider().gridCellColumns(max(table.headers.count, 1))
-                ForEach(Array(table.rows.enumerated()), id: \.offset) { _, row in
-                    GridRow {
-                        ForEach(Array(row.enumerated()), id: \.offset) { _, cell in
-                            Text(english(cell)) // l10n: content(en)
-                                .font(DesignTokens.FontScale.caption)
-                                .foregroundStyle(DesignTokens.Colors.ink)
-                        }
-                    }
-                }
-            }
-            .padding(DesignTokens.Spacing.md)
-        }
-        .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
-        .accessibilityElement(children: .contain)
-        .accessibilityLabel("Lesson table")
+    func state(for quizID: String) -> LessonQuizSessionState {
+        if let state = states[quizID] { return state }
+        let state = LessonQuizSessionState()
+        states[quizID] = state
+        return state
+    }
+
+    func clear() {
+        objectWillChange.send()
+        states.removeAll()
     }
 }
 
-private struct LessonQuizScreen: View {
+struct LessonQuizScreen: View {
     let quiz: LessonQuiz
     let lesson: Lesson
     let bank: QuestionBank
@@ -635,34 +691,29 @@ private struct LessonQuizScreen: View {
     @ObservedObject var progressStore: ProgressStoreService
     let language: BankLanguage
     let onDataChanged: () -> Void
+    let onOpenHintLesson: (QuestionHintLessonLink) -> Void
+    @EnvironmentObject private var sessions: LessonQuizSessionStateCache
 
     @State private var attempts: [LessonQuizAttempt] = []
     @State private var errorMessage: String?
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
-                if let errorMessage {
-                    MessagePanel(title: "Lesson quiz unavailable", message: errorMessage, kind: .warning)
-                }
-                LessonQuizView(
-                    quiz: quiz,
-                    lesson: lesson,
-                    bank: bank,
-                    library: library,
-                    language: language,
-                    progressStore: progressStore,
-                    attempts: attempts,
-                    onSaved: {
-                        refresh()
-                        onDataChanged()
-                    }
-                )
+        LessonQuizView(
+            quiz: quiz,
+            lesson: lesson,
+            bank: bank,
+            library: library,
+            language: language,
+            progressStore: progressStore,
+            attempts: attempts,
+            loadErrorMessage: errorMessage,
+            state: sessions.state(for: quiz.id),
+            onOpenHintLesson: onOpenHintLesson,
+            onSaved: {
+                refresh()
+                onDataChanged()
             }
-            .pagePadding()
-        }
-        .background(DesignTokens.Colors.paper)
-        .navigationTitle("Lesson quiz")
+        )
         .task { refresh() }
     }
 
@@ -676,6 +727,35 @@ private struct LessonQuizScreen: View {
     }
 }
 
+// Keep one child tree: ViewThatFits candidates can lose audit-node provenance when Dynamic Type changes.
+private struct LessonQuizControlLayout: Layout {
+    let horizontalAlignment: VerticalAlignment
+    let verticalSpacing: CGFloat
+    let forceVertical: Bool
+
+    private func fittingLayout(proposal: ProposedViewSize, subviews: Subviews) -> AnyLayout {
+        let horizontal = AnyLayout(HStackLayout(alignment: horizontalAlignment))
+        var cache = horizontal.makeCache(subviews: subviews)
+        let ideal = horizontal.sizeThatFits(proposal: .unspecified, subviews: subviews, cache: &cache)
+        if !forceVertical && ideal.width <= (proposal.width ?? .infinity) {
+            return horizontal
+        }
+        return AnyLayout(VStackLayout(alignment: .leading, spacing: verticalSpacing))
+    }
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        let layout = fittingLayout(proposal: proposal, subviews: subviews)
+        var layoutCache = layout.makeCache(subviews: subviews)
+        return layout.sizeThatFits(proposal: proposal, subviews: subviews, cache: &layoutCache)
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        let layout = fittingLayout(proposal: proposal, subviews: subviews)
+        var layoutCache = layout.makeCache(subviews: subviews)
+        layout.placeSubviews(in: bounds, proposal: proposal, subviews: subviews, cache: &layoutCache)
+    }
+}
+
 private struct LessonQuizView: View {
     let quiz: LessonQuiz
     let lesson: Lesson
@@ -684,106 +764,134 @@ private struct LessonQuizView: View {
     let language: BankLanguage
     @ObservedObject var progressStore: ProgressStoreService
     let attempts: [LessonQuizAttempt]
+    let loadErrorMessage: String?
+
+    @ObservedObject var state: LessonQuizSessionState
+    let onOpenHintLesson: (QuestionHintLessonLink) -> Void
     let onSaved: () -> Void
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @State private var selectedTool: ExamTool?
+    // The shared tool presenter requires a calculator model; this quiz exposes only .hint.
+    @StateObject private var presentationCalculator = ExamCalculatorViewModel()
+    @State private var calculatorFocused = false
+    @AccessibilityFocusState private var roundFocus: LessonQuizRoundFocus?
+    @State private var previousRoundPosition: LessonQuizRoundPosition?
 
-    @State private var seed: String
-    @State private var items: [LessonQuizRuntimeItem] = []
-    @State private var currentIndex = 0
-    @State private var selectedByItemId: [String: Int] = [:]
-    @State private var submittedAttemptID: String?
-    @State private var errorMessage: String?
-
-    init(
-        quiz: LessonQuiz,
-        lesson: Lesson,
-        bank: QuestionBank,
-        library: ContentLibrary,
-        language: BankLanguage,
-        progressStore: ProgressStoreService,
-        attempts: [LessonQuizAttempt],
-        onSaved: @escaping () -> Void
-    ) {
-        self.quiz = quiz
-        self.lesson = lesson
-        self.bank = bank
-        self.library = library
-        self.language = language
-        self.progressStore = progressStore
-        self.attempts = attempts
-        self.onSaved = onSaved
-        _seed = State(initialValue: Self.initialSeed())
+    private var roundPosition: LessonQuizRoundPosition {
+        LessonQuizRoundPosition(roundIndex: roundProgress?.roundIndex, checkpointVisible: state.checkpointVisible)
     }
 
-    private static func initialSeed() -> String {
-#if DEBUG
-        AppLaunchArguments.value(after: "-CanadianHamLessonQuizSeed") ?? "lesson-quiz/\(UUID().uuidString)"
-#else
-        "lesson-quiz/\(UUID().uuidString)"
-#endif
+    private var roundProgress: LessonQuizRoundProgress? {
+        lessonQuizRoundProgress(quiz: quiz, items: items, currentIndex: currentIndex)
+    }
+
+    private var seed: String {
+        get { state.seed }
+        nonmutating set { state.seed = newValue }
+    }
+    private var items: [LessonQuizRuntimeItem] {
+        get { state.items }
+        nonmutating set { state.items = newValue }
+    }
+    private var currentIndex: Int {
+        get { state.currentIndex }
+        nonmutating set { state.currentIndex = newValue }
+    }
+    private var selectedByItemId: [String: Int] {
+        get { state.selectedByItemId }
+        nonmutating set { state.selectedByItemId = newValue }
+    }
+    private var submittedAttemptID: String? {
+        get { state.submittedAttemptID }
+        nonmutating set { state.submittedAttemptID = newValue }
+    }
+    private var errorMessage: String? {
+        get { state.errorMessage }
+        nonmutating set { state.errorMessage = newValue }
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
-            HStack(alignment: .top) {
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                    Text("Lesson quiz")
-                        .font(DesignTokens.FontScale.caption.weight(.semibold))
-                        .foregroundStyle(DesignTokens.Colors.inkMuted)
-                    Text(quiz.id) // l10n: verbatim
-                        .font(DesignTokens.FontScale.title.weight(.bold))
-                        .foregroundStyle(DesignTokens.Colors.ink)
-                        .accessibilityAddTraits(.isHeader)
-                    Text("\(items.count) questions: official bank questions update practice progress; concept checks do not.")
-                        .font(DesignTokens.FontScale.body)
-                        .foregroundStyle(DesignTokens.Colors.ink)
-                    if let latest = attempts.last {
-                        Text("Latest result: \(latest.correct) / \(latest.total) (\(latest.percent, format: .number.precision(.fractionLength(0...0)))%). Attempts saved: \(attempts.count).")
-                            .font(DesignTokens.FontScale.caption)
-                            .foregroundStyle(DesignTokens.Colors.inkMuted)
-                            .accessibilityIdentifier("lesson-quiz-latest-score")
+        ScrollViewReader { proxy in
+            ScrollView {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
+                    if let loadErrorMessage {
+                        MessagePanel(title: "Lesson quiz unavailable", message: loadErrorMessage, kind: .warning)
                     }
+                    quizCard
                 }
-                Spacer()
-                Button { restart() } label: {
-                    AccessibleSecondaryButtonLabel(title: "Retry quiz")
-                }
-                .buttonStyle(AccessibleSecondaryButtonStyle())
+                .pagePadding()
             }
+            .background(DesignTokens.Colors.paper)
+            .navigationTitle("Lesson quiz")
+            .task(id: state.generation) { if items.isEmpty { restart(keepSeed: true) } }
+            .examToolPresentation(
+                selectedTool: $selectedTool,
+                calculator: presentationCalculator,
+                calculatorFocused: $calculatorFocused,
+                hintContext: hintToolContext
+            )
+            .onChange(of: currentIndex) { _, _ in selectedTool = nil }
+            .task(id: roundPosition) {
+                let position = roundPosition
+                let target = position.focusTarget(from: previousRoundPosition)
+                previousRoundPosition = position
+                guard let target else { return }
+                selectedTool = nil
+                roundFocus = nil
+                await Task.yield()
+                guard !Task.isCancelled else { return }
+                proxy.scrollTo("lesson-quiz-position", anchor: .top)
+                roundFocus = target
+            }
+            .onDisappear { selectedTool = nil }
+        }
+    }
+
+    private var quizCard: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+            quizHeaderControls
 
             if let errorMessage {
                 MessagePanel(title: "Lesson quiz unavailable", message: errorMessage, kind: .warning)
             }
 
-            if let item = items[safe: currentIndex] {
-                Text("Question \(currentIndex + 1) of \(items.count)")
+            if state.checkpointVisible, let round = roundProgress {
+                roundCheckpoint(round)
+            } else if let item = items[safe: currentIndex] {
+                if let round = roundProgress {
+                    Text("Round \(round.roundIndex + 1) of \(round.roundCount): \(round.round.title.textAndLanguage(for: canadianHamUsesFrenchUI ? .french : .english).text)") // l10n: localized
+                        .font(DesignTokens.FontScale.body.weight(.bold))
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                        .accessibilityAddTraits(.isHeader)
+                        .accessibilityIdentifier("lesson-quiz-round-heading")
+                        .accessibilityFocused($roundFocus, equals: .question)
+                        .id("lesson-quiz-position")
+                }
+                if let reviewLessonId = item.reviewLessonId, let reviewLesson = library.lessonsById[reviewLessonId] {
+                    Text(lessonQuizReviewHeading(title: reviewLesson.title, language: canadianHamUsesFrenchUI ? .french : .english)) // l10n: localized
+                        .font(DesignTokens.FontScale.body.weight(.bold))
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                        .accessibilityAddTraits(.isHeader)
+                        .accessibilityIdentifier("lesson-quiz-review-heading")
+                }
+                Text("Question \(currentIndex - (roundProgress?.startIndex ?? 0) + 1) of \(roundProgress?.questionCount ?? items.count)") // l10n: localized
                     .font(DesignTokens.FontScale.body.weight(.semibold))
                     .foregroundStyle(DesignTokens.Colors.ink)
+                if hintToolContext != nil {
+                    ExamToolButtons(availableTools: [.hint]) { selectedTool = $0 }
+                }
                 LessonQuizQuestionView(
                     item: item,
                     bank: bank,
                     library: library,
                     language: language,
                     selectedSourceOrChoiceIndex: selectedByItemId[item.id],
+                    answeredWithHelp: item.questionID.map { state.answeredWithHelpIds.contains($0) } ?? false,
                     disabled: selectedByItemId[item.id] != nil || submittedAttemptID != nil
                 ) { selected in
-                    selectedByItemId[item.id] = selected
+                    state.select(selected, for: item)
                 }
-                HStack {
-                    Button { currentIndex = max(0, currentIndex - 1) } label: {
-                        AccessibleSecondaryButtonLabel(title: "Previous")
-                    }
-                    .disabled(currentIndex == 0)
-                    .buttonStyle(AccessibleSecondaryButtonStyle())
-                    Button { currentIndex = min(items.count - 1, currentIndex + 1) } label: {
-                        AccessibleSecondaryButtonLabel(title: "Next")
-                    }
-                    .disabled(currentIndex + 1 >= items.count)
-                    .buttonStyle(AccessibleSecondaryButtonStyle())
-                    Button("Submit lesson quiz") { submit() }
-                        .buttonStyle(AccessiblePrimaryButtonStyle())
-                        .disabled(!allAnswered || submittedAttemptID != nil)
-                        .accessibilityIdentifier("submit-lesson-quiz-button")
-                }
+                quizNavigationControls
                 if let submittedAttemptID, let attempt = attempts.first(where: { $0.id == submittedAttemptID }) {
                     Text("Saved result: \(attempt.correct) / \(attempt.total) (\(attempt.percent, format: .number.precision(.fractionLength(0...0)))%).")
                         .font(DesignTokens.FontScale.body.weight(.bold))
@@ -798,7 +906,129 @@ private struct LessonQuizView: View {
         .paperCard()
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("lesson-quiz-card")
-        .task { if items.isEmpty { restart(keepSeed: true) } }
+    }
+
+    private func roundCheckpoint(_ round: LessonQuizRoundProgress) -> some View {
+        let roundItems = Array(items[round.startIndex...round.endIndex])
+        let correct = roundItems.filter { selectedByItemId[$0.id] == 0 }.count
+        let answered = roundItems.filter { selectedByItemId[$0.id] != nil }.count
+        return VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+            Text("Round \(round.roundIndex + 1) of \(round.roundCount) checkpoint") // l10n: localized
+                .font(DesignTokens.FontScale.title.weight(.bold))
+                .accessibilityAddTraits(.isHeader)
+                .accessibilityIdentifier("lesson-quiz-round-checkpoint")
+                .accessibilityFocused($roundFocus, equals: .checkpoint)
+                .id("lesson-quiz-position")
+            Text(round.round.title.textAndLanguage(for: canadianHamUsesFrenchUI ? .french : .english).text) // l10n: verbatim
+                .font(DesignTokens.FontScale.body)
+            Text("Score so far: \(correct) / \(round.questionCount). Answered: \(answered) / \(round.questionCount).") // l10n: localized
+                .font(DesignTokens.FontScale.body)
+                .accessibilityIdentifier("lesson-quiz-round-score")
+            Button { state.previous() } label: {
+                AccessibleSecondaryButtonLabel(title: "Previous")
+            }
+            .buttonStyle(AccessibleSecondaryButtonStyle())
+            Button("Continue to next round") { state.continueRound() }
+                .buttonStyle(AccessiblePrimaryButtonStyle())
+                .accessibilityIdentifier("lesson-quiz-round-continue")
+        }
+        .foregroundStyle(DesignTokens.Colors.ink)
+    }
+
+    private var quizHeaderControls: some View {
+        let layout = dynamicTypeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: DesignTokens.Spacing.md))
+            : AnyLayout(HStackLayout(alignment: .top))
+        return layout {
+            quizHeader
+            if !dynamicTypeSize.isAccessibilitySize {
+                Spacer()
+            }
+            retryButton
+        }
+    }
+
+    private var quizNavigationControls: some View {
+        LessonQuizControlLayout(
+            horizontalAlignment: .center,
+            verticalSpacing: DesignTokens.Spacing.sm,
+            forceVertical: dynamicTypeSize.isAccessibilitySize
+        ) { navigationButtons }
+    }
+
+    private var quizHeader: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+            Text("Lesson quiz")
+                .font(DesignTokens.FontScale.caption.weight(.semibold))
+                .foregroundStyle(DesignTokens.Colors.inkMuted)
+            Text(quiz.id) // l10n: verbatim
+                .font(DesignTokens.FontScale.title.weight(.bold))
+                .foregroundStyle(DesignTokens.Colors.ink)
+                .accessibilityAddTraits(.isHeader)
+            Text("\(items.count) questions: official bank questions update practice progress; concept checks do not.")
+                .font(DesignTokens.FontScale.body)
+                .foregroundStyle(DesignTokens.Colors.ink)
+            if let latest = attempts.last {
+                Text("Latest result: \(latest.correct) / \(latest.total) (\(latest.percent, format: .number.precision(.fractionLength(0...0)))%). Attempts saved: \(attempts.count).")
+                    .font(DesignTokens.FontScale.caption)
+                    .foregroundStyle(DesignTokens.Colors.inkMuted)
+                    .accessibilityIdentifier("lesson-quiz-latest-score")
+                Text("Answers with help: \(latest.answeredWithHelpIds?.count ?? 0).") // l10n: localized
+                    .font(DesignTokens.FontScale.body)
+                    .foregroundStyle(DesignTokens.Colors.ink)
+                    .accessibilityIdentifier("lesson-quiz-help-summary")
+            }
+        }
+    }
+
+    private var retryButton: some View {
+        Button { restart() } label: {
+            AccessibleSecondaryButtonLabel(title: "Retry quiz")
+        }
+        .buttonStyle(AccessibleSecondaryButtonStyle())
+    }
+
+    private var hintToolContext: HintToolContext? {
+        guard let item = items[safe: currentIndex], let questionID = item.questionID,
+              bank.courseBankID == .basic, let hint = library.questionHintsByQuestionId[questionID] else { return nil }
+        return HintToolContext(
+            hint: hint,
+            language: language,
+            visibleLevel: state.hintLevelsByQuestionId[questionID] ?? 0,
+            answeredWithHelpQualified: state.hintQualifiedQuestionIds.contains(questionID),
+            canRecordHelp: selectedByItemId[item.id] == nil && submittedAttemptID == nil,
+            referenceSheetAvailable: false,
+            revealLevel: { state.hintLevelsByQuestionId[questionID] = max(state.hintLevelsByQuestionId[questionID] ?? 0, $0) },
+            hintVisibleLongEnough: {
+                state.qualifyHint(for: item)
+            },
+            openLesson: { link in
+                selectedTool = nil
+                // Dismiss the compact tool sheet before pushing a lesson on its parent stack.
+                Task { @MainActor in
+                    await Task.yield()
+                    onOpenHintLesson(link)
+                }
+            }
+        )
+    }
+
+    @ViewBuilder
+    private var navigationButtons: some View {
+        Button { state.previous() } label: {
+            AccessibleSecondaryButtonLabel(title: "Previous")
+        }
+        .disabled(currentIndex == 0)
+        .buttonStyle(AccessibleSecondaryButtonStyle())
+        Button { state.next(in: quiz) } label: {
+            AccessibleSecondaryButtonLabel(title: "Next")
+        }
+        .disabled(currentIndex + 1 >= items.count)
+        .buttonStyle(AccessibleSecondaryButtonStyle())
+        Button("Submit lesson quiz") { submit() }
+            .buttonStyle(AccessiblePrimaryButtonStyle())
+            .disabled(!allAnswered || submittedAttemptID != nil)
+            .accessibilityIdentifier("submit-lesson-quiz-button")
     }
 
     private var allAnswered: Bool {
@@ -806,13 +1036,20 @@ private struct LessonQuizView: View {
     }
 
     private func restart(keepSeed: Bool = false) {
+        previousRoundPosition = nil
+        roundFocus = nil
         if !keepSeed {
             seed = "lesson-quiz/\(quiz.id)/\(attempts.count + 1)/\(UUID().uuidString)"
         }
         do {
-            items = try buildLessonQuizItems(quiz: quiz, seed: seed)
+            items = try buildLessonQuizItems(quiz: quiz, seed: seed, library: library)
             currentIndex = 0
+            state.checkpointVisible = false
             selectedByItemId = [:]
+            state.hintLevelsByQuestionId = [:]
+            state.hintQualifiedQuestionIds = []
+            state.answeredWithHelpIds = []
+            selectedTool = nil
             submittedAttemptID = nil
             errorMessage = nil
         } catch {
@@ -821,38 +1058,12 @@ private struct LessonQuizView: View {
         }
     }
 
-    private func buildLessonQuizItems(quiz: LessonQuiz, seed: String) throws -> [LessonQuizRuntimeItem] {
-        let official = try quiz.officialQuestionIds.enumerated().map { index, questionId in
-            var rng = Pcg32(seed: "\(seed):official:\(index):\(questionId)")
-            return LessonQuizRuntimeItem.official(
-                id: "\(quiz.id):official:\(questionId)",
-                questionId: questionId,
-                choicePermutation: try CanadianHamEngine.shuffled([0, 1, 2, 3], rng: &rng)
-            )
-        }
-        let concepts = try quiz.conceptChecks.enumerated().map { index, check in
-            var rng = Pcg32(seed: "\(seed):concept:\(index):\(check.id)")
-            return LessonQuizRuntimeItem.concept(
-                id: "\(quiz.id):concept:\(check.id)",
-                conceptCheck: check,
-                choicePermutation: try CanadianHamEngine.shuffled(Array(check.choices.indices), rng: &rng)
-            )
-        }
-        var rng = Pcg32(seed: "\(seed):items:\(quiz.id)")
-        let shuffled = try CanadianHamEngine.shuffled(official + concepts, rng: &rng)
-#if DEBUG
-        if let value = AppLaunchArguments.value(after: "-CanadianHamLessonQuizLimit"), let limit = Int(value), limit > 0 {
-            return Array(shuffled.prefix(limit))
-        }
-#endif
-        return shuffled
-    }
-
     private func submit() {
         do {
             let submittedAt = try AppleStudyEngine.canonicalNow()
             var correct = 0
             var officialQuestionIds: [String] = []
+            var reviewQuestionIds: [String] = []
             var incorrectOfficialQuestionIds: [String] = []
             var incorrectConceptCheckIds: [String] = []
             var progress = try progressStore.questionProgressRecords()
@@ -860,15 +1071,15 @@ private struct LessonQuizView: View {
             for item in items {
                 guard let selected = selectedByItemId[item.id] else { continue }
                 switch item {
-                case .official(_, let questionId, _):
-                    officialQuestionIds.append(questionId)
+                case .official(_, let questionId, _, let reviewLessonId):
+                    if reviewLessonId == nil { officialQuestionIds.append(questionId) } else { reviewQuestionIds.append(questionId) }
                     if selected == 0 {
                         correct += 1
                     } else {
                         incorrectOfficialQuestionIds.append(questionId)
                     }
                     if let question = bank.question(id: questionId) {
-                        progress = try AppleStudyEngine.applyPracticeAnswer(progress: progress, question: question, selectedSourceIndex: selected, now: submittedAt)
+                        progress = try AppleStudyEngine.applyPracticeAnswer(progress: progress, question: question, selectedSourceIndex: selected, now: submittedAt, answeredWithHelp: state.answeredWithHelpIds.contains(questionId))
                     }
                 case .concept(_, let conceptCheck, _):
                     if conceptCheck.choices[safe: selected]?.isCorrect == true {
@@ -889,7 +1100,9 @@ private struct LessonQuizView: View {
                 percent: items.isEmpty ? 0 : (Double(correct) / Double(items.count)) * 100,
                 officialQuestionIds: officialQuestionIds,
                 incorrectOfficialQuestionIds: incorrectOfficialQuestionIds,
-                incorrectConceptCheckIds: incorrectConceptCheckIds
+                incorrectConceptCheckIds: incorrectConceptCheckIds,
+                answeredWithHelpIds: state.answeredWithHelpIds.sorted(),
+                reviewQuestionIds: reviewQuestionIds.sorted()
             )
             try progressStore.saveLessonQuizAttempt(attempt, questionProgress: progress)
             submittedAttemptID = attempt.id
@@ -901,15 +1114,124 @@ private struct LessonQuizView: View {
     }
 }
 
-private enum LessonQuizRuntimeItem: Identifiable, Equatable {
-    case official(id: String, questionId: String, choicePermutation: [Int])
+enum LessonQuizRuntimeItem: Identifiable, Equatable {
+    case official(id: String, questionId: String, choicePermutation: [Int], reviewLessonId: String? = nil)
     case concept(id: String, conceptCheck: ConceptCheck, choicePermutation: [Int])
 
     var id: String {
         switch self {
-        case .official(let id, _, _), .concept(let id, _, _): id
+        case .official(let id, _, _, _), .concept(let id, _, _): id
         }
     }
+
+    var reviewLessonId: String? {
+        if case .official(_, _, _, let lessonId) = self { return lessonId }
+        return nil
+    }
+
+    var questionID: String? {
+        if case .official(_, let questionID, _, _) = self { return questionID }
+        return nil
+    }
+}
+
+enum LessonQuizRoundFocus: Hashable { case question, checkpoint }
+
+struct LessonQuizRoundPosition: Equatable {
+    let roundIndex: Int?
+    let checkpointVisible: Bool
+
+    func focusTarget(from previous: Self?) -> LessonQuizRoundFocus? {
+        guard let roundIndex, let previous, previous.roundIndex != nil else { return nil }
+        if checkpointVisible && !previous.checkpointVisible { return .checkpoint }
+        return roundIndex != previous.roundIndex ? .question : nil
+    }
+}
+
+struct LessonQuizRoundProgress {
+    let round: LessonQuizRound
+    let roundIndex: Int
+    let roundCount: Int
+    let startIndex: Int
+    let endIndex: Int
+    var questionCount: Int { endIndex - startIndex + 1 }
+}
+
+func lessonQuizRoundProgress(quiz: LessonQuiz, items: [LessonQuizRuntimeItem], currentIndex: Int) -> LessonQuizRoundProgress? {
+    guard quiz.conceptChecks.isEmpty, let id = items[safe: currentIndex]?.questionID, var rounds = quiz.rounds else { return nil }
+    let reviewIds = items.filter { $0.reviewLessonId != nil }.compactMap(\.questionID)
+    if !reviewIds.isEmpty {
+        rounds.append(LessonQuizRound(sectionAnchor: "review", title: LocalizedNullableText(en: "Review", fr: "Révision"), officialQuestionIds: reviewIds))
+    }
+    guard let roundIndex = rounds.firstIndex(where: { $0.officialQuestionIds.contains(id) }) else { return nil }
+    let round = rounds[roundIndex]
+    let indices = items.indices.filter { index in
+        items[index].questionID.map { round.officialQuestionIds.contains($0) } ?? false
+    }
+    guard let startIndex = indices.first, let endIndex = indices.last else { return nil }
+    return LessonQuizRoundProgress(round: round, roundIndex: roundIndex, roundCount: rounds.count, startIndex: startIndex, endIndex: endIndex)
+}
+
+func lessonQuizReviewHeading(title: LocalizedNullableText, language: BankLanguage, bundle: Bundle = .main) -> AttributedString {
+    let localizedTitle = title.textAndLanguage(for: language)
+    var attributedTitle = AttributedString(localizedTitle.text)
+    attributedTitle.languageIdentifier = localizedTitle.language == .english ? "en" : "fr"
+    // Build the localized prefix as plain text and tag it explicitly with the interface language, so the
+    // English title's language can never spread onto it (AttributedString(localized:) inherited it in some runs).
+    var heading = AttributedString(String(localized: "Review question from \("")", bundle: bundle)) // l10n: localized
+    heading.languageIdentifier = language == .french ? "fr" : "en"
+    heading += attributedTitle
+    return heading
+}
+
+func buildLessonQuizItems(quiz: LessonQuiz, seed: String, library: ContentLibrary? = nil) throws -> [LessonQuizRuntimeItem] {
+    let official = try quiz.officialQuestionIds.enumerated().map { index, questionId in
+        var rng = Pcg32(seed: "\(seed):official:\(index):\(questionId)")
+        return LessonQuizRuntimeItem.official(
+            id: "\(quiz.id):official:\(questionId)",
+            questionId: questionId,
+            choicePermutation: try CanadianHamEngine.shuffled([0, 1, 2, 3], rng: &rng)
+        )
+    }
+    let concepts = try quiz.conceptChecks.enumerated().map { index, check in
+        var rng = Pcg32(seed: "\(seed):concept:\(index):\(check.id)")
+        return LessonQuizRuntimeItem.concept(
+            id: "\(quiz.id):concept:\(check.id)",
+            conceptCheck: check,
+            choicePermutation: try CanadianHamEngine.shuffled(Array(check.choices.indices), rng: &rng)
+        )
+    }
+    var rng = Pcg32(seed: "\(seed):items:\(quiz.id)")
+    let seededItems = try CanadianHamEngine.shuffled(official + concepts, rng: &rng)
+    // Group the existing seeded order without changing choice permutations.
+    var shuffled = (quiz.conceptChecks.isEmpty ? quiz.rounds : nil).map { rounds in
+        rounds.flatMap { round in seededItems.filter { item in
+            item.questionID.map { round.officialQuestionIds.contains($0) } ?? false
+        } }
+    } ?? seededItems
+#if DEBUG
+    // Keep the existing total-prefix control unchanged; this control exercises the final review round.
+    if let value = AppLaunchArguments.value(after: "-CanadianHamLessonQuizCoreLimit"), let limit = Int(value), limit > 0 {
+        shuffled = Array(shuffled.prefix(limit))
+    }
+#endif
+    if let library {
+        let pools = library.orderedLessons().map { lesson in
+            LessonReviewPool(lessonId: lesson.id, questionIds: library.questions.filter { lesson.covers.contains($0.subsectionId) }.map(\.id))
+        }
+        let excluded = quiz.officialQuestionIds + library.questions.filter { library.lessonsById[quiz.lessonId]?.covers.contains($0.subsectionId) == true }.map(\.id)
+        let reviews = try selectLessonReviewItems(orderedPools: pools, lessonId: quiz.lessonId, excludedQuestionIds: excluded, seed: seed)
+        shuffled += try reviews.enumerated().map { index, review in
+            var rng = Pcg32(seed: "\(seed):review-choice:\(index):\(review.questionId)")
+            return .official(id: "\(quiz.id):review:\(review.questionId)", questionId: review.questionId, choicePermutation: try CanadianHamEngine.shuffled([0, 1, 2, 3], rng: &rng), reviewLessonId: review.lessonId)
+        }
+    }
+#if DEBUG
+    if let value = AppLaunchArguments.value(after: "-CanadianHamLessonQuizLimit"), let limit = Int(value), limit > 0 {
+        return Array(shuffled.prefix(limit))
+    }
+#endif
+    return shuffled
 }
 
 private struct LessonQuizQuestionView: View {
@@ -918,12 +1240,13 @@ private struct LessonQuizQuestionView: View {
     let library: ContentLibrary
     let language: BankLanguage
     let selectedSourceOrChoiceIndex: Int?
+    let answeredWithHelp: Bool
     let disabled: Bool
     let onChoose: (Int) -> Void
 
     var body: some View {
         switch item {
-        case .official(_, let questionId, let permutation):
+        case .official(_, let questionId, let permutation, _):
             if let question = bank.question(id: questionId) {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                     QuestionCard(question: question, language: language)
@@ -940,6 +1263,12 @@ private struct LessonQuizQuestionView: View {
                         }
                     }
                     if let selectedSourceOrChoiceIndex {
+                        if answeredWithHelp {
+                            Text("Answered with help")
+                                .font(DesignTokens.FontScale.body.weight(.semibold))
+                                .foregroundStyle(DesignTokens.Colors.ink)
+                                .accessibilityIdentifier("lesson-quiz-with-help-marker")
+                        }
                         PracticeFeedback(question: question, selectedSourceIndex: selectedSourceOrChoiceIndex, language: language, choicePermutation: permutation)
                     }
                 }
@@ -960,6 +1289,8 @@ private struct ConceptCheckQuestionView: View {
     let selectedChoiceIndex: Int?
     let disabled: Bool
     let onChoose: (Int) -> Void
+    @AccessibilityFocusState private var feedbackFocused: Bool
+    @State private var feedbackFocusRequest = ConceptCheckFeedbackFocusRequest()
 
     var body: some View {
         let prompt = check.prompt.textAndLanguage(for: language)
@@ -973,6 +1304,7 @@ private struct ConceptCheckQuestionView: View {
             ForEach(Array(permutation.enumerated()), id: \.offset) { displayIndex, choiceIndex in
                 if let choice = check.choices[safe: choiceIndex] {
                     ConceptChoiceButton(choice: choice, displayIndex: displayIndex, sourceIndex: choiceIndex, language: language, selectedChoiceIndex: selectedChoiceIndex, showCorrectness: selectedChoiceIndex != nil, disabled: disabled) {
+                        feedbackFocusRequest.pendingCheckID = check.id
                         onChoose(choiceIndex)
                     }
                 }
@@ -981,21 +1313,52 @@ private struct ConceptCheckQuestionView: View {
                 let isCorrect = check.choices[safe: selectedChoiceIndex]?.isCorrect == true
                 let feedbackTextColor = isCorrect ? DesignTokens.Colors.correctText : DesignTokens.Colors.incorrectText
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                    Text(isCorrect ? "Correct" : "Incorrect") // l10n: localized
-                        .font(DesignTokens.FontScale.body.weight(.bold))
-                        .foregroundStyle(feedbackTextColor)
+                    if let status = conceptCheckAnswerStatus(check: check, selectedSourceIndex: selectedChoiceIndex, language: language) {
+                        Text(status) // l10n: content(question)
+                            .font(DesignTokens.FontScale.body)
+                            .foregroundStyle(feedbackTextColor)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .accessibilityIdentifier("lesson-quiz-feedback-status")
+                            .accessibilityFocused($feedbackFocused)
+                            .task(id: selectedChoiceIndex) {
+                                guard feedbackFocusRequest.consume(for: check.id) else { return }
+                                await Task.yield()
+                                guard !Task.isCancelled else { return }
+                                feedbackFocused = true
+                            }
+                    }
                     let explanation = check.explanation.textAndLanguage(for: language)
                     Text(localized(explanation.text, language: explanation.language)) // l10n: content(question)
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(feedbackTextColor)
+                        .accessibilityIdentifier("lesson-quiz-feedback-explanation")
                 }
                 .padding(DesignTokens.Spacing.lg)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .background(isCorrect ? DesignTokens.Colors.correctBg : DesignTokens.Colors.incorrectBg, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
                 .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(isCorrect ? DesignTokens.Colors.correctBorder : DesignTokens.Colors.incorrectBorder, lineWidth: 2))
+                .accessibilityElement(children: .contain)
                 .accessibilityIdentifier("lesson-quiz-feedback")
             }
         }
+        .onChange(of: check.id) {
+            feedbackFocusRequest.pendingCheckID = nil
+            feedbackFocused = false
+        }
+        .onDisappear {
+            feedbackFocusRequest.pendingCheckID = nil
+            feedbackFocused = false
+        }
+    }
+}
+
+// A restored answer must not request focus; only a choice action arms this one-shot flag.
+struct ConceptCheckFeedbackFocusRequest {
+    var pendingCheckID: String?
+
+    mutating func consume(for checkID: String) -> Bool {
+        defer { pendingCheckID = nil }
+        return pendingCheckID == checkID
     }
 }
 
@@ -1167,7 +1530,7 @@ struct ExplanationPanelView: View {
     @ViewBuilder
     private func citationView(_ citation: ExplanationCitation) -> some View {
         if citation.type == "lesson", let id = citation.id {
-            NavigationLink(value: LearnRoute.lesson(id)) {
+            NavigationLink(value: RootNavigationRoute.learn(.lesson(id))) {
                 Text(id) // l10n: verbatim
                     .font(DesignTokens.FontScale.caption)
                     .frame(minHeight: 44, alignment: .leading)
@@ -1213,6 +1576,18 @@ private func localizedLessonReadProgress(readCount: Int, totalCount: Int) -> Str
 
 private func markedReadText(_ count: Int) -> String {
     String.localizedStringWithFormat(String(localized: "Marked read %lld times."), count)
+}
+
+// Quiz selections store source indices, never shuffled display positions.
+func conceptCheckAnswerStatus(check: ConceptCheck, selectedSourceIndex: Int?, language: BankLanguage) -> AttributedString? {
+    guard let selectedSourceIndex, let choice = check.choices[safe: selectedSourceIndex] else { return nil }
+    var status = AttributedString(choice.isCorrect ? String(localized: "Correct.") : String(localized: "Incorrect."))
+    status.inlinePresentationIntent = .stronglyEmphasized
+    if let feedback = choice.feedback?.textAndLanguage(for: language) {
+        status += AttributedString(" ")
+        status += localized(feedback.text, language: feedback.language)
+    }
+    return status
 }
 
 struct LocalizedNullableResolvedText {

@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-013-010",
+  "questionId": "B-006-013-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the total wire length convention for the driven loop in a square-loop antenna.",
+      "fr": "Revoyez la convention de longueur totale du fil pour la boucle alimentée d’une antenne à boucles carrées."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-05",
+    "sectionAnchor": "quad-antennas"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Formula recall item: a second hint would state the formula being tested; topic pointer and lesson link only."
+}

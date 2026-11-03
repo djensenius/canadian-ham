@@ -1,0 +1,43 @@
+<svg id="transformer-resonance-meters" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 560" role="img">
+  <title>Transformer windings and meter placement</title>
+  <desc>Two panels show separate primary and secondary transformer windings on a core, and ammeter and voltmeter placement around a load.</desc>
+  <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M150 172 C150 248 150 334 150 414" stroke-width="7"/>
+    <path d="M192 172 C192 248 192 334 192 414" stroke-width="7"/>
+    <path d="M108 176 C108 188 108 194 108 202" stroke-width="7"/>
+    <path d="M108 202 C72 214 72 244 108 256" stroke-width="8"/>
+    <path d="M108 256 C72 268 72 298 108 310" stroke-width="8"/>
+    <path d="M108 310 C72 322 72 352 108 364" stroke-width="8"/>
+    <path d="M108 364 C72 376 72 406 108 418" stroke-width="8"/>
+    <path d="M234 176 C234 188 234 194 234 202" stroke-width="7"/>
+    <path d="M234 202 C270 214 270 244 234 256" stroke-width="8"/>
+    <path d="M234 256 C270 268 270 298 234 310" stroke-width="8"/>
+    <path d="M234 310 C270 322 270 352 234 364" stroke-width="8"/>
+    <path d="M234 364 C270 376 270 406 234 418" stroke-width="8"/>
+
+    <path d="M362 186 C392 186 424 186 448 186" stroke-width="7"/>
+    <circle cx="482" cy="186" r="34" stroke-width="7"/>
+    <path d="M516 186 C540 186 562 186 586 186" stroke-width="7"/>
+    <path d="M586 186 C586 226 586 258 586 292" stroke-width="7"/>
+    <path d="M586 414 C586 446 586 472 586 500" stroke-width="7"/>
+    <path d="M586 500 C512 500 436 500 362 500" stroke-width="7"/>
+    <path d="M362 186 C362 226 362 252 362 276" stroke-width="7"/>
+    <path d="M328 276 C350 276 374 276 396 276" stroke-width="7"/>
+    <path d="M346 318 C358 318 370 318 382 318" stroke-width="7"/>
+    <path d="M362 318 C362 386 362 446 362 500" stroke-width="7"/>
+    <path d="M586 292 L586 300 L566 310 L606 330 L566 350 L606 370 L566 390 L586 400 L586 414" stroke-width="8"/>
+    <circle cx="480" cy="354" r="34" stroke-width="7"/>
+    <path d="M514 336 C540 318 562 304 586 292" stroke-width="6"/>
+    <path d="M514 372 C540 390 562 404 586 414" stroke-width="6"/>
+  </g>
+  <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
+    <text x="180" y="58" font-size="40" font-weight="700">xfmr</text>
+    <text x="112" y="144" font-size="36">P</text>
+    <text x="250" y="144" font-size="36">S</text>
+
+    <text x="514" y="58" font-size="40" font-weight="700">meters</text>
+    <text x="482" y="198" font-size="40" font-weight="700">A</text>
+    <text x="480" y="366" font-size="40" font-weight="700">V</text>
+    <text x="532" y="454" font-size="36">load</text>
+  </g>
+</svg>

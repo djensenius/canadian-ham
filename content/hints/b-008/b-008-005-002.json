@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-008-005-002",
+  "questionId": "B-008-005-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review how filter names describe which side of the cut-off is the useful side.",
+      "fr": "Revoyez comment les noms de filtres indiquent quel côté de la coupure est le côté utile."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-01",
+    "sectionAnchor": "filter-vocabulary"
+  },
+  "singleLevelReason": "Filter-name recall: a second hint would state the pass direction directly.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

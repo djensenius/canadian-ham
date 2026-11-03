@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-001-017-008",
+  "questionId": "B-001-017-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "EIRP compares your signal with an imaginary antenna that radiates equally in every direction.",
+      "fr": "La PIRE compare votre signal à une antenne imaginaire qui rayonne également dans toutes les directions."
+    },
+    {
+      "level": 2,
+      "en": "For the same power fed to the antenna, ask which antenna property makes a real antenna’s strongest direction stronger than that reference.",
+      "fr": "Pour une même puissance fournie à l’antenne, demandez-vous quelle caractéristique rend la direction la plus forte d’une antenne réelle plus intense que cette référence."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-04",
+    "sectionAnchor": "reference-facts-power-needs-a-quantity-and-a-measurement-point"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

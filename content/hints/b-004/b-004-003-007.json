@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-004-003-007",
+  "questionId": "B-004-003-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the polarity subsection for bipolar transistors.",
+      "fr": "Revoyez la sous-section sur la polarité des transistors bipolaires."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-004-02",
+    "sectionAnchor": "npn-and-pnp-polarity"
+  },
+  "singleLevelReason": "Name-pair recall: a second hint would list or eliminate the two types.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

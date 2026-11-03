@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-003-006.\n\nWhy the correct answer is right: The IF amplifier raises the converted signal level enough for effective detection after the IF filter has selected the wanted signal.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"RF amplifier\": The RF amplifier helps sensitivity at the input, but the final signal power before detector operation is supplied in the IF chain.\n- sourceIndex 2: \"Speech amplifier\": A speech amplifier is a transmitter audio block, not a receiver IF gain stage.\n- sourceIndex 3: \"Frequency multiplier\": A frequency multiplier is a transmitter frequency-generation block and does not drive a receiver detector.",
+    "en": "Question B-003-003-006.\n\nWhy the correct answer is right: The intermediate frequency (IF) amplifier raises the converted signal level enough for effective detection after the IF filter has selected the wanted signal.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"RF amplifier\": The radio-frequency (RF) amplifier helps sensitivity at the input, but the final signal power before detector operation is supplied in the IF chain.\n- sourceIndex 2: \"Speech amplifier\": A speech amplifier is a transmitter audio block, not a receiver IF gain stage.\n- sourceIndex 3: \"Frequency multiplier\": A frequency multiplier is a transmitter frequency-generation block and does not drive a receiver detector.",
     "fr": null
   },
   "citations": [

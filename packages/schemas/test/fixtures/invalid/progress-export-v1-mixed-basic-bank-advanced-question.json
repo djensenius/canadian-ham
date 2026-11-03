@@ -1,0 +1,21 @@
+{
+  "schema": "canadian-ham.progress-export",
+  "version": 1,
+  "exportedAt": "2026-01-02T03:04:05.000Z",
+  "bankId": "basic-2025-07-15",
+  "questionProgress": [
+    {
+      "questionId": "A-001-001-001",
+      "bankId": "basic-2025-07-15",
+      "attempts": 1,
+      "correctAttempts": 1,
+      "lastAttemptedAt": "2026-01-02T03:00:00.000Z",
+      "lastResult": "correct",
+      "recentResults": [true],
+      "leitner": { "box": 1, "dueAt": "2026-01-03T03:00:00.000Z" },
+      "notes": null
+    }
+  ],
+  "examAttempts": [],
+  "preferences": { "practiceMode": "immediate", "examTimerEnabled": false }
+}

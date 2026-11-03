@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-005-006-003",
+  "questionId": "B-005-006-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Convert milliamperes to amperes before using P = I x E.",
+      "fr": "Convertissez les milliampères en ampères avant d'utiliser P = I x E."
+    },
+    {
+      "level": 2,
+      "en": "Set the current as 0.500 A, then use P = 0.500 A x 12 V.",
+      "fr": "Écrivez le courant comme 0,500 A, puis utilisez P = 0,500 A x 12 V."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-03",
+    "sectionAnchor": "power-ratings-and-heat"
+  },
+  "referenceSheetSection": "power",
+  "licenseClass": "original"
+}

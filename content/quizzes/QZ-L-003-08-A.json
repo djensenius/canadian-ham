@@ -14,36 +14,174 @@
   "conceptChecks": [
     {
       "id": "QZ-L-003-08-A-C1",
-      "prompt": { "en": "A trainee tapes a high-voltage supply cabinet interlock closed so the cover can stay open during a test, then plans to probe with both hands. What error must be stopped first?", "fr": null },
+      "prompt": {
+        "en": "A trainee wants to tape a high-voltage cabinet interlock closed for an open-cover test. Which plan preserves the protections taught in this lesson?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "An open cabinet automatically removes all shock risk, leaving only RF leakage to consider", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Defeating the interlock and using both hands removes important shock protections", "fr": null }, "isCorrect": true },
-        { "text": { "en": "The only concern is whether the fuse voltage rating is printed on the holder", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Increasing the fuse current rating would make the open-cabinet test safer", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Keep the bypass and rely on the original fuse to prevent a shock.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "A fuse protects wiring from overcurrent. A dangerous body current can be far below the fuse rating.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Keep the interlock functional; use qualified de-energized service, controlled discharge, and meter verification.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "Do not defeat the interlock. Removing input power and verifying stored-charge discharge address different hazards.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Remove the bypass and begin internal work as soon as the cover switch opens.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "The interlock may remove input power, but it does not prove capacitors are discharged. Verification is still required.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Keep the bypass and use a smaller fuse as the main personal shock protection.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "A fuse is not a replacement for an enclosure interlock or safe service procedures. Changing its rating does not establish shock safety.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "A cabinet interlock is there to reduce contact with dangerous voltage when the cover is opened. It must not be defeated, and two-handed probing increases the chance of current crossing the chest.", "fr": null }
+      "explanation": {
+        "en": "Interlocks, fuses, de-energizing, and stored-energy control serve different safety functions. Preserve each protection rather than substituting one for another.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-003-08-A-C2",
-      "prompt": { "en": "An indoor antenna test is moved from 1 m away from a marked keep-clear line to 2 m away in the same direction, with the same power and antenna. In the simple free-space model, what happens to power density at that line?", "fr": null },
+      "prompt": {
+        "en": "A test point moves from 1.5 m to 3.0 m from an unchanged antenna. In the simple free-space point-source model, how does power density compare?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "It falls to about one quarter", "fr": null }, "isCorrect": true },
-        { "text": { "en": "It falls to about one half", "fr": null }, "isCorrect": false },
-        { "text": { "en": "It stays the same because frequency did not change", "fr": null }, "isCorrect": false },
-        { "text": { "en": "It increases because the antenna is farther from the operator", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "About one quarter of the original value.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "Distance doubled. Squaring the distance ratio gives four, so power density becomes a quarter. This is a model, not a site exposure assessment.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "About one half of the original value.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "A half corresponds to the field-strength ratio in this model. Power density follows the square of that ratio.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "About the same as the original value.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Fixed transmitter power does not mean fixed density at every distance. The energy spreads over more area.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "About twice the original value.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Moving farther away reduces power density in this model. It does not concentrate the same power into the farther point.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "Power density follows the inverse-square relationship in the simple free-space model, so doubling distance reduces it to roughly 1/4.", "fr": null }
+      "explanation": {
+        "en": "In the stated free-space model, field strength varies with inverse distance and power density with inverse distance squared. Real exposure assessment needs more than this ratio.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-003-08-A-C3",
-      "prompt": { "en": "Which statement is NOT true for reducing RF exposure around indoor, UHF, or directional transmitting antennas?", "fr": null },
+      "prompt": {
+        "en": "A free-space point-source calculation predicts a large exposure reduction at a new operating position beside metal structures. What can that calculation establish by itself?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "Moving people farther from the energized antenna usually improves the safety margin", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Reducing power or transmission time can lower exposure", "fr": null }, "isCorrect": false },
-        { "text": { "en": "A high-gain main beam should not be aimed into occupied nearby space", "fr": null }, "isCorrect": false },
-        { "text": { "en": "A low SWR makes it safe for people to stand close to an energized UHF antenna", "fr": null }, "isCorrect": true }
+        {
+          "text": {
+            "en": "The nearby metal can be treated as a minor correction to the calculated reduction.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "That assumption has not been tested. Nearby structures and reflections can change the actual field relative to the simple model.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "Low SWR would make the calculated reduction a suitable site assessment.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "Low SWR addresses match, not whether the actual field near the occupied position follows the assumed pattern.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "A model-based comparison, but not approval of the real occupied position.",
+            "fr": null
+          },
+          "isCorrect": true,
+          "feedback": {
+            "en": "The simple ratio helps explain distance effects. A real assessment must account for the installation and actual operating conditions.",
+            "fr": null
+          }
+        },
+        {
+          "text": {
+            "en": "A relative reduction sufficient to assess the position without the old absolute exposure.",
+            "fr": null
+          },
+          "isCorrect": false,
+          "feedback": {
+            "en": "A relative reduction cannot establish a safe absolute exposure without a baseline, even if the simple model applied exactly.",
+            "fr": null
+          }
+        }
       ],
-      "explanation": { "en": "Low SWR helps the equipment but does not make close human exposure safe. Distance, power, time, antenna gain, beam direction, and access control still matter.", "fr": null }
+      "explanation": {
+        "en": "An estimate can guide planning without proving compliance or safety at a real location.",
+        "fr": null
+      }
     }
   ]
 }

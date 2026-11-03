@@ -3,10 +3,12 @@
   "$id": "progress-export-v1.schema.json",
   "title": "Canadian Ham progress export v1",
   "type": "object",
+  "lessonReviewVersion": "lessonQuizAttempts",
   "required": ["schema", "version", "exportedAt", "questionProgress", "examAttempts", "preferences"],
   "properties": {
     "schema": { "const": "canadian-ham.progress-export" },
     "version": { "const": 1 },
+    "lessonIdVersion": { "$ref": "#/$defs/lessonIdVersion" },
     "exportedAt": { "$ref": "common.schema.json#/$defs/canonicalUtcTimestamp" },
     "bankId": { "$ref": "common.schema.json#/$defs/bankId" },
     "questionProgress": {
@@ -26,7 +28,120 @@
       "items": { "$ref": "common.schema.json#/$defs/lessonQuizAttempt" }
     },
     "morseCourseProgress": { "$ref": "common.schema.json#/$defs/morseCourseProgress" },
+    "syncDeviceRows": { "$ref": "#/$defs/syncDeviceRows" },
     "preferences": { "$ref": "common.schema.json#/$defs/webPreferences" }
   },
-  "additionalProperties": false
+  "$defs": {
+    "lessonIdVersion": { "enum": [1, 2] },
+    "syncDeviceRows": {
+      "type": "object",
+      "required": ["questionProgress", "examAttempts", "lessonProgress", "lessonQuizAttempts", "morseCourseProgress"],
+      "properties": {
+        "questionProgress": { "type": "array", "items": { "$ref": "#/$defs/deviceQuestionProgressRecord" } },
+        "examAttempts": { "type": "array", "items": { "$ref": "#/$defs/deviceExamAttempt" } },
+        "lessonProgress": { "type": "array", "items": { "$ref": "#/$defs/deviceLessonProgressRecord" } },
+        "lessonQuizAttempts": { "type": "array", "items": { "$ref": "#/$defs/deviceLessonQuizAttempt" } },
+        "morseCourseProgress": { "type": "array", "items": { "$ref": "#/$defs/deviceMorseCourseProgress" } }
+      },
+      "additionalProperties": false
+    },
+    "deviceId": { "type": "string", "minLength": 1 },
+    "deviceQuestionProgressRecord": {
+      "type": "object",
+      "required": ["deviceId", "record"],
+      "properties": {
+        "deviceId": { "$ref": "#/$defs/deviceId" },
+        "record": { "$ref": "common.schema.json#/$defs/questionProgressRecord" }
+      },
+      "additionalProperties": false
+    },
+    "deviceExamAttempt": {
+      "type": "object",
+      "required": ["deviceId", "attempt"],
+      "properties": {
+        "deviceId": { "$ref": "#/$defs/deviceId" },
+        "attempt": { "$ref": "common.schema.json#/$defs/progressExamAttempt" }
+      },
+      "additionalProperties": false
+    },
+    "deviceLessonProgressRecord": {
+      "type": "object",
+      "required": ["deviceId", "record"],
+      "properties": {
+        "deviceId": { "$ref": "#/$defs/deviceId" },
+        "record": { "$ref": "common.schema.json#/$defs/lessonProgressRecord" },
+        "lessonIdVersion": { "$ref": "#/$defs/lessonIdVersion" }
+      },
+      "additionalProperties": false
+    },
+    "deviceLessonQuizAttempt": {
+      "type": "object",
+      "lessonReviewVersion": "attempt",
+      "required": ["deviceId", "attempt"],
+      "properties": {
+        "deviceId": { "$ref": "#/$defs/deviceId" },
+        "attempt": { "$ref": "common.schema.json#/$defs/lessonQuizAttempt" },
+        "lessonIdVersion": { "$ref": "#/$defs/lessonIdVersion" }
+      },
+      "additionalProperties": false
+    },
+    "deviceMorseCourseProgress": {
+      "type": "object",
+      "required": ["deviceId", "progress"],
+      "properties": {
+        "deviceId": { "$ref": "#/$defs/deviceId" },
+        "progress": { "$ref": "common.schema.json#/$defs/morseCourseProgress" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "bankId": { "$ref": "common.schema.json#/$defs/basicBankId" },
+        "questionProgress": {
+          "type": "array",
+          "items": { "$ref": "common.schema.json#/$defs/basicQuestionProgressRecord" }
+        },
+        "examAttempts": {
+          "type": "array",
+          "items": { "$ref": "common.schema.json#/$defs/basicProgressExamAttempt" }
+        },
+        "lessonQuizAttempts": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              { "$ref": "common.schema.json#/$defs/lessonQuizAttempt" },
+              {
+                "type": "object",
+                "properties": {
+                  "officialQuestionIds": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/basicQuestionId" } },
+                  "incorrectOfficialQuestionIds": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/basicQuestionId" } }
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": ["bankId"],
+      "properties": {
+        "bankId": { "$ref": "common.schema.json#/$defs/advancedBankId" },
+        "questionProgress": {
+          "type": "array",
+          "items": { "$ref": "common.schema.json#/$defs/advancedQuestionProgressRecord" }
+        },
+        "examAttempts": {
+          "type": "array",
+          "items": { "$ref": "common.schema.json#/$defs/advancedProgressExamAttempt" }
+        },
+        "lessonProgress": { "type": "array", "maxItems": 0 },
+        "lessonQuizAttempts": { "type": "array", "maxItems": 0 }
+      }
+    }
+  ]
 }

@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-002-006-007.\n\nWhy the correct answer is right: One S-unit is 6 dB in the stated convention, and a 6 dB power reduction is a four-to-one drop. One quarter of 100 W is 25 W.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"75 watts\": 75 W is only a small reduction and would not drop one full 6 dB S-unit.\n- sourceIndex 2: \"50 watts\": 50 W is a 3 dB reduction, about half of the 6 dB step.\n- sourceIndex 3: \"33 watts\": 33 W is roughly a three-to-one drop, not the four-to-one ratio for one S-unit.",
+    "en": "Question B-002-006-007.\n\nWhy the correct answer is right: One S-unit is 6 decibels (dB) in the stated convention. A 6 dB power reduction is a four-to-one drop, and one quarter of 100 W is 25 W.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"75 watts\": 75 W is only a small reduction and would not drop one full 6 dB S-unit.\n- sourceIndex 2: \"50 watts\": 50 W is a 3 dB reduction, about half of the 6 dB step.\n- sourceIndex 3: \"33 watts\": 33 W is roughly a three-to-one drop, not the four-to-one ratio for one S-unit.",
     "fr": null
   },
   "citations": [

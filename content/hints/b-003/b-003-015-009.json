@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-015-009",
+  "questionId": "B-003-015-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review packet, digipeaters and reliability.",
+      "fr": "Revoyez la transmission par paquets, les digipeaters et la fiabilité."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-06",
+    "sectionAnchor": "packet-digipeaters-and-reliability"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

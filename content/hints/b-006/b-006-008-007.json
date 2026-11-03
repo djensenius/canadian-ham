@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-008-007",
+  "questionId": "B-006-008-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the physical speed used for radio waves before applying wavelength estimates.",
+      "fr": "Revoyez la vitesse physique utilisée pour les ondes radio avant d’appliquer les estimations de longueur d’onde."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-03",
+    "sectionAnchor": "wavelength-and-frequency"
+  },
+  "referenceSheetSection": "wavelength-dipole-length",
+  "licenseClass": "original",
+  "singleLevelReason": "Definition item: a second hint would paraphrase the definition or name the correct term; topic pointer and lesson link only."
+}

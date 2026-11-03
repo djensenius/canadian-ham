@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-010-001",
+  "questionId": "B-003-010-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the lesson’s narrow-to-wide mode bandwidth comparison.",
+      "fr": "Revoyez la comparaison de la leçon sur les largeurs de bande des modes, du plus étroit au plus large."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-04",
+    "sectionAnchor": "bandwidth-and-emission-width"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

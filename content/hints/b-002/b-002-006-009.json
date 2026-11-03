@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-002-006-009",
+  "questionId": "B-002-006-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Read a three-number Morse report left to right through the RST parts.",
+      "fr": "Lisez un rapport Morse à trois chiffres de gauche à droite selon les parties du RST."
+    },
+    {
+      "level": 2,
+      "en": "Use the lesson scale for each digit separately; in Morse, the third digit reports keyed-signal tone.",
+      "fr": "Utilisez l’échelle de la leçon pour chaque chiffre séparément; en Morse, le troisième chiffre indique la tonalité du signal manipulé."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-002-02",
+    "sectionAnchor": "report-what-reaches-your-receiver"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

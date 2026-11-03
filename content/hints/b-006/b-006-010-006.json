@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-006-010-006",
+  "questionId": "B-006-010-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review ground-plane radial arrangements.",
+      "fr": "Revoyez les dispositions des conducteurs radiaux d'un plan de sol."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-006-04",
+    "sectionAnchor": "quarter-wave-and-half-wave-verticals"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original",
+  "singleLevelReason": "Principle item: a content hint would restate the rule that selects one option; topic pointer and lesson link only."
+}

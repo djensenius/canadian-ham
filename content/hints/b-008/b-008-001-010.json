@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-008-001-010",
+  "questionId": "B-008-001-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Use the receiver-mixing arithmetic from the lesson: combine the two listed RF frequencies and compare the result with the affected channel range.",
+      "fr": "Utilisez le calcul de mélange au récepteur vu dans la leçon : combinez les deux fréquences RF indiquées et comparez le résultat avec la plage du canal touché."
+    },
+    {
+      "level": 2,
+      "en": "Check whether the difference lands in the channel 5 range. If it does, work out in which equipment those two signals actually meet, then use the filter vocabulary to decide which filter, placed where, removes one of them.",
+      "fr": "Vérifiez si la différence tombe dans la plage du canal 5. Si oui, déterminez dans quel appareil ces deux signaux se rencontrent, puis utilisez le vocabulaire des filtres pour choisir quel filtre, placé où, en élimine un."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-01",
+    "sectionAnchor": "worked-example-intermod-clue"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

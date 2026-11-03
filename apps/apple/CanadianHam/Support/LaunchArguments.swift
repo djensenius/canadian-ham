@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 
 enum AppLaunchArguments {
     static func value(after option: String, in arguments: [String] = ProcessInfo.processInfo.arguments) -> String? {
@@ -8,3 +9,16 @@ enum AppLaunchArguments {
         return arguments[valueIndex]
     }
 }
+
+#if DEBUG
+func canadianHamParsedHorizontalSizeClass(_ rawValue: String) -> UserInterfaceSizeClass? {
+    switch rawValue.lowercased() {
+    case "compact":
+        return .compact
+    case "regular":
+        return .regular
+    default:
+        return nil
+    }
+}
+#endif

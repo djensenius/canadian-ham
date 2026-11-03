@@ -1,0 +1,133 @@
+Attributes: Application, 0x1033dabc0, pid: 77201, label: 'Canadian Ham'
+Element subtree:
+ →Application, 0x1033dabc0, pid: 77201, label: 'Canadian Ham'
+    Window (Main), 0x1033dae40, {{0.0, 0.0}, {1032.0, 1376.0}}
+      Other, 0x1033d9680, {{0.0, 0.0}, {1032.0, 1376.0}}
+        Other, 0x1033db0c0, {{0.0, 0.0}, {1032.0, 1376.0}}
+          Other, 0x1033d9040, {{0.0, 0.0}, {1032.0, 1376.0}}
+            Other, 0x1033da800, {{0.0, 0.0}, {1032.0, 1376.0}}
+              Other, 0x1033d8f00, {{0.0, 0.0}, {1032.0, 1376.0}}
+                Other, 0x1033d8c80, {{0.0, 0.0}, {1032.0, 1376.0}}
+                  Other, 0x1033d8dc0, {{0.0, 0.0}, {1032.0, 1376.0}}
+                    Other, 0x1033d9180, {{0.0, 0.0}, {1032.0, 1376.0}}
+                      Other, 0x1033d92c0, {{0.0, 0.0}, {1032.0, 1376.0}}
+                        NavigationBar, 0x1033daf80, {{0.0, 32.0}, {1032.0, 54.0}}, identifier: '_TtGC7SwiftUI32NavigationStackHosting'
+                          Button, 0x1033db340, {{14.0, 36.0}, {36.0, 36.0}}, label: 'Show Sidebar'
+                        Other, 0x1033db5c0, {{0.0, 0.0}, {1032.0, 1376.0}}
+                          Other, 0x1033db700, {{0.0, 0.0}, {1032.0, 1376.0}}
+                            Other, 0x1033d9cc0, {{0.0, 0.0}, {1032.0, 1376.0}}
+                              Other, 0x1033db840, {{0.0, 0.0}, {1032.0, 1376.0}}
+                                Other, 0x1033db200, {{0.0, 0.0}, {1032.0, 1376.0}}
+                                  Other, 0x1033d8500, {{0.0, 0.0}, {1032.0, 1376.0}}
+                                    Other, 0x1033da940, {{0.0, 0.0}, {1032.0, 1376.0}}
+                                      Other, 0x10eca4640, {{0.0, 0.0}, {1032.0, 1376.0}}
+                                        Other, 0x10eca4780, {{0.0, 0.0}, {1032.0, 1376.0}}
+                                          Other, 0x10eca6bc0, {{0.0, 0.0}, {1032.0, 1376.0}}
+                                            Other, 0x10eca6440, {{0.0, 86.0}, {652.0, 1270.0}}
+                                            ScrollView, 0x10eca5cc0, {{0.0, 0.0}, {1032.0, 1376.0}}
+                                              Other, 0x10eca7480, {{0.0, 0.0}, {1032.0, 1376.0}}
+                                                Other, 0x10eca75c0, {{0.0, 0.0}, {1032.0, 126.0}}
+                                              Other, 0x10eca7700, {{0.0, 0.0}, {1032.0, 1376.0}}
+                                              Other, 0x10eca43c0, {{0.0, 86.0}, {652.0, 1190.5}}
+                                                StaticText, 0x10eca5400, {{40.0, 126.0}, {252.5, 14.5}}, identifier: 'mock-exam-seed', label: 'Exam code: ui-a11y-mock-exam-timer'
+                                                StaticText, 0x10eca7340, {{40.0, 148.5}, {160.5, 26.5}}, label: 'Question 1 of 3'
+                                                StaticText, 0x10eca6580, {{40.0, 183.0}, {205.5, 20.5}}, label: 'Answered 0 of 3. Timer off.'
+                                                Button, 0x10eca5900, {{40.0, 211.5}, {148.5, 56.0}}, identifier: 'mock-flag-button', label: 'Flag for review'
+                                                Button, 0x10eca7e80, {{196.5, 211.5}, {170.5, 56.0}}, identifier: 'mock-next-unanswered-button', label: 'Next unanswered'
+                                                Button, 0x10eca66c0, {{375.0, 211.5}, {134.0, 56.0}}, identifier: 'mock-next-flagged-button', label: 'Next flagged', Disabled
+                                                StaticText, 0x10eca7c00, {{40.0, 275.5}, {111.5, 14.5}}, label: 'Timer off by default'
+                                                Other, 0x10eca7d40, {{24.0, 322.0}, {604.0, 80.0}}, identifier: 'exam-tools-controls'
+                                                  Button, 0x10eca7840, {{36.0, 334.0}, {113.5, 56.0}}, identifier: 'exam-tool-calculator-button', label: 'Calculator'
+                                                  Button, 0x10eca5f40, {{157.5, 334.0}, {161.5, 56.0}}, identifier: 'exam-tool-referenceSheet-button', label: 'Reference sheet'
+                                                Other, 0x10eca4000, {{24.0, 418.0}, {604.0, 88.5}}, identifier: 'question-card'
+                                                  StaticText, 0x10eca4140, {{40.0, 434.0}, {137.0, 20.5}}, identifier: 'question-identifier', label: 'B-001-002-002'
+                                                  StaticText, 0x10eca6e40, {{24.0, 450.5}, {488.5, 56.0}}, identifier: 'question-stem', label: 'An Amateur Radio Operator Certificate is valid for:'
+                                                StaticText, 0x10eca4a00, {{24.0, 522.5}, {93.0, 26.5}}, identifier: 'mock-answers-title', label: 'Answers'
+                                                Button, 0x10eca4b40, {{24.0, 561.0}, {604.0, 74.0}}, identifier: 'answer-A-button', label: 'Answer A, one year'
+                                                  StaticText, 0x10eca4c80, {{40.0, 577.0}, {42.0, 42.0}}, identifier: 'answer-A-chip', label: 'A'
+                                                  StaticText, 0x10eca6d00, {{94.0, 577.0}, {65.5, 20.5}}, identifier: 'answer-A-text', label: 'one year'
+                                                Button, 0x10eca4500, {{24.0, 647.0}, {604.0, 74.0}}, identifier: 'answer-B-button', label: 'Answer B, five years'
+                                                  StaticText, 0x10f354000, {{40.0, 663.0}, {42.0, 42.0}}, identifier: 'answer-B-chip', label: 'B'
+                                                  StaticText, 0x10f354140, {{94.0, 663.0}, {73.0, 20.5}}, identifier: 'answer-B-text', label: 'five years'
+                                                Button, 0x10f354280, {{24.0, 733.0}, {604.0, 74.0}}, identifier: 'answer-C-button', label: 'Answer C, three years'
+                                                  StaticText, 0x10f3543c0, {{40.0, 749.0}, {42.0, 42.0}}, identifier: 'answer-C-chip', label: 'C'
+                                                  StaticText, 0x10f354500, {{94.0, 749.0}, {85.5, 20.5}}, identifier: 'answer-C-text', label: 'three years'
+                                                Button, 0x10f354640, {{24.0, 819.0}, {604.0, 74.0}}, identifier: 'answer-D-button', label: 'Answer D, life'
+                                                  StaticText, 0x10f354780, {{40.0, 835.0}, {42.0, 42.0}}, identifier: 'answer-D-chip', label: 'D'
+                                                  StaticText, 0x10f3548c0, {{94.0, 835.0}, {22.5, 20.5}}, identifier: 'answer-D-text', label: 'life'
+                                                Button, 0x10f354a00, {{24.0, 909.0}, {101.0, 56.0}}, identifier: 'mock-previous-button', label: 'Previous', Disabled
+                                                Button, 0x10f354b40, {{133.0, 909.0}, {69.5, 56.0}}, identifier: 'mock-next-button', label: 'Next'
+                                                StaticText, 0x10f354c80, {{40.0, 997.0}, {210.0, 26.5}}, label: 'Question navigator'
+                                                Button, 0x10f354dc0, {{40.0, 1031.5}, {170.5, 56.0}}, identifier: 'mock-next-unanswered-button', label: 'Next unanswered'
+                                                Button, 0x10f354f00, {{218.5, 1031.5}, {134.0, 56.0}}, identifier: 'mock-next-flagged-button', label: 'Next flagged', Disabled
+                                                Other, 0x10f355040, {{37.0, 1095.5}, {172.0, 44.0}}
+                                                  Button, 0x10f355180, {{37.0, 1095.5}, {56.0, 44.0}}, label: 'Question 1, unanswered, current'
+                                                  Button, 0x10f3552c0, {{95.0, 1095.5}, {56.0, 44.0}}, label: 'Question 2, unanswered'
+                                                  Button, 0x10f355400, {{153.0, 1095.5}, {56.0, 44.0}}, label: 'Question 3, unanswered'
+                                                Button, 0x10f355540, {{24.0, 1171.5}, {135.5, 44.5}}, identifier: 'submit-mock-exam-button', label: 'Submit exam'
+                                                Button, 0x10f355680, {{24.0, 1232.0}, {74.5, 20.5}}, identifier: 'end-mock-exam-button', label: 'End exam'
+                                              Other, 0x10f3557c0, {{619.0, 86.0}, {30.0, 1260.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                                                Other, 0x10f355900, {{646.0, 168.5}, {3.0, 1174.5}}
+                                              Other, 0x10f355a40, {{619.0, 86.0}, {30.0, 1260.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                                                Other, 0x10f355b80, {{646.0, 168.5}, {3.0, 1174.5}}
+                                            Other, 0x10f355cc0, {{326.0, 721.0}, {0.0, 0.0}}
+                                      Toolbar, 0x10f355e00, {{0.0, 0.0}, {1032.0, 1376.0}}, identifier: 'Toolbar', label: 'Toolbar'
+                                        Other, 0x10f355f40, {{0.0, 0.0}, {1032.0, 1376.0}}
+                                      Other, 0x10f356080, {{652.0, 0.0}, {380.0, 1376.0}}
+                                        Other, 0x10f3561c0, {{652.0, 0.0}, {380.0, 1376.0}}
+                                          Other, 0x10f356300, {{652.0, 0.0}, {380.0, 1376.0}}
+                                            Image, 0x10f356440, {{682.5, 109.5}, {17.5, 21.5}}, identifier: 'doc.text.magnifyingglass', label: 'Search Document'
+                                            StaticText, 0x10f356580, {{724.0, 100.0}, {133.0, 20.5}}, identifier: 'exam-tool-reference-sheet-panel', label: 'Reference sheet'
+                                            Button, 0x10f3566c0, {{896.5, 98.0}, {119.5, 50.5}}, identifier: 'exam-tool-close-button', label: 'Close tool'
+                                            ScrollView, 0x10f356800, {{668.0, 173.0}, {348.0, 1171.0}}, identifier: 'reference-sheet-scroll'
+                                              Other, 0x10f356940, {{668.0, 173.0}, {348.0, 1034.0}}
+                                                Other, 0x10f356a80, {{668.0, 173.0}, {127.5, 84.5}}, label: 'Sheet version'
+                                                  StaticText, 0x10f356bc0, {{668.0, 173.0}, {105.5, 20.5}}, identifier: 'reference-sheet-version-title', label: 'Official sheet'
+                                                  Button, 0x10f356d00, {{668.0, 201.5}, {127.5, 56.0}}, identifier: 'reference-sheet-version', label: 'Study sheet'
+                                                Switch, 0x10f356e40, {{668.0, 269.5}, {348.0, 28.0}}, identifier: 'reference-sheet-text-equivalent', label: 'Text equivalent', value: 0
+                                                  StaticText, 0x10f356f80, {{668.0, 273.2}, {114.5, 20.5}}, label: 'Text equivalent'
+                                                  Switch, 0x10f3570c0, {{955.0, 269.5}, {63.0, 28.0}}, value: 0
+                                                StaticText, 0x10f357200, {{668.0, 309.5}, {90.0, 20.5}}, identifier: 'reference-sheet-page-number', label: 'Page 4 of 5'
+                                                Button, 0x10f357340, {{668.0, 342.0}, {101.0, 56.0}}, identifier: 'reference-sheet-page-previous', label: 'Previous'
+                                                Button, 0x10f357480, {{668.0, 410.0}, {69.5, 56.0}}, identifier: 'reference-sheet-page-next', label: 'Next', value: 4 / 5
+                                                Button, 0x10f3575c0, {{668.0, 478.0}, {108.0, 56.0}}, identifier: 'reference-sheet-zoom-out', label: 'Zoom out', value: 100%, Disabled
+                                                StaticText, 0x10f357700, {{784.0, 495.8}, {49.0, 20.5}}, identifier: 'reference-sheet-zoom-level', label: 'Zoom', value: 100%
+                                                Button, 0x10f357840, {{841.0, 478.0}, {96.0, 56.0}}, identifier: 'reference-sheet-zoom-in', label: 'Zoom in', value: 100%
+                                                ScrollView, 0x10f357980, {{668.0, 546.0}, {348.0, 450.5}}
+                                                  Other, 0x10f357ac0, {{668.0, 546.0}, {348.0, 450.5}}
+                                                    Image, 0x10f357c00, {{668.0, 546.0}, {348.0, 450.5}}, identifier: 'reference-sheet-official-page', label: 'Official sheet, page 4 of 5. Use Text equivalent for accessible content.'
+                                                  Other, 0x10f357d40, {{668.0, 963.5}, {348.0, 30.0}}, label: 'Horizontal scroll bar, 1 page', value: 0%
+                                                    Other, 0x10f357e80, {{906.0, 990.5}, {7.0, 3.0}}
+                                                  Other, 0x10f360000, {{668.0, 963.5}, {348.0, 30.0}}, label: 'Horizontal scroll bar, 1 page', value: 0%
+                                                    Other, 0x10f360140, {{906.0, 990.5}, {7.0, 3.0}}
+                                                StaticText, 0x10f360280, {{668.0, 1008.4}, {327.0, 174.5}}, label: 'Source: Innovation, Science and Economic Development Canada (ISED), Reference Material for Amateur Radio Exam – Basic Qualification, Version 1 (May 2025). Reproduced for internal use; this reproduction is not an official version. Canadian Ham is not affiliated with or endorsed by the Government of Canada.'
+                                              Other, 0x10f3603c0, {{983.0, 173.0}, {30.0, 1171.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                                                Other, 0x10f360500, {{1010.0, 313.0}, {3.0, 1028.0}}
+                                              Other, 0x10f360640, {{983.0, 173.0}, {30.0, 1171.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                                                Other, 0x10f360780, {{1010.0, 313.0}, {3.0, 1028.0}}
+                                        Other, 0x10f3608c0, {{652.0, 0.0}, {380.0, 1376.0}}
+                                          Other, 0x10f360a00, {{652.0, 0.0}, {380.0, 1376.0}}
+                                            Other, 0x10f360b40, {{652.0, 0.0}, {380.0, 1376.0}}
+                                              Other, 0x10f360c80, {{652.0, 0.0}, {380.0, 1376.0}}
+                                                Other, 0x10f360dc0, {{652.0, 0.0}, {380.0, 1376.0}}
+                                                  Other, 0x10f360f00, {{652.0, 0.0}, {280.0, 1376.0}}
+                                              Other, 0x10f361040, {{652.0, 0.0}, {380.0, 1376.0}}
+                                                Other, 0x10f361180, {{652.0, 0.0}, {280.0, 1376.0}}
+                                    Other, 0x10f3612c0, {{0.0, 0.0}, {1032.0, 1376.0}}
+                                      Toolbar, 0x10f361400, {{0.0, 0.0}, {1032.0, 1376.0}}, identifier: 'Toolbar', label: 'Toolbar'
+                                        Other, 0x10f361540, {{0.0, 0.0}, {1032.0, 1376.0}}
+                                  Other, 0x10f361680, {{0.0, 0.0}, {1032.0, 1376.0}}
+                                    Other, 0x10f3617c0, {{0.0, 0.0}, {1032.0, 1376.0}}
+                        Toolbar, 0x10f361900, {{0.0, 0.0}, {1032.0, 1376.0}}, identifier: 'Toolbar', label: 'Toolbar'
+                          Other, 0x10f361a40, {{0.0, 0.0}, {1032.0, 1376.0}}
+                    Toolbar, 0x10f361b80, {{0.0, 0.0}, {1032.0, 1376.0}}, identifier: 'Toolbar', label: 'Toolbar'
+                      Other, 0x10f361cc0, {{0.0, 0.0}, {1032.0, 1376.0}}
+                Other, 0x10f361e00, {{0.0, 0.0}, {1032.0, 1376.0}}
+                  Other, 0x10f361f40, {{0.0, 0.0}, {1032.0, 1376.0}}
+Path to element:
+ →Application, 0x1033dabc0, pid: 77201, label: 'Canadian Ham'
+Query chain:
+ →Find: Target Application 'org.davidjensenius.CanadianHam'
+  Output: {
+    Application, 0x10f362080, pid: 77201, label: 'Canadian Ham'
+  }

@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-003-015-007",
+  "questionId": "B-003-015-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the practical centre-to-centre spacing discussed for keyboard-style digital contacts.",
+      "fr": "Revoyez l’espacement pratique de centre à centre abordé pour les contacts numériques au clavier."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-003-06",
+    "sectionAnchor": "analog-digital-and-digital-voice"
+  },
+  "singleLevelReason": "Pure recall: any content hint would identify or eliminate an option; topic pointer and lesson link only.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

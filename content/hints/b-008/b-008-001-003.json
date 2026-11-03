@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-008-001-003",
+  "questionId": "B-008-001-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the troubleshooting observations for neighbour TV interference.",
+      "fr": "Revoyez les observations de dépannage pour le brouillage d'un téléviseur voisin."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-008-01",
+    "sectionAnchor": "troubleshooting-mindset"
+  },
+  "singleLevelReason": "Symptom classification: a second hint would name the matching diagnosis or rule out the narrow-frequency choices.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

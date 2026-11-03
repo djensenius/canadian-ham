@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-001-021-003",
+  "questionId": "B-001-021-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Whose band limits apply depends on whose territory you are in, and a country’s territorial sea extends 12 nautical miles from its coast.",
+      "fr": "Les limites de bande applicables dépendent du territoire où vous êtes, et la mer territoriale d’un pays s’étend jusqu’à 12 milles marins de sa côte."
+    },
+    {
+      "level": 2,
+      "en": "Compare the offshore distance with that limit, then apply the same rule you would use for a station operating on land in that country.",
+      "fr": "Comparez la distance au large avec cette limite, puis appliquez la même règle que pour une station exploitée sur la terre ferme dans ce pays."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-05",
+    "sectionAnchor": "reference-facts-location-decides-the-applicable-limits"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

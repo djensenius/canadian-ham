@@ -88,10 +88,27 @@
       }
     },
     {
-      "id": "invalid-received-character-counts-as-wrong-not-throw",
+      "id": "invalid-received-precomposed-accent-counts-as-one-wrong-character",
       "input": {
         "expected": "ABC",
         "received": "ABÉ"
+      },
+      "expectedOutput": {
+        "errors": 1,
+        "wrong": 1,
+        "missing": 0,
+        "inserted": 0,
+        "passed": true,
+        "markPercent": 100,
+        "expectedLength": 3,
+        "receivedLength": 3
+      }
+    },
+    {
+      "id": "invalid-received-decomposed-accent-normalizes-to-precomposed-score",
+      "input": {
+        "expected": "ABC",
+        "received": "ABÉ"
       },
       "expectedOutput": {
         "errors": 1,

@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-006-004-001.\n\nWhy the correct answer is right: RG-58 is small coax, and loss rises sharply at UHF. On the 70 cm band, too much transmitter power can be turned into heat in a long or marginal RG-58 run before it reaches the antenna.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Excess reflections at the antenna feed point\": Reflections come from an impedance mismatch at the load, not simply from choosing a small lossy coax type.\n- sourceIndex 2: \"Excess RF radiation from the transmission line\": Feedline radiation is usually a balance or common-mode problem; the RG-58 concern on 70 cm is attenuation.\n- sourceIndex 3: \"Excess transmission line heating\": Heating is a symptom of loss, but the adverse station result being tested is excessive RF loss in the line.",
+    "en": "Question B-006-004-001.\n\nWhy the correct answer is right: RG-58 is small coax, and feedline loss rises sharply at ultra high frequency (UHF). On the 70 cm band, a long or marginal RG-58 run can turn too much transmitter power into heat before it reaches the antenna.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Excess reflections at the antenna feed point\": Reflections come from an impedance mismatch at the load, not simply from choosing a small lossy coax type.\n- sourceIndex 2: \"Excess RF radiation from the transmission line\": Feedline radiation is usually a balance or common-mode problem; the RG-58 concern on 70 cm is attenuation.\n- sourceIndex 3: \"Excess transmission line heating\": Heating is a symptom of loss, but the adverse station result being tested is excessive radio-frequency (RF) loss in the line.",
     "fr": null
   },
   "citations": [

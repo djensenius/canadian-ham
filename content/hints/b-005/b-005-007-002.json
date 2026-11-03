@@ -1,0 +1,20 @@
+{
+  "id": "HINT-B-005-007-002",
+  "questionId": "B-005-007-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "Review the usual human-hearing range in the AC basics section.",
+      "fr": "Revoyez la gamme habituelle de l'audition humaine dans la section sur les bases du CA."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-005-04",
+    "sectionAnchor": "ac-basics"
+  },
+  "singleLevelReason": "Pure range recall: a second hint would give enough boundary information to identify the option.",
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}

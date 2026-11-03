@@ -50,6 +50,70 @@ function assertSchemaRejects(data, schemaFile, expectedMessage) {
   assert(errors.some((error) => error.includes(expectedMessage)), `${schemaFile} errors did not include ${JSON.stringify(expectedMessage)}: ${errors.join("\n")}`);
 }
 
+test("progress export schema rejects Basic bankId with Advanced question progress", () => {
+  assertSchemaRejects(
+    readInvalidFixture("progress-export-v1-mixed-basic-bank-advanced-question.json"),
+    "progress-export-v1.schema.json",
+    "expected exactly one oneOf branch to match",
+  );
+});
+
+test("progress export schema rejects Advanced bankId with Basic exam items and breakdowns", () => {
+  assertSchemaRejects(
+    readInvalidFixture("progress-export-v1-mixed-advanced-bank-basic-exam.json"),
+    "progress-export-v1.schema.json",
+    "expected exactly one oneOf branch to match",
+  );
+});
+
+const basicLessonQuizWithAdvancedQuestion = {
+  id: "lesson-quiz-1",
+  quizId: "QZ-L-005-01-A",
+  lessonId: "L-005-01",
+  submittedAt: "2026-01-02T03:45:00.000Z",
+  correct: 1,
+  total: 1,
+  percent: 100,
+  officialQuestionIds: ["A-001-001-001"],
+  incorrectOfficialQuestionIds: [],
+  incorrectConceptCheckIds: [],
+};
+
+test("progress export schema rejects Basic lesson quizzes that reference Advanced questions", () => {
+  assertSchemaRejects(
+    { ...validProgressExport, lessonQuizAttempts: [basicLessonQuizWithAdvancedQuestion] },
+    "progress-export-v1.schema.json",
+    "expected exactly one oneOf branch to match",
+  );
+});
+
+test("progress export schema rejects invalid answered-with-help fields", () => {
+  assertSchemaRejects(
+    readInvalidFixture("progress-export-v1-answered-with-help-non-boolean.json"),
+    "progress-export-v1.schema.json",
+    "$.questionProgress[0].lastAnsweredWithHelp: expected type \"boolean\"",
+  );
+  assertSchemaRejects(
+    readInvalidFixture("progress-export-v1-recent-answered-with-help-too-long.json"),
+    "progress-export-v1.schema.json",
+    "$.questionProgress[0].recentAnsweredWithHelp: expected at most 5 item(s)",
+  );
+});
+
+test("progress export schema rejects Advanced exports that carry lesson data", () => {
+  const advancedExport = { ...validProgressExport, bankId: "advanced-2025-02-04" };
+  assertSchemaRejects(
+    { ...advancedExport, lessonQuizAttempts: [{ ...basicLessonQuizWithAdvancedQuestion, officialQuestionIds: ["B-005-001-001"] }] },
+    "progress-export-v1.schema.json",
+    "expected exactly one oneOf branch to match",
+  );
+  assertSchemaRejects(
+    { ...advancedExport, lessonProgress: [{ lessonId: "L-005-01", readAt: "2026-01-02T03:30:00.000Z", readCount: 1 }] },
+    "progress-export-v1.schema.json",
+    "expected exactly one oneOf branch to match",
+  );
+});
+
 test("semantic canonical timestamps reject impossible calendar/time values", () => {
   assertSchemaRejects(
     { ...validProgressExport, exportedAt: "2026-02-31T25:61:61.000Z" },
@@ -160,21 +224,21 @@ test("generated bank categories require verified French names to be non-empty", 
   );
 });
 
-test("generated Advanced bank categories enforce pending French-name status", () => {
+test("generated Advanced bank categories reject a French name when marked pending", () => {
   const categories = readProjectJson("content/generated/advanced-2025-02-04/categories.json");
-  categories[0] = { ...categories[0], name: { ...categories[0].name, fr: "Nom provisoire" } };
-  assertSchemaRejects(categories, "generated-bank-categories.schema.json", "$[0].name.fr: expected const null, got \"Nom provisoire\"");
+  categories[0] = { ...categories[0], frenchNameStatus: "pending verification" };
+  assertSchemaRejects(categories, "generated-bank-categories.schema.json", "$[0].name.fr: expected const null, got \"Théorie avancée\"");
 });
 
 test("generated Advanced bank categories require verified French names to be non-empty", () => {
   const categories = readProjectJson("content/generated/advanced-2025-02-04/categories.json");
   assertSchemaRejects(
-    [{ ...categories[0], frenchNameStatus: "verified" }, ...categories.slice(1)],
+    [{ ...categories[0], name: { ...categories[0].name, fr: null } }, ...categories.slice(1)],
     "generated-bank-categories.schema.json",
     "$[0].name.fr: expected type \"string\", got null",
   );
   assertSchemaRejects(
-    [{ ...categories[0], frenchNameStatus: "verified", name: { ...categories[0].name, fr: "" } }, ...categories.slice(1)],
+    [{ ...categories[0], name: { ...categories[0].name, fr: "" } }, ...categories.slice(1)],
     "generated-bank-categories.schema.json",
     "$[0].name.fr: expected string length >= 1",
   );
@@ -207,6 +271,50 @@ test("generated bank subsections reject non-importer lesson and title fields", (
   );
 });
 
+test("hint schema rejects each ladder constraint independently", () => {
+  const hint = readValidFixture("hint.json");
+  assertSchemaRejects(
+    { ...hint, hints: [{ ...hint.hints[0], level: 2 }, hint.hints[1]] },
+    "hint.schema.json",
+    "$.hints[0].level: expected const 1",
+  );
+  assertSchemaRejects(
+    { ...hint, hints: [hint.hints[0]] },
+    "hint.schema.json",
+    "expected exactly one oneOf branch to match",
+  );
+  assertSchemaRejects(
+    { ...hint, hints: [] },
+    "hint.schema.json",
+    "$.hints: expected at least 1 item(s)",
+  );
+  assertSchemaRejects(
+    { ...hint, singleLevelReason: "Only for one-level hints." },
+    "hint.schema.json",
+    "expected exactly one oneOf branch to match",
+  );
+  assertSchemaRejects(
+    { ...hint, lessonLink: { sectionAnchor: "how-these-rules-fit-together" } },
+    "hint.schema.json",
+    "$.lessonLink: missing required property lessonId",
+  );
+  assertSchemaRejects(
+    { ...hint, lessonLink: { lessonId: "NOT-A-LESSON" } },
+    "hint.schema.json",
+    "$.lessonLink.lessonId: expected string to match",
+  );
+  assertSchemaRejects(
+    { ...hint, referenceSheetSection: "unknown-section" },
+    "hint.schema.json",
+    "$.referenceSheetSection: expected one of",
+  );
+  assertSchemaRejects(
+    { ...hint, licenseClass: "copied" },
+    "hint.schema.json",
+    "$.licenseClass: expected const",
+  );
+});
+
 function readValidFixture(fixture) {
   return JSON.parse(fs.readFileSync(path.join(validFixturesDir, fixture), "utf8"));
 }
@@ -232,4 +340,53 @@ test("oneOf discriminator shortcut applies only to a required const property in 
   // Const in only one branch: no shortcut.
   const noConst = { type: "object", required: ["kind"], properties: { kind: { type: "string" } } };
   assert.equal(selectOneOfBranchByConstDiscriminator([a, noConst], { kind: "a" }), null);
+});
+
+test("lesson-quiz help IDs are optional sorted unique official subsets in attempts and sync rows", () => {
+  const fixture = JSON.parse(fs.readFileSync(path.join(projectRoot, "fixtures/lesson-quiz-help.json"), "utf8"));
+  for (const ids of [undefined, ...fixture.validHelpIds, ...fixture.invalidHelpIds]) {
+    const attempt = { ...fixture.attempt, ...(ids === undefined ? {} : { answeredWithHelpIds: ids }) };
+    const exports = [
+      { ...validProgressExport, lessonQuizAttempts: [attempt] },
+      { ...validProgressExport, syncDeviceRows: { questionProgress: [], examAttempts: [], lessonProgress: [], lessonQuizAttempts: [{ deviceId: "web", attempt }], morseCourseProgress: [] } },
+    ];
+    for (const data of exports) {
+      const errors = validateDataAgainstSchema(data, "progress-export-v1.schema.json");
+      assert.equal(errors.length === 0, ids === undefined || fixture.validHelpIds.includes(ids), errors.join("\n"));
+    }
+  }
+});
+
+test("review IDs are optional sorted disjoint official IDs; union help is allowed only in version 2", () => {
+  const fixture = JSON.parse(fs.readFileSync(path.join(projectRoot, "fixtures/lesson-quiz-help.json"), "utf8"));
+  const reviewId = "B-004-001-001";
+  const base = { ...fixture.attempt, reviewQuestionIds: [reviewId], answeredWithHelpIds: [reviewId], incorrectOfficialQuestionIds: [reviewId] };
+  for (const [reviewQuestionIds, valid] of [[[reviewId], true], [[], false], [[reviewId, reviewId], false], [[base.officialQuestionIds[0]], false], [["QZ-L-005-01-A-C1"], false], [null, false], [["B-005-001-999", reviewId], false]]) {
+    for (const version of [undefined, 1, 2]) {
+      const attempt = { ...base, reviewQuestionIds };
+      for (const sync of [false, true]) {
+        const data = { ...validProgressExport, lessonIdVersion: version, ...(sync
+          ? { syncDeviceRows: { questionProgress: [], examAttempts: [], lessonProgress: [], lessonQuizAttempts: [{ deviceId: "web", lessonIdVersion: version, attempt }], morseCourseProgress: [] } }
+          : { lessonQuizAttempts: [attempt] }) };
+        const errors = validateDataAgainstSchema(data, "progress-export-v1.schema.json");
+        assert.equal(errors.length === 0, valid && version === 2, errors.join("\n"));
+      }
+    }
+  }
+});
+
+
+test("legacy missing/v1 attempts allow explicit empty review IDs at top level and in sync rows", () => {
+  const fixture = JSON.parse(fs.readFileSync(path.join(projectRoot, "fixtures/lesson-quiz-help.json"), "utf8"));
+  const attempt = { ...fixture.attempt, reviewQuestionIds: [] };
+  for (const version of [undefined, 1]) for (const sync of [false, true]) {
+    const data = { ...validProgressExport, lessonIdVersion: version, lessonQuizAttempts: [attempt], ...(sync
+      ? { syncDeviceRows: { questionProgress: [], examAttempts: [], lessonProgress: [], lessonQuizAttempts: [{ deviceId: "web", lessonIdVersion: version, attempt }], morseCourseProgress: [] } }
+      : {}) };
+    if (version === undefined) {
+      delete data.lessonIdVersion;
+      if (sync) delete data.syncDeviceRows.lessonQuizAttempts[0].lessonIdVersion;
+    }
+    assert.deepEqual(validateDataAgainstSchema(data, "progress-export-v1.schema.json"), []);
+  }
 });

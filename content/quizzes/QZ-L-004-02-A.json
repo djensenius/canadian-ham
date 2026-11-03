@@ -15,123 +15,171 @@
     {
       "id": "QZ-L-004-02-A-C1",
       "prompt": {
-        "en": "You are checking an NPN transistor symbol before replacing the part. Which terminal carries the arrow that tells you the device polarity?",
+        "en": "A control pin cannot safely supply a fan's current. In a suitable transistor driver, what provides the energy that runs the fan?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Collector",
+            "en": "The pin supplies all fan power; the transistor only changes its voltage.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "The driver controls a larger current path from the fan supply. It does not make the pin deliver all the fan energy.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Base",
+            "en": "The transistor supplies stored energy continuously without drawing from the fan supply.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "A transistor is not a continuous energy source. The supply still powers the load.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Emitter",
+            "en": "The fan supply provides the load energy while the small pin signal controls that current path.",
             "fr": null
           },
-          "isCorrect": true
+          "isCorrect": true,
+          "feedback": {
+            "en": "The control and power paths have different jobs. Device and pin ratings must still suit the circuit.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Gate",
+            "en": "The base resistor converts the pin's small power into a larger amount of fan power.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "A resistor cannot multiply energy. It limits control current; the fan supply provides the load power.",
+            "fr": null
+          }
         }
       ],
       "explanation": {
-        "en": "The emitter is the bipolar-transistor terminal with the schematic arrow; its direction helps distinguish NPN from PNP.",
+        "en": "A small signal can control a larger supply current without providing the load's energy itself.",
         "fr": null
       }
     },
     {
       "id": "QZ-L-004-02-A-C2",
       "prompt": {
-        "en": "A JFET gate is changed from -1 V bias to -3 V bias relative to its source. What happens in the Basic-level channel model?",
+        "en": "An N-channel JFET gate changes from -1 V to -3 V relative to its source. In the lesson's reverse-bias channel model, what happens?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "The channel narrows and drain current decreases",
+            "en": "The channel narrows and drain current decreases.",
             "fr": null
           },
-          "isCorrect": true
+          "isCorrect": true,
+          "feedback": {
+            "en": "The gate becomes more reverse biased. Its electric field narrows the conducting channel and reduces drain current.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "The channel widens and drain current increases",
+            "en": "The channel widens and drain current increases.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "That is the direction expected from reducing reverse bias in this model, not increasing it.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "Drain current stays fixed because the gate is insulated from control",
+            "en": "Drain current stays fixed because the gate draws little steady current.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "Small gate current does not mean weak control. Gate voltage controls channel conduction through an electric field.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "The source and drain must swap terminal names",
+            "en": "The channel narrows and drain current increases.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "A narrower channel opposes the drain current more. It does not squeeze a larger current through the device.",
+            "fr": null
+          }
         }
       ],
       "explanation": {
-        "en": "Increasing reverse bias on a junction FET gate narrows the channel, so the controlled drain current is reduced.",
+        "en": "A high-impedance control terminal can strongly affect another current path while drawing little current itself. Keep the specified FET family and bias model in view.",
         "fr": null
       }
     },
     {
       "id": "QZ-L-004-02-A-C3",
       "prompt": {
-        "en": "In a tube RF amplifier, making the grid more negative reduces the current drawn by the plate circuit. What principle is being applied?",
+        "en": "A learner compares a FET with a vacuum triode. Which similarity is useful without treating them as interchangeable parts?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "The grid is only a shield and cannot affect plate current",
+            "en": "Both use the same solid semiconductor channel, so the same bias and ratings apply.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "A FET uses semiconductor material, while a triode has an electron path through a vacuum.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "The plate current is controlled only by heater brightness",
+            "en": "Both use an electric field at a control terminal to influence a separate current path.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": true,
+          "feedback": {
+            "en": "That is the useful analogy. Their construction, bias requirements, and ratings are still different.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "A more negative grid always increases plate current",
+            "en": "Both need the same heated cathode before their channel conducts.",
             "fr": null
           },
-          "isCorrect": false
+          "isCorrect": false,
+          "feedback": {
+            "en": "A triode uses a heated electron-emitting cathode. A FET is not a heated-cathode vacuum device.",
+            "fr": null
+          }
         },
         {
           "text": {
-            "en": "A small grid voltage controls a larger plate current",
+            "en": "Both can replace a bipolar transistor without checking terminal functions.",
             "fr": null
           },
-          "isCorrect": true
+          "isCorrect": false,
+          "feedback": {
+            "en": "Similar control roles do not establish pin compatibility or suitable bias and ratings.",
+            "fr": null
+          }
         }
       ],
       "explanation": {
-        "en": "A triode amplifies because grid-voltage changes control the electron stream and therefore the larger plate current.",
+        "en": "Use analogies to connect control ideas, not to approve component substitutions.",
         "fr": null
       }
     }

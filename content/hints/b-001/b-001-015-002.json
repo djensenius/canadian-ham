@@ -1,0 +1,24 @@
+{
+  "id": "HINT-B-001-015-002",
+  "questionId": "B-001-015-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "hints": [
+    {
+      "level": 1,
+      "en": "A transmission must be allowed by the call sign being used and by the person responsible for control.",
+      "fr": "Une émission doit être permise par l’indicatif d’appel utilisé et par la personne responsable du contrôle."
+    },
+    {
+      "level": 2,
+      "en": "Identify whose call sign is on the air and which person has fewer privileges, then ask which set of limits the transmission can never exceed.",
+      "fr": "Repérez quel indicatif est en ondes et quelle personne a le moins de privilèges, puis demandez-vous quelles limites l’émission ne peut jamais dépasser."
+    }
+  ],
+  "lessonLink": {
+    "lessonId": "L-001-04",
+    "sectionAnchor": "reference-facts-qualification-by-privilege-matrix-for-access-and-power"
+  },
+  "referenceSheetSection": null,
+  "licenseClass": "original"
+}
