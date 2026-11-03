@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-11-03T02:32:00Z'
-updated_date: '2026-11-03T08:01:00Z'
+updated_date: '2026-11-03T08:08:00Z'
 labels:
   - apple
   - privacy
@@ -152,6 +152,8 @@ PR #1064 round 7c (reviewer REQUEST CHANGES on 9ec9afb6..96ac971b), commit 8fefd
 - Sweep: Package.swift labels, members and strings are allowlisted (the regex denylist is removed); shipped and package sources may hold only Swift and five inert data types (.json, .strings, .xcstrings, .entitlements, .xcprivacy) in every phase; the shipped target type is application only; sources and package paths must fit the modelled relative form; a missing non-optional path fails in every phase.
 - Doc: build-setting allowlist table, corrected post-build script wording (after link but before signing; reviewed by hand, binary inspection cross-checks), bypass rows, Limitations (working tree vs xcodeproj, clean-checkout releases) and a round 7c Evidence row.
 - Checks: self-test passed; real-tree --verbose byte-identical to 96ac971b (0.38 s); every allowlist entry, label, member and data type is needed by the real tree; 89/89 mutations killed (no-op control survives); pnpm typecheck, pnpm test (283 web tests plus packages), check:links, check:shell, git diff --check and the test guard passed.
+
+PR #1064 round 7c follow-up (reviewer APPROVE WITH NOTES), commit f7bb6d17cefbd28d6bec923c2dcb4aaf30c9c8d2: rewrote the stale comment above checkSwiftFlags (exact-name allowlist with a value rule per setting, base and configs only, conditional keys matched on the name before [). Added a Limitations sentence: INFOPLIST_FILE and CODE_SIGN_ENTITLEMENTS are checked for path and file type, not contents (LSEnvironment DYLD_*, library-validation entitlements); a bundled library is still rejected as prebuilt code; the project does not set ENABLE_HARDENED_RUNTIME, so that is not relied on; the iCloud gate allowlists the CloudKit entitlements keys and checks the default macOS entitlements only for iCloud/push/background-mode keys, so other content is reviewed by hand. Checks: self-test passed; real-tree --verbose byte-identical to b2c359dc; check:links and git diff --check passed.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
