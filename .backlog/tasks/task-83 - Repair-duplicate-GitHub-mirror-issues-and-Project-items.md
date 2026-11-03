@@ -1,10 +1,11 @@
 ---
 id: TASK-83
 title: Repair duplicate GitHub mirror issues and Project items
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@coordinator'
 created_date: '2026-11-03T02:32:00Z'
-updated_date: '2026-11-03T02:39:00Z'
+updated_date: '2026-11-03T02:41:00Z'
 labels:
   - tooling
   - github
@@ -29,3 +30,21 @@ backlog-sync mirrors 186 Backlog tasks into 854 marked GitHub issues: 668 surplu
 - [ ] #5 The duplicate root cause is recorded in the task notes, with a follow-up guard against mass recreation filed as an issue in djensenius/backlog-sync
 - [ ] #6 A backlog-sync run after the repair reports 0 created and logs no duplicate-marker warnings
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Read-only planner: list all issues (state=all), verify the count against the Search API total, group by first-line marker, keep the lowest number as canonical, and map Project #8 items; save mirror-plan.json.
+2. Paced executor (7.5 s between writes, resumable log): for each duplicate, re-read it and its canonical; replace the duplicate marker line with a retired marker and a visible note linking the canonical issue; close open duplicates as duplicates with a comment.
+3. Remove the duplicates' Project #8 items.
+4. Re-run the planner to verify one marker per task and one item per canonical issue; confirm the next backlog-sync run reports 0 created and no duplicate-marker warnings.
+5. Record the root cause and file the upstream guard in djensenius/backlog-sync.
+<!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Root cause (2026-11-03): the launchd job com.djensenius.canadian-ham.backlog-sync (backlog-sync 0eca8d7c, every 300 s, config in the main checkout) logged 'create issue' for every task right after normal scans on 2026-10-22 at 09:43, 10:04, 11:13, 11:39 and 12:59 EDT, plus smaller batches on 2026-10-01 and 2026-10-02. djensenius/backlog-sync's own mirror shows 10 copies per task, created in the same windows. So GitHub's issue listing (gh api --paginate --slurp issues?state=all) intermittently returned a successful response without the marked issues, and backlog-sync has no guard against mass creation. Filed djensenius/backlog-sync#114 (mass-creation guard, completeness check, pre-create marker search, quieter logs). Each run logged about 670 duplicate-marker warnings, so ~/Library/Logs/canadian-ham-backlog-sync.log (owner's file, left in place) has grown to 205 MB.
+
+Dry-run plan (2026-11-03 02:35 UTC): 870 issues, matching the Search API total; 186 tasks; 668 duplicates (84 open, 41 with comments); 16 unmarked legacy T-xxx issues (#1-#16, closed, never on the Project, left as is); 851 Project items, 665 of them for duplicates. Every canonical issue is on the Project with Status matching its state. The pilot on #334 (task-1, canonical #17) checked out: CLOSED as DUPLICATE, marker retired, visible note and comment link #17. Full paced run started; 31 operations logged so far. The launchd sync was not paused: it edits only canonical (lowest-numbered) issues and the repair edits only higher-numbered duplicates, after re-reading each duplicate and confirming its canonical issue still has the marker.
+<!-- SECTION:NOTES:END -->
