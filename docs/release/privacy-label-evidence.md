@@ -956,7 +956,20 @@ works as follows:
   what the real files use, so a new key, setting, manifest form, data type
   or target type fails even when it is harmless; confirm it is inert and
   add it (see each allowlist). Test-target settings and file types are not
-  checked, because test bundles never ship. The checker reads `project.yml`,
+  checked, because test bundles never ship. For `INFOPLIST_FILE` and
+  `CODE_SIGN_ENTITLEMENTS` the checker checks only the path and file type,
+  not the contents, so it would not catch an Info.plist that sets
+  `LSEnvironment` with `DYLD_*` variables, or entitlements that disable
+  library validation. Either still needs a library to load, and a library
+  bundled in the app is prebuilt code that the checker rejects (a post-build
+  script that copies one in is the script limitation above). The hardened
+  runtime would ignore `DYLD_*` variables, but `project.yml` does not set
+  `ENABLE_HARDENED_RUNTIME`, so the checks do not rely on it.
+  `pnpm check:apple-icloud-gate` allows only the approved keys in the two
+  CloudKit entitlements files and checks the CloudKit Info.plist's
+  background modes, but it checks the default macOS entitlements only for
+  iCloud, push and background-mode keys. Other entitlement and Info.plist
+  content is reviewed by hand. The checker reads `project.yml`,
   each linked `Package.swift` and the files in the working tree, not the
   committed `CanadianHam.xcodeproj`; the walk verification under Evidence
   shows that the two agree today. On CI the working tree is a clean

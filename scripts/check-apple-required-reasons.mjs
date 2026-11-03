@@ -1695,11 +1695,13 @@ function declaredCategories(manifestPath, targetName) {
 
 // ---------------------------------------------------------------------------
 
-// Build settings apply to every target, so the project's and each shipped
-// target's settings may not add bridging or prefix headers, search paths,
-// linker flags or Swift flags other than -D conditions. Settings maps (base,
-// configs, Debug, ...) are walked recursively; `KEY[sdk=...]` counts as KEY.
-// OTHER_SWIFT_FLAGS may hold only $(inherited) and single-token -DNAME conditions.
+// Build settings: checkBuildSettings (below) checks the project's and each
+// shipped target's settings.base and every settings.configs.<name> mapping,
+// and nothing else, against BUILD_SETTINGS, an exact-name allowlist with a
+// value rule per setting. A conditional key NAME[sdk=...] or NAME[arch=...]
+// is matched on NAME, the part before the first [, and gets NAME's rule.
+// For OTHER_SWIFT_FLAGS the rule then calls checkSwiftFlags, which allows only
+// $(inherited) and single-token -DNAME conditions.
 function checkSwiftFlags(where, key, value) {
   const flags = [value].flat().join(' ').split(/\s+/).filter(Boolean);
   const unsupported = [];
