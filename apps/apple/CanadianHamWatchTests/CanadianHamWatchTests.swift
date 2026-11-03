@@ -48,8 +48,13 @@ final class CanadianHamWatchTests: XCTestCase {
         let url = try XCTUnwrap(bundle.url(forResource: "PrivacyInfo", withExtension: "xcprivacy"))
         let privacy = try XCTUnwrap(PropertyListSerialization.propertyList(from: Data(contentsOf: url), format: nil) as? [String: Any])
         XCTAssertEqual(privacy["NSPrivacyTracking"] as? Bool, false)
-        for key in ["NSPrivacyTrackingDomains", "NSPrivacyCollectedDataTypes", "NSPrivacyAccessedAPITypes"] {
+        for key in ["NSPrivacyTrackingDomains", "NSPrivacyCollectedDataTypes"] {
             XCTAssertEqual((privacy[key] as? [Any])?.count, 0, key)
         }
+        // TASK-85: the watch reads system uptime only to time haptic Morse playback (35F9.1).
+        let accessedAPITypes = try XCTUnwrap(privacy["NSPrivacyAccessedAPITypes"] as? [[String: Any]])
+        XCTAssertEqual(accessedAPITypes.count, 1)
+        XCTAssertEqual(accessedAPITypes.first?["NSPrivacyAccessedAPIType"] as? String, "NSPrivacyAccessedAPICategorySystemBootTime")
+        XCTAssertEqual(accessedAPITypes.first?["NSPrivacyAccessedAPITypeReasons"] as? [String], ["35F9.1"])
     }
 }

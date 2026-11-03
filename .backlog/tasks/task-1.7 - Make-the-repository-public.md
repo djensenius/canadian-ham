@@ -4,7 +4,7 @@ title: Make the repository public
 status: To Do
 assignee: []
 created_date: 2026-10-01 02:27
-updated_date: '2026-11-03T02:54:00Z'
+updated_date: '2026-11-03T03:15:00Z'
 labels:
   - release
   - legacy:T-009
@@ -38,4 +38,6 @@ Only after the ISED permission is recorded and the release candidate pass is com
 Coordinator 2026-11-03 (TASK-83 tracking pass): GitHub already reports djensenius/canadian-ham as public (isPrivate false), but TASK-1.1 still records the ISED permission as pending and TASK-1.8 (history purge) is not done. The owner needs to reconcile this: either record the permission and the decision to publish early, or return the repository to private until the gates pass. Agents must not change visibility.
 
 TASK-87 2026-11-03: owner steps and evidence format for this task are indexed in docs/release/owner-gates.md (Sitting 1: owner decisions; repository already public while TASK-1.1 is pending). The guide restates and links these criteria without changing them.
+
+Owner sign-off required before App Store submission (from TASK-85 review): the Apple privacy manifests declare User defaults reason CA92.1 for CanadianHam, including the iOS/macOS read of the app's own-domain AppleLanguages key via persistentDomain(forName: Bundle.main.bundleIdentifier) (it can hold the per-app language chosen in system Settings). Coordinator decision 2026-11-02: keep CA92.1, with fallbacks (drop the external-selection adoption and legacy French nil check, or request a new reason from Apple). The owner must explicitly sign off this decision before submission; see docs/release/privacy-label-evidence.md, section 'Required-reason API review (TASK-85, 2026-11-03)' > 'Why these reasons', and the required-reason item in docs/release/release-checklist.md.
 <!-- SECTION:NOTES:END -->
