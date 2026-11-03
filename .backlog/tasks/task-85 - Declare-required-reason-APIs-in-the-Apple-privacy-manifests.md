@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-11-03T02:32:00Z'
-updated_date: '2026-11-03T09:00:00Z'
+updated_date: '2026-11-03T09:06:00Z'
 labels:
   - apple
   - privacy
@@ -158,6 +158,8 @@ PR #1064 round 7c follow-up (reviewer APPROVE WITH NOTES), commit f7bb6d17cefbd2
 Round 8 (Copilot PRRT_kwDOUxZq_M6zB6pw, PRRT_kwDOUxZq_M6zB6qM; commit e0b916eda813ae57513b54e6e25bb7c7dc613738): the Swift scanner now lexes as swiftc 6.4.2 does, verified with xcrun swiftc -typecheck and compiled probes. CR and CRLF become LF before lexing (comments end and file:line counts match Swift); a leading BOM is skipped; invalid UTF-8, VT/FF/NEL/U+2028/U+2029/NUL/DEL/C0 controls and non-ASCII code (NFD, KELVIN SIGN, zero-width, NBSP, stray BOM, backticks) fail closed. String literals are decoded (\u{1-8 hex}, \0 \\ \t \n \r \" \', raw-string delimiters, multi-line continuations and indentation), literal-only interpolations inlined and + joins of literals chained, then matched as well as the raw text; a decoded NUL ends an exact name and U+212A/U+037E/U+1FEF read as ASCII; unsupported escapes fail closed. Selector, key-path, #if and #sourceLocation forms were already covered (fixtures added). Names built from variables, calls, +=, joined() or non-literal interpolations stay a documented limitation. Checks: self-test passed; real-tree --verbose output byte-identical (48 lines, 0.38 s); 39 mutations, 38 killed after tightening two fixtures, 1 message-only survivor, no-op control passes; pnpm typecheck, pnpm test (one unrelated web test failed once, then passed on two reruns), check:links, check:shell, git diff --check and the test guard pass.
 
 Round 8 review note (docs only): the lexing step and the run-time-name limitation now name casts (`("system" as String) + "Uptime"`) and initialiser or other calls around the literal after the `+` (`"system" + String("Uptime")`), which end a literal join. A probe of the current lexer shows that the look-back skips a closing `)`, so `f("system") + "Uptime"` and `String("system") + "Uptime"` are joined and matched. This only adds matches for names matched anywhere in a string. It can hide one exact-name case: an escaped name as a call's last argument followed by `+` and a literal (`k("st\u{61}t") + "x"` is read as "statx"). The plain `k("stat") + "x"` is still matched by the raw scan. This is documented; the code is unchanged. pnpm check:links and git diff --check pass.
+
+Round 8 review follow-up (commit e1cac7f53cf3984ac898fe2eba0f51fb57bfdbb8): every decoded string literal is now also matched on its own, with every pattern, as well as in chains of two or more. The join's look-back skips a call's closing `)`, so `k("st\u{61}t") + "x"` (exact name) and `k("system\u{55}ptime") + "x"` (whole-word name) were missed before; both are now caught, and a join can only add matches. New fixtures: escaped, raw and multi-line call arguments before a join (fail), the whole-word case (fail), and literals holding only part of an exact name (pass). The previous checker fails exactly the two new fail fixtures; four mutations of the change are all killed and the no-op control passes. Self-test passed; real-tree --verbose output byte-identical; pnpm typecheck, pnpm check:links, git diff --check and the test guard pass.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
