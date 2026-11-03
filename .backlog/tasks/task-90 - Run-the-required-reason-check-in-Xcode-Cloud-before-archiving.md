@@ -1,9 +1,11 @@
 ---
 id: TASK-90
 title: Run the required-reason check in Xcode Cloud before archiving
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@copilot'
 created_date: '2026-11-03T04:10:00Z'
+updated_date: '2026-11-03T09:15:00Z'
 labels:
   - apple
   - ci
