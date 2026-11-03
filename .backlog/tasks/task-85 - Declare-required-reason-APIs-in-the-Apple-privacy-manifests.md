@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-11-03T02:32:00Z'
-updated_date: '2026-11-03T06:48:00Z'
+updated_date: '2026-11-03T07:18:00Z'
 labels:
   - apple
   - privacy
@@ -139,6 +139,13 @@ Round 7 (PR #1064, Copilot thread PRRT_kwDOUxZq_M6y_3uM plus a full parser sweep
 - Checks: self-test, checker, pnpm typecheck, pnpm test, check:links, check:shell, git diff --check and the test guard all pass.
 
 Round 7 follow-up, commit defd3273a2e1f55b1756ab78fc6bdabad3188b2b: added fixtures for anchors, tags and %TAG directives (fail), a plain key holding ': ' (fail), a quoted key holding ': ' (read as one key, then caught by the build-setting check) and a key starting with '-' (a plain key, as Yams reads it). 7 more mutations were all killed (72 in total for round 7). The self-test, checker, check:links, git diff --check and the test guard pass.
+
+PR #1064 round 7b (afb8718b8498172bae173f81811678f577db4a9e): replaced the project.yml denylist with an allowlist, PROJECT_SHAPE and TARGET_SHAPE, of exactly the keys the real file uses, plus the modelled sdk dependency. Allowed: top-level name, options (bundleIdPrefix, deploymentTarget, developmentLanguage, knownRegions, createIntermediateGroups), configs, packages, settings (base and configs only), targets and schemes (build.targets; test gatherCoverageData, testPlans path/defaultPlan, targets as strings); target type, platform, supportedDestinations, deploymentTarget, sources, dependencies, settings and postBuildScripts (name, script string, basedOnDependencyAnalysis, inputFiles, outputFiles); dependency target, package, sdk, product, embed and destinationFilters.
+- Any other key fails with apps/apple/project.yml:<line>, as do wrong value shapes. Fixtures cover projectReferences, options.pre/postGenCommand, targetTemplates/templates/schemeTemplates, aggregateTargets, fileGroups, localPackages, configFiles (no .xcconfig files exist, so fail closed), settingGroups/settings groups/flat settings, scheme pre/post-actions and run/profile/analyze/archive, target scheme, buildToolPlugins, buildRules, pre-build and post-compile scripts, script files and shells, and dependency link/weak/codeSign/copy/root.
+- target: dependencies must be defined in project.yml (cross-project Project/Target fails), and shipped targets may depend only on shipped targets. sdk: must be a bare .framework or .tbd name.
+- Sources and package paths are compared component by component with on-disk names, so a wrong-case (optional) path fails on both macOS and Linux.
+- Docs: allowlist table with a justification per key, maintenance rule, pruning, bypass and Limitations rows, and a round 7b Evidence row.
+- Checks: self-test passes; 41/41 mutants killed. Real-tree --verbose output is byte-identical (about 0.4-0.5 s). pnpm typecheck, pnpm test (283 passed), check:links, check:shell, git diff --check and the test guard all pass.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
@@ -150,13 +157,15 @@ Declares Apple required-reason API usage for every shipped target and enforces i
 - docs/release/privacy-label-evidence.md records:
   - the per-target rationale against Apple's current required-reason list;
   - how scanning works and what fails;
+  - the project.yml allowlist, with a justification for each key and the maintenance rule;
   - a table of bypass classes, each covered, failing closed or listed as a limitation;
   - tables of every pruning point and every native-code format, with the formats left out and why;
   - verification that the walk matches the committed project and SwiftPM.
 - scripts/check-apple-required-reasons.mjs runs in CI with its self-test. It fails when shipped target or linked package sources use an undeclared required-reason spelling. It also fails closed on:
   - C-family, assembly, module-map, prefix-header or LLVM IR sources, and prebuilt code (Mach-O, universal 32/64, ar and thin archives, LLVM bitcode, Swift modules and interfaces, text stubs, code bundles), including inside folder references, buildPhase: none entries, excluded paths and resource catalogues;
-  - symbolic links, special files and missing non-optional source or folder-reference paths;
-  - XcodeGen or SwiftPM constructs that can add unscanned code (pre-build scripts, plugins, macros, header and linker settings, non -D flags, unmodelled source types, build phases or exclude globs, `..` package paths);
+  - symbolic links, special files, missing non-optional source or folder-reference paths, and sources or package paths that differ from the disk only in letter case;
+  - XcodeGen or SwiftPM constructs that can add unscanned code (header and linker settings, non -D flags, unmodelled source types, build phases or exclude globs, plugins, macros, `..` package paths);
+  - project.yml keys outside an allowlist of the keys the real file uses, reported with file:line (scripts other than post-build, templates, xcconfig files, scheme actions, setting groups, project references and others); cross-project, undefined or test-target dependencies of shipped targets; and sdk paths;
   - project.yml outside a strict YAML subset (unmodelled escapes, duplicate or prototype-style keys, anchors, merge keys, document markers, multi-line scalars, include, ${VAR} outside scripts, $platform and multi-platform targets), and Package.swift outside a strict grammar (raw, escaped, interpolated or multi-line strings, #if, variables, helpers, .map, version-specific manifests, other source roots);
   - unknown targets, and targets without exactly one manifest copied to the bundle root;
   - manifests that track, have unknown or duplicate keys, use the wrong plist value types or padded codes, or fall outside the XML plist subset Xcode writes (strict typed parser).
