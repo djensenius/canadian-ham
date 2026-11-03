@@ -58,4 +58,6 @@ AC2 evidence: apps/apple/ci_scripts/{ci_post_clone,ci_pre_xcodebuild,ci_post_xco
 Other checks: local xbuild Release build of CanadianHam for generic/platform=macOS without SDKROOT/SUPPORTED_PLATFORMS overrides (CODE_SIGNING_ALLOWED=NO, -derivedDataPath /tmp/ch-task86-dd) BUILD SUCCEEDED, product platform MACOS minos 27.0, no watch app; so Xcode Cloud macOS archives should not need project changes. pnpm typecheck OK; pnpm test OK; pnpm check:links OK; pnpm check:apple-network/test:apple-network/check:apple-icloud-gate/test:apple-icloud-gate OK; pnpm test:fastlane 9 runs, 179 assertions, 0 failures; ruby -c Fastfile Syntax OK; plutil -lint both plists OK; node scripts/check-test-guard.mjs --base 4067a86c passed.
 
 Open: App Store Connect acceptance of a 12-digit Next Build Number is untested (Mac builds can't go below 202610271757); visionOS CI_PRODUCT_PLATFORM value is undocumented (scripts accept visionOS/xrOS and fail closed otherwise); Xcode Cloud internal builds never include the internal-only official sheet.
+
+AC2 checked on local criteria only (scripts, shellcheck, dry run, docs). The first real Xcode Cloud run for all four platforms is an owner gate and is not verified. Task left In Progress for coordinator review.
 <!-- SECTION:NOTES:END -->
