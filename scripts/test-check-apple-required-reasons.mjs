@@ -158,6 +158,9 @@ let modes = UITextInputMode.activeInputModes
     'packages/unlinked-swift/Sources/Engine/Disk.swift': `import Darwin
 var info = statfs(); let status = statfs("/", &info)
 `,
+    // C-family files outside shipped targets and linked packages are not scanned and do not fail.
+    'apps/apple/AppTests/AppTests-Bridging-Header.h': '#import <sys/stat.h>\n',
+    'packages/unlinked-swift/Sources/Engine/shim.c': '#include <sys/stat.h>\n',
   };
 }
 
@@ -269,6 +272,35 @@ assertFail('duplicate category', tvManifest([...TV_WITH_PACKAGE, [USER_DEFAULTS,
   'NSPrivacyAccessedAPICategoryUserDefaults is declared more than once');
 assertFail('invalid manifest', { ...tvManifest(TV_WITH_PACKAGE), 'apps/apple/Platforms/watchOS/Resources/PrivacyInfo.xcprivacy': '<plist><dict><key>NSPrivacyAccessedAPITypes</key></dict></plist>' },
   'apps/apple/Platforms/watchOS/Resources/PrivacyInfo.xcprivacy: invalid property list');
+
+// No tracking and no collected data in any shipped manifest.
+const TV_MANIFEST_PATH = 'apps/apple/Platforms/tvOS/Resources/PrivacyInfo.xcprivacy';
+const tvManifestEdited = (from, to) => ({ [TV_MANIFEST_PATH]: manifest(TV_WITH_PACKAGE).replace(from, to) });
+const TRACKING_FALSE = '\t<key>NSPrivacyTracking</key>\n\t<false/>\n';
+const TRACKING_DOMAINS_EMPTY = '\t<key>NSPrivacyTrackingDomains</key>\n\t<array/>\n';
+const COLLECTED_EMPTY = '\t<key>NSPrivacyCollectedDataTypes</key>\n\t<array/>\n';
+assertFail('tracking enabled', tvManifestEdited(TRACKING_FALSE, '\t<key>NSPrivacyTracking</key>\n\t<true/>\n'),
+  `${TV_MANIFEST_PATH} (TV): NSPrivacyTracking must be present and false`);
+assertFail('tracking key missing', tvManifestEdited(TRACKING_FALSE, ''),
+  `${TV_MANIFEST_PATH} (TV): NSPrivacyTracking must be present and false`);
+assertFail('tracking domain listed', tvManifestEdited(TRACKING_DOMAINS_EMPTY, '\t<key>NSPrivacyTrackingDomains</key>\n\t<array>\n\t\t<string>tracker.example.com</string>\n\t</array>\n'),
+  `${TV_MANIFEST_PATH} (TV): NSPrivacyTrackingDomains must be present and an empty array`);
+assertFail('tracking domains key missing', tvManifestEdited(TRACKING_DOMAINS_EMPTY, ''),
+  `${TV_MANIFEST_PATH} (TV): NSPrivacyTrackingDomains must be present and an empty array`);
+assertFail('collected data type listed', tvManifestEdited(COLLECTED_EMPTY, '\t<key>NSPrivacyCollectedDataTypes</key>\n\t<array>\n\t\t<dict>\n\t\t\t<key>NSPrivacyCollectedDataType</key>\n\t\t\t<string>NSPrivacyCollectedDataTypeDeviceID</string>\n\t\t</dict>\n\t</array>\n'),
+  `${TV_MANIFEST_PATH} (TV): NSPrivacyCollectedDataTypes must be present and an empty array`);
+assertFail('collected data types key missing', tvManifestEdited(COLLECTED_EMPTY, ''),
+  `${TV_MANIFEST_PATH} (TV): NSPrivacyCollectedDataTypes must be present and an empty array`);
+
+// Only Swift is scanned: C-family sources in shipped targets or linked packages fail closed.
+assertFail('Objective-C source in a shipped target', { ...tvManifest(TV_WITH_PACKAGE), 'apps/apple/Platforms/tvOS/Legacy.m': '#import <Foundation/Foundation.h>\n' },
+  'TV: apps/apple/Platforms/tvOS/Legacy.m is not Swift; only Swift sources are scanned; extend scripts/check-apple-required-reasons.mjs');
+assertFail('C++ source in a shipped target', { ...tvManifest(TV_WITH_PACKAGE), 'apps/apple/App/Bridge.mm': '#include <sys/stat.h>\n' },
+  'App: apps/apple/App/Bridge.mm is not Swift');
+assertFail('C header in a shipped target', { ...tvManifest(TV_WITH_PACKAGE), 'apps/apple/Platforms/watchOS/Shim.h': '#include <mach/mach_time.h>\n' },
+  'Watch: apps/apple/Platforms/watchOS/Shim.h is not Swift');
+assertFail('C source in a linked package', { ...tvManifest(TV_WITH_PACKAGE), 'packages/engine-swift/Sources/CEngine/shim.c': '#include <sys/stat.h>\n' },
+  'package EnginePkg: packages/engine-swift/Sources/CEngine/shim.c is not Swift; only Swift sources are scanned');
 
 // Manifest bundling.
 assertFail('missing manifest', { ...tvManifest(TV_WITH_PACKAGE), 'apps/apple/Platforms/watchOS/Resources/PrivacyInfo.xcprivacy': null },

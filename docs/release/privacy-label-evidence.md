@@ -434,7 +434,8 @@ target bundles anything other than exactly one manifest.
   - **Decision (coordinator, 2026-11-02):** keep `CA92.1`. The app reads
     only its own app-domain `AppleLanguages` key, which its language picker
     also writes. The two remedies above stay as fallbacks if App Review
-    objects.
+    objects. **The owner must explicitly sign off this decision before App
+    Store submission** (tracked on TASK-1.7).
 - **System boot time → `35F9.1`.** Both uses measure time elapsed between
   events inside the app or drive timers. On iOS, hinge-peek dwell rechecks
   schedule a timer from sample timestamps. On watchOS, haptic spacing and
@@ -463,6 +464,10 @@ works as follows:
     or is duplicated;
   - a category is unknown or duplicated;
   - a target bundles anything other than exactly one manifest;
+  - a manifest does not set `NSPrivacyTracking` to `false`, or does not have
+    empty `NSPrivacyTrackingDomains` and `NSPrivacyCollectedDataTypes` arrays;
+  - a shipped target or linked package contains C, Objective-C or C++
+    sources or headers, because only Swift is scanned;
   - a Swift file under `apps/apple` is compiled by no target.
 - **Unsupported constructs.** It also fails on XcodeGen keys it does not
   model, on remote, binary or dynamic packages, and on unknown target types.

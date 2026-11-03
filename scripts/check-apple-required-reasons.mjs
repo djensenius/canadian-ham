@@ -2,6 +2,9 @@
 // Checks that every shipped Apple app target declares, in its own bundled
 // PrivacyInfo.xcprivacy, exactly the required-reason API categories its Swift
 // sources (and the local Swift packages it links) use, with approved reasons.
+// Each manifest must also keep NSPrivacyTracking = false and empty
+// NSPrivacyTrackingDomains / NSPrivacyCollectedDataTypes, and shipped targets
+// and linked packages may contain only Swift sources.
 //
 // Categories, listed APIs and reason codes follow Apple's current
 // documentation, quoted in docs/release/privacy-label-evidence.md:
@@ -89,6 +92,12 @@ const CATEGORIES = {
     ],
   },
 };
+
+// Only Swift is scanned. C-family sources could call required-reason APIs
+// (stat, mach_absolute_time, NSUserDefaults, ...) with other spellings, so any
+// such file in a shipped target or linked package fails the check.
+const NON_SWIFT_SOURCE = /\.(?:c|m|mm|cpp|cc|cxx|h|hpp)$/;
+const NON_SWIFT_MESSAGE = 'only Swift sources are scanned; extend scripts/check-apple-required-reasons.mjs to scan C/Objective-C/C++ before shipping it';
 
 const SHIPPED_TARGET_TYPE = /^(?:application(?:\..+)?|app-extension(?:\..+)?|.*-extension)$/;
 const TEST_TARGET_TYPES = new Set(['bundle.unit-test', 'bundle.ui-testing']);
@@ -469,12 +478,13 @@ function walk(directory, excludes, base, visit) {
 
 function resolveTarget(name, target, packages) {
   const swiftFiles = new Set();
+  const nonSwiftFiles = new Set();
   const manifests = new Set();
   const packageNames = [];
   const sources = target.sources ?? [];
   if (!Array.isArray(sources)) {
     fail(`${name}: sources must be a list in project.yml.`);
-    return { swiftFiles, manifests, packageNames };
+    return { swiftFiles, nonSwiftFiles, manifests, packageNames };
   }
   for (const rawEntry of sources) {
     const entry = typeof rawEntry === 'string' ? { path: rawEntry } : rawEntry;
@@ -500,6 +510,7 @@ function resolveTarget(name, target, packages) {
     }
     const record = (file) => {
       if (file.endsWith('.swift') && compiles) swiftFiles.add(file);
+      if (NON_SWIFT_SOURCE.test(file) && buildPhase !== 'resources') nonSwiftFiles.add(file);
       if (basename(file) === MANIFEST_NAME && buildPhase !== 'sources') manifests.add(file);
     };
     if (statSync(absolutePath).isDirectory()) {
@@ -526,7 +537,7 @@ function resolveTarget(name, target, packages) {
       fail(`${name}: unsupported dependency ${JSON.stringify(dependency)}; binary or third-party code needs its own required-reason review.`);
     }
   }
-  return { swiftFiles, manifests, packageNames };
+  return { swiftFiles, nonSwiftFiles, manifests, packageNames };
 }
 
 function resolvePackage(name, spec) {
@@ -558,6 +569,7 @@ function resolvePackage(name, spec) {
   if (existsSync(sourcesDir)) {
     walk(sourcesDir, [], sourcesDir, (file) => {
       if (file.endsWith('.swift')) files.add(file);
+      if (NON_SWIFT_SOURCE.test(file)) fail(`package ${name}: ${display(file)} is not Swift; ${NON_SWIFT_MESSAGE}.`);
     });
   }
   return files;
@@ -578,6 +590,15 @@ function declaredCategories(manifestPath, targetName) {
   if (!plist || typeof plist !== 'object' || Array.isArray(plist)) {
     fail(`${label}: top level must be a dictionary.`);
     return null;
+  }
+  // The Apple app does no tracking and collects no data (AGENTS.md, docs/privacy.md).
+  if (plist.NSPrivacyTracking !== false) {
+    fail(`${label} (${targetName}): NSPrivacyTracking must be present and false; the Apple app does no tracking.`);
+  }
+  for (const key of ['NSPrivacyTrackingDomains', 'NSPrivacyCollectedDataTypes']) {
+    if (!Array.isArray(plist[key]) || plist[key].length !== 0) {
+      fail(`${label} (${targetName}): ${key} must be present and an empty array; the Apple app does no tracking and collects no data.`);
+    }
   }
   const entries = plist.NSPrivacyAccessedAPITypes ?? [];
   if (!Array.isArray(entries)) {
@@ -651,6 +672,7 @@ function main() {
     const resolved = resolveTarget(name, target, packages);
     for (const file of resolved.swiftFiles) claimed.add(file);
     if (!shipped) continue;
+    for (const file of resolved.nonSwiftFiles) fail(`${name}: ${display(file)} is not Swift; ${NON_SWIFT_MESSAGE}.`);
 
     const files = [...resolved.swiftFiles];
     for (const packageName of resolved.packageNames) {
@@ -721,4 +743,4 @@ if (errors.length > 0) {
   for (const error of errors) console.error(`- ${error}`);
   process.exit(1);
 }
-console.log('Apple required-reason API check passed: every shipped target declares exactly the required-reason API categories its sources and linked local packages use, with approved app reasons.');
+console.log('Apple required-reason API check passed: every shipped target declares exactly the required-reason API categories its sources and linked local packages use, with approved app reasons, no tracking and no collected data.');
