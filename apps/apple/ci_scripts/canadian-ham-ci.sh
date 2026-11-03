@@ -19,7 +19,16 @@ CH_NODE_FORMULA="node@${CH_REQUIRED_NODE_MAJOR}"
 
 # package.json guard scripts run before every action that builds from source.
 # The test:* self-tests prove each guard still rejects its leak fixtures.
-CH_GUARD_SCRIPTS="check:apple-network test:apple-network check:apple-icloud-gate test:apple-icloud-gate"
+# The required-reason check keeps the privacy manifests in step with the
+# sources; its self-test takes about 25 seconds. ci_post_clone.sh and
+# ci_pre_xcodebuild.sh both run this list, so each action that builds from
+# source pays it twice (about 50 seconds): post-clone fails a workflow before
+# package resolution, and pre-xcodebuild guards the exact tree being built.
+CH_GUARD_SCRIPTS="check:apple-network test:apple-network check:apple-icloud-gate test:apple-icloud-gate check:apple-required-reasons test:apple-required-reasons"
+# Environment variables that point a guard at another tree. The guards honour
+# them for their own self-tests; ch_run_guards unsets them so a workflow
+# environment variable can never move a guard off CH_REPO_ROOT.
+CH_GUARD_ROOT_OVERRIDES="APPLE_NO_NETWORK_ROOT ICLOUD_GATE_ROOT REQUIRED_REASONS_ROOT"
 
 # Shared schemes Xcode Cloud may archive. The watch app ships inside the iOS
 # archive of CanadianHam; CanadianHamWatch is never archived on its own.
@@ -138,19 +147,23 @@ ch_ensure_node() {
   fi
 }
 
-# Runs the Apple network and iCloud guards exactly as package.json defines
-# them. A missing script, a failing guard or a failing self-test stops the build.
+# Runs the Apple network, iCloud and required-reason guards exactly as
+# package.json defines them. A missing script, a failing guard or a failing
+# self-test stops the build. Each guard runs from CH_REPO_ROOT with the
+# CH_GUARD_ROOT_OVERRIDES variables unset (in a subshell, so only the guards
+# lose them).
 ch_run_guards() {
   local script
   ch_ensure_node
   cd "$CH_REPO_ROOT" || ch_fail "cannot enter $CH_REPO_ROOT"
   for script in $CH_GUARD_SCRIPTS; do
     ch_log "running package.json script $script"
-    if ! node --run "$script"; then
+    # shellcheck disable=SC2086 # CH_GUARD_ROOT_OVERRIDES is a word list.
+    if ! (unset $CH_GUARD_ROOT_OVERRIDES && cd "$CH_REPO_ROOT" && node --run "$script"); then
       ch_fail "Apple guard $script failed; refusing to build"
     fi
   done
-  ch_log "Apple network and iCloud guards passed"
+  ch_log "Apple network, iCloud and required-reason guards passed"
 }
 
 ch_project_path() {

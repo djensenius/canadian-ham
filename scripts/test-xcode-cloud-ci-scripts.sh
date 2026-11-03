@@ -10,7 +10,7 @@ script_dir=$(CDPATH='' cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 repo_root=$(CDPATH='' cd -- "$script_dir/.." && pwd)
 ci_dir="$repo_root/apps/apple/ci_scripts"
 schemes_dir="$repo_root/apps/apple/CanadianHam.xcodeproj/xcshareddata/xcschemes"
-guard_scripts="check:apple-network test:apple-network check:apple-icloud-gate test:apple-icloud-gate"
+guard_scripts="check:apple-network test:apple-network check:apple-icloud-gate test:apple-icloud-gate check:apple-required-reasons test:apple-required-reasons"
 tmp_root=$(mktemp -d "${TMPDIR:-/tmp}/xcode-cloud-ci-scripts-test.XXXXXX") || exit 2
 tmp_root=$(CDPATH='' cd -- "$tmp_root" && pwd -P)
 failures=0
@@ -209,6 +209,18 @@ run_case() {
 clean=$(make_fixture clean)
 failing=$(make_fixture failing check:apple-icloud-gate)
 missing=$(make_fixture missing "" test:apple-network)
+failing_reasons=$(make_fixture failing-reasons check:apple-required-reasons)
+failing_reasons_test=$(make_fixture failing-reasons-test test:apple-required-reasons)
+# Guard stubs that print the root override variables they receive.
+root_probe=$(make_fixture root-probe)
+# shellcheck disable=SC2016 # The guard stubs expand these, not this script.
+sed -i '' -E 's/"echo fixture-guard ([^"]*)"/"echo fixture-guard \1 roots=${APPLE_NO_NETWORK_ROOT-unset},${ICLOUD_GATE_ROOT-unset},${REQUIRED_REASONS_ROOT-unset}"/' \
+  "$root_probe/package.json"
+grep -q 'roots=' "$root_probe/package.json" || die "could not build the root-probe fixture"
+override_root="$tmp_root/override-root"
+mkdir -p "$override_root"
+root_overrides=(APPLE_NO_NETWORK_ROOT="$override_root" ICLOUD_GATE_ROOT="$override_root" REQUIRED_REASONS_ROOT="$override_root")
+unset_roots='roots=unset,unset,unset'
 cloudkit=$(make_fixture cloudkit)
 perl -0pi -e 's/(<ArchiveAction\s+buildConfiguration\s*=\s*")Release"/${1}DebugCloudKit"/' \
   "$cloudkit/apps/apple/CanadianHam.xcodeproj/xcshareddata/xcschemes/CanadianHam.xcscheme"
@@ -217,7 +229,7 @@ perl -0pi -e 's/(<ArchiveAction\s+buildConfiguration\s*=\s*")Release"/${1}DebugC
   || die "could not build the DebugCloudKit scheme fixture"
 empty="$tmp_root/no-source"
 mkdir -p "$empty"
-all_guards='fixture-guard check:apple-network.*fixture-guard test:apple-network.*fixture-guard check:apple-icloud-gate.*fixture-guard test:apple-icloud-gate'
+all_guards='fixture-guard check:apple-network.*fixture-guard test:apple-network.*fixture-guard check:apple-icloud-gate.*fixture-guard test:apple-icloud-gate.*fixture-guard check:apple-required-reasons.*fixture-guard test:apple-required-reasons'
 ios_archive=(CI_XCODEBUILD_ACTION=archive CI_XCODE_SCHEME=CanadianHam CI_PRODUCT_PLATFORM=iOS CI_BUILD_NUMBER="$above_floor")
 
 # Marketing version and floors file variants.
@@ -304,9 +316,12 @@ printf '== Real repository and real guards\n'
 run_case "post-clone runs the real guards" pass "guards passed" "" ci_post_clone.sh \
   CI_XCODEBUILD_ACTION=archive
 run_case "pre-xcodebuild iOS archive with real schemes, floors and guards" pass \
-  "CanadianHam \(ios\) uses Release.*build number $above_real_floors .*guards passed" "" \
+  "CanadianHam \(ios\) uses Release.*build number $above_real_floors .*Apple required-reason API check passed.*required-reasons-test: passed self-test fixtures.*required-reason guards passed" "" \
   ci_pre_xcodebuild.sh CI_XCODEBUILD_ACTION=archive CI_XCODE_SCHEME=CanadianHam \
   CI_PRODUCT_PLATFORM=iOS CI_BUILD_NUMBER="$above_real_floors"
+run_case "real guards ignore root overrides pointing at an empty tree" pass \
+  "Apple required-reason API check passed.*required-reasons-test: passed self-test fixtures.*required-reason guards passed" \
+  "override-root" ci_pre_xcodebuild.sh CI_XCODEBUILD_ACTION=build "${root_overrides[@]}"
 run_case "real floors reject macOS build number 1" fail "CI_BUILD_NUMBER 1 is not above the last macOS upload" \
   "guards passed" ci_pre_xcodebuild.sh CI_XCODEBUILD_ACTION=archive CI_XCODE_SCHEME=CanadianHam \
   CI_PRODUCT_PLATFORM=macOS CI_BUILD_NUMBER=1
@@ -557,6 +572,17 @@ run_case "failing guard stops post-clone" fail "Apple guard check:apple-icloud-g
   ci_post_clone.sh CI_PRIMARY_REPOSITORY_PATH="$failing" CI_XCODEBUILD_ACTION=archive
 run_case "failing guard stops an archive" fail "Apple guard check:apple-icloud-gate failed" "guards passed" \
   ci_pre_xcodebuild.sh CI_PRIMARY_REPOSITORY_PATH="$failing" "${ios_archive[@]}"
+run_case "failing required-reason check stops an archive" fail \
+  "running package.json script check:apple-required-reasons.*fixture-guard check:apple-required-reasons failing.*Apple guard check:apple-required-reasons failed; refusing to build" \
+  "fixture-guard test:apple-required-reasons|guards passed" \
+  ci_pre_xcodebuild.sh CI_PRIMARY_REPOSITORY_PATH="$failing_reasons" "${ios_archive[@]}"
+run_case "failing required-reason self-test stops an archive" fail \
+  "fixture-guard check:apple-required-reasons.*fixture-guard test:apple-required-reasons failing.*Apple guard test:apple-required-reasons failed; refusing to build" \
+  "guards passed" \
+  ci_pre_xcodebuild.sh CI_PRIMARY_REPOSITORY_PATH="$failing_reasons_test" "${ios_archive[@]}"
+run_case "root override variables never reach the guards" pass \
+  "fixture-guard check:apple-network $unset_roots.*fixture-guard test:apple-network $unset_roots.*fixture-guard check:apple-icloud-gate $unset_roots.*fixture-guard test:apple-icloud-gate $unset_roots.*fixture-guard check:apple-required-reasons $unset_roots.*fixture-guard test:apple-required-reasons $unset_roots" \
+  "override-root" ci_pre_xcodebuild.sh CI_PRIMARY_REPOSITORY_PATH="$root_probe" "${ios_archive[@]}" "${root_overrides[@]}"
 run_case "missing guard script fails closed" fail "Apple guard test:apple-network failed" "guards passed" \
   ci_pre_xcodebuild.sh CI_PRIMARY_REPOSITORY_PATH="$missing" CI_XCODEBUILD_ACTION=build
 
