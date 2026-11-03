@@ -971,10 +971,18 @@ assertFail('prototype keys', {
   '__proto__: uses NSPrivacyAccessedAPICategorySystemBootTime',
   'App: depends on unknown package toString.',
 ]);
+// Keys are matched as Yams reads them: a quoted key may hold ": ", and a key
+// starting with "-" (no space) is a plain key, not a sequence item.
+assertFail('quoted key with ": "', watchSettings('        "OTHER_LDFLAGS[sdk=a: b]": -lvendor\n'),
+  'Watch: build setting OTHER_LDFLAGS[sdk=a: b] can compile, import or link code the checker does not scan');
+assertPass('key starting with -', watchSettings('        SWIFT_VERSION: "6.0"\n        -OTHER_LDFLAGS: x\n'), ['Apple required-reason API check passed']);
 assertFail('duplicate keys', watchYml(`${WATCH_PLATFORM}    settings:\n      base:\n        OTHER_LDFLAGS: -lvendor\n    settings: {}\n`),
   'apps/apple/project.yml:40: duplicate key "settings"');
 for (const [name, text, expected] of [
   ['merge key', '    <<: *base\n', 'merge keys (<<) are not supported'],
+  ['anchor', '    platform: &p watchOS\n', 'anchors, aliases and tags are not supported: &p watchOS'],
+  ['tag', '    platform: !!str watchOS\n', 'anchors, aliases and tags are not supported: !!str watchOS'],
+  ['": " in a plain key', '    platform: watchOS\n    settings:\n      OTHER_LDFLAGS[sdk=a: b]: x\n', '": " inside a plain scalar is not supported; quote it: b]: x'],
   ['complex key', '    ? OTHER_LDFLAGS\n    : -lvendor\n', 'complex keys ("? ") are not supported'],
   ['continuation line', '    platform: watch\n      OS\n', 'apps/apple/project.yml:37: a more-indented line after a scalar (a multi-line scalar or continuation line) is not supported'],
   ['multi-line double-quoted scalar', '    platform: "watch\n      OS"\n', 'unterminated double-quoted scalar; quoted scalars must close on the same line'],
@@ -1012,6 +1020,7 @@ for (const [name, text, expected] of [
   ['document start marker', `---\n${PROJECT_YML}`, 'apps/apple/project.yml:1: document markers (--- and ...) are not supported'],
   ['document end marker', `${PROJECT_YML}...\n`, 'document markers (--- and ...) are not supported'],
   ['directive', `%YAML 1.1\n${PROJECT_YML}`, 'directives (%YAML, %TAG) are not supported'],
+  ['tag directive', `%TAG !e! tag:example.com,2000:\n${PROJECT_YML}`, 'apps/apple/project.yml:1: directives (%YAML, %TAG) are not supported'],
   ['content after the document', `${PROJECT_YML}- stray\n`, 'unexpected content after document'],
 ]) {
   assertFail(`unsupported YAML: ${name}`, { ...tvManifest(TV_WITH_PACKAGE), ...projectYml(text) }, [expected, YAML_SUBSET]);
