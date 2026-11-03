@@ -137,6 +137,16 @@ struct SettingsView: View {
 `,
     'apps/apple/Platforms/watchOS/WatchMain.swift': `import Foundation
 let watchNow = ProcessInfo.processInfo.systemUptime
+struct Stat { var stat = 0; var stats = [0]; var status = 1 }
+func accuracy(_ stat: Stat?) -> Double {
+    guard let stat, stat.stat > 0 else { return 0 }
+    return Double(stat.stat) / Double(stat.stats.count) // UserDefaults after division is a comment
+}
+let lstatus = Stat().status; let restat = Stat().stats; let half = lstatus/2 // statfs(note)
+let quotient = half/2; let path = "a/b" // UserDefaults after division and a string is a comment
+let forced = Optional(4)!/2; let other = "c/d" // NSUserDefaults after a postfix operator is a comment
+let word = /[a-z]+/ // activeInputModes after a bare regex is a comment
+let escaped = /a\\/b/ ; let extended = #/[/*]/# // creationDateKey after an extended regex is a comment
 `,
     'apps/apple/Platforms/watchOS/Resources/PrivacyInfo.xcprivacy': manifest(WATCH_MANIFEST),
     'apps/apple/Platforms/tvOS/TVMain.swift': `import Foundation
@@ -255,6 +265,62 @@ assertFail('getattrlist needs file timestamp and disk space', {
   'apps/apple/Platforms/watchOS/Attributes.swift:2 getattrlist family',
 ]);
 
+// C functions count as references too, not only as calls.
+assertFail('file timestamp function references', {
+  ...tvManifest(TV_WITH_PACKAGE),
+  'apps/apple/Platforms/watchOS/References.swift': `import Darwin
+let readAttributes = Darwin.fstat
+let attributes: @convention(c) (UnsafePointer<CChar>?, UnsafeMutablePointer<stat>?) -> Int32 = stat
+let qualified = Darwin.stat
+`,
+}, [
+  'Watch: uses NSPrivacyAccessedAPICategoryFileTimestamp (File timestamp)',
+  'apps/apple/Platforms/watchOS/References.swift:2 fstat/lstat/fstatat',
+  'apps/apple/Platforms/watchOS/References.swift:3 stat',
+  'apps/apple/Platforms/watchOS/References.swift:4 stat',
+]);
+assertFail('disk space function references', {
+  ...tvManifest(TV_WITH_PACKAGE),
+  'apps/apple/Platforms/watchOS/References.swift': `import Darwin
+let volumeInfo = Darwin.statfs
+let fileSystem = fstatvfs
+let attributeList = getattrlist
+`,
+}, [
+  'Watch: uses NSPrivacyAccessedAPICategoryDiskSpace (Disk space)',
+  'apps/apple/Platforms/watchOS/References.swift:2 statfs/statvfs/fstatfs/fstatvfs',
+  'apps/apple/Platforms/watchOS/References.swift:3 statfs/statvfs/fstatfs/fstatvfs',
+  'apps/apple/Platforms/watchOS/References.swift:4 getattrlist family',
+  'Watch: uses NSPrivacyAccessedAPICategoryFileTimestamp (File timestamp)',
+]);
+
+// Regex literals: comment markers inside them must not hide later code.
+const TV_REGEX = 'apps/apple/Platforms/tvOS/Patterns.swift';
+const TV_BOOT_TIME = `TV: uses ${BOOT_TIME} (System boot time) but apps/apple/Platforms/tvOS/Resources/PrivacyInfo.xcprivacy does not declare it.`;
+assertFail('extended regex literal containing /*', { ...tvManifest(TV_WITH_PACKAGE), [TV_REGEX]: `let punctuation = #/[/*]/#
+let started = ProcessInfo.processInfo.systemUptime
+` }, [TV_BOOT_TIME, `${TV_REGEX}:2 systemUptime`]);
+assertFail('multi-line extended regex literal', { ...tvManifest(TV_WITH_PACKAGE), [TV_REGEX]: `let pattern = ##/
+  [/*] // not a comment
+/##
+let started = ProcessInfo.processInfo.systemUptime
+` }, [TV_BOOT_TIME, `${TV_REGEX}:4 systemUptime`]);
+assertFail('bare regex literals with escaped slashes', { ...tvManifest(TV_WITH_PACKAGE), [TV_REGEX]: `let slash = /\\//; let started = ProcessInfo.processInfo.systemUptime
+let slashStar = /a\\/*b/
+let later = ProcessInfo.processInfo.systemUptime
+` }, [TV_BOOT_TIME, `${TV_REGEX}:1 systemUptime`, `${TV_REGEX}:3 systemUptime`]);
+assertFail('bare regex literal after a keyword', { ...tvManifest(TV_WITH_PACKAGE), [TV_REGEX]: `func pattern() -> Regex<Substring> { return/a\\/*b/ }
+let later = ProcessInfo.processInfo.systemUptime
+` }, [TV_BOOT_TIME, `${TV_REGEX}:2 systemUptime`]);
+assertFail('undelimited regex fails closed', { ...tvManifest(TV_WITH_PACKAGE), [TV_REGEX]: `let ratio = total()/a\\/*b/
+` }, `${TV_REGEX}:1: comment marker /* straight after "\\" looks like an escaped slash in a regex literal the checker could not delimit`);
+assertFail('unterminated block comment fails closed', { ...tvManifest(TV_WITH_PACKAGE), [TV_REGEX]: `let a = 1 /* never closed
+let later = ProcessInfo.processInfo.systemUptime
+` }, `${TV_REGEX}:1: unterminated block comment`);
+assertFail('unterminated extended regex fails closed', { ...tvManifest(TV_WITH_PACKAGE), [TV_REGEX]: `let r = #/abc
+let later = 1
+` }, `${TV_REGEX}:1: unterminated extended regex literal`);
+
 // Reason validation.
 assertFail('unknown reason', { ...tvManifest(TV_WITH_PACKAGE), ...appManifest([[USER_DEFAULTS, ['XXXX.1']], [BOOT_TIME, ['35F9.1']], [FILE_TIMESTAMP, ['C617.1']]]) },
   '"XXXX.1" is not an approved reason for NSPrivacyAccessedAPICategoryUserDefaults');
@@ -301,6 +367,14 @@ assertFail('C header in a shipped target', { ...tvManifest(TV_WITH_PACKAGE), 'ap
   'Watch: apps/apple/Platforms/watchOS/Shim.h is not Swift');
 assertFail('C source in a linked package', { ...tvManifest(TV_WITH_PACKAGE), 'packages/engine-swift/Sources/CEngine/shim.c': '#include <sys/stat.h>\n' },
   'package EnginePkg: packages/engine-swift/Sources/CEngine/shim.c is not Swift; only Swift sources are scanned');
+assertFail('assembly and C++ inline sources', {
+  ...tvManifest(TV_WITH_PACKAGE),
+  'apps/apple/Platforms/watchOS/uptime.S': '.globl _uptime\n',
+  'packages/engine-swift/Sources/CEngine/engine.ipp': 'inline int f() { return 0; }\n',
+}, [
+  'Watch: apps/apple/Platforms/watchOS/uptime.S is not Swift; only Swift sources are scanned; extend scripts/check-apple-required-reasons.mjs to scan C/Objective-C/C++/assembly',
+  'package EnginePkg: packages/engine-swift/Sources/CEngine/engine.ipp is not Swift',
+]);
 
 // Manifest bundling.
 assertFail('missing manifest', { ...tvManifest(TV_WITH_PACKAGE), 'apps/apple/Platforms/watchOS/Resources/PrivacyInfo.xcprivacy': null },

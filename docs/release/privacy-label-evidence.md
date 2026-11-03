@@ -456,7 +456,13 @@ works as follows:
   packages contribute their `Sources/**`. Test bundles count only for
   coverage.
 - **Scanning.** It blanks Swift comments and scans the code for the spellings
-  of each category.
+  of each category. String and regex literals are kept, following the Swift 6
+  lexer for extended `#/.../#` and bare `/.../` regex literals, so a `/*` or
+  `//` inside a literal does not hide later code. C functions such as
+  `fstat`, `lstat`, `statfs` and `getattrlist` count as references as well
+  as calls (for example `let read = Darwin.fstat`). Bare `stat` is also a
+  common Swift name, so it counts only as a call, a C-module-qualified name
+  (`Darwin.stat`) or the whole right-hand side of an assignment.
 - **What fails.** The check fails in any of these cases:
   - a shipped target uses a category its own manifest does not declare;
   - a manifest declares a category its target does not use;
@@ -466,19 +472,26 @@ works as follows:
   - a target bundles anything other than exactly one manifest;
   - a manifest does not set `NSPrivacyTracking` to `false`, or does not have
     empty `NSPrivacyTrackingDomains` and `NSPrivacyCollectedDataTypes` arrays;
-  - a shipped target or linked package contains C, Objective-C or C++
-    sources or headers, because only Swift is scanned;
-  - a Swift file under `apps/apple` is compiled by no target.
+  - a shipped target or linked package contains C, Objective-C, C++ or
+    assembly sources or headers, because only Swift is scanned;
+  - a Swift file under `apps/apple` is compiled by no target;
+  - comment stripping could hide code: an unterminated block comment or
+    extended regex literal, or a comment marker straight after `\` (an
+    escaped slash in a regex literal the checker could not delimit).
 - **Unsupported constructs.** It also fails on XcodeGen keys it does not
   model, on remote, binary or dynamic packages, and on unknown target types.
 - **Self-test.** `pnpm test:apple-required-reasons` runs the fixtures. They
   include comment-only mentions, a string containing `//` followed by real
   code, excluded and test-only files, unlinked packages and package tests,
-  and `getattrlist` counting for both File timestamp and Disk space.
+  `getattrlist` counting for both File timestamp and Disk space, C-function
+  references, `stat`-named Swift identifiers that must not count, regex
+  literals containing comment markers, and the fail-closed cases above.
 - **Limitations.** The check does not evaluate `#if` (an API compiled out on
   some platforms still counts for the target). It also scans inside string
-  literals, so it errs towards declaring a category. Binary inspection
-  (below) is the cross-check.
+  and regex literals, so it errs towards declaring a category. An
+  unqualified bare `stat` passed as an argument (for example `apply(stat)`)
+  is not detected, to avoid matching Swift variables named `stat`. Binary
+  inspection (below) is the cross-check.
 
 ### Evidence
 

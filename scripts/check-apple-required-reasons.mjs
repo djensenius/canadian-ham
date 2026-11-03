@@ -18,8 +18,8 @@
 //
 // Limitation: `#if` conditions are not evaluated, so an API compiled out on a
 // platform still counts for every target that compiles the file, and string
-// literals are scanned too. Both err towards declaring a category; binary
-// inspection of the built bundles is the cross-check.
+// and regex literals are scanned too. Both err towards declaring a category;
+// binary inspection of the built bundles is the cross-check.
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { basename, join, normalize, relative, resolve, sep } from 'node:path';
 
@@ -44,9 +44,13 @@ const CATEGORIES = {
       [/\bcreationDateKey\b/, 'creationDateKey'],
       [/\bNSFile(?:Creation|Modification)Date\b/, 'NSFileCreationDate/NSFileModificationDate'],
       [/\bNSURL(?:Creation|ContentModification)DateKey\b/, 'NSURLCreationDateKey/NSURLContentModificationDateKey'],
-      [/\bf?getattrlist(?:bulk|at)?\s*\(/, 'getattrlist family'],
-      [/\b(?:f|l)?stat\s*\(/, 'stat/fstat/lstat'],
-      [/\bfstatat\s*\(/, 'fstatat'],
+      // C functions are matched as identifiers, not only calls, so references
+      // such as `let read = Darwin.fstat` count. Bare `stat` is also a common
+      // Swift name, so it counts only as a call, a C-module-qualified name or the
+      // whole right-hand side of an assignment.
+      [/\bf?getattrlist(?:bulk|at)?\b/, 'getattrlist family'],
+      [/\b[fl]stat\b|\bfstatat\b/, 'fstat/lstat/fstatat'],
+      [/\bstat\s*\(|\b(?:Darwin|Glibc|SwiftGlibc|Musl|Foundation|ucrt)\.stat\b|=\s*stat\s*(?:;|$)/, 'stat'],
     ],
   },
   NSPrivacyAccessedAPICategorySystemBootTime: {
@@ -69,8 +73,8 @@ const CATEGORIES = {
       [/\bvolumeTotalCapacity(?:Key)?\b/, 'volumeTotalCapacityKey'],
       [/\.systemFreeSize\b|\bNSFileSystemFreeSize\b/, 'systemFreeSize'],
       [/\.systemSize\b|\bNSFileSystemSize\b/, 'systemSize'],
-      [/\bf?statv?fs\s*\(/, 'statfs/statvfs/fstatfs/fstatvfs'],
-      [/\bf?getattrlist(?:at)?\s*\(/, 'getattrlist family'],
+      [/\bf?statv?fs\b/, 'statfs/statvfs/fstatfs/fstatvfs'],
+      [/\bf?getattrlist(?:at)?\b/, 'getattrlist family'],
     ],
   },
   NSPrivacyAccessedAPICategoryActiveKeyboards: {
@@ -93,11 +97,12 @@ const CATEGORIES = {
   },
 };
 
-// Only Swift is scanned. C-family sources could call required-reason APIs
-// (stat, mach_absolute_time, NSUserDefaults, ...) with other spellings, so any
-// such file in a shipped target or linked package fails the check.
-const NON_SWIFT_SOURCE = /\.(?:c|m|mm|cpp|cc|cxx|h|hpp)$/;
-const NON_SWIFT_MESSAGE = 'only Swift sources are scanned; extend scripts/check-apple-required-reasons.mjs to scan C/Objective-C/C++ before shipping it';
+// Only Swift is scanned. C-family and assembly sources could call
+// required-reason APIs (stat, mach_absolute_time, NSUserDefaults, ...) with
+// other spellings, so any such file in a shipped target or linked package
+// fails the check.
+const NON_SWIFT_SOURCE = /\.(?:c|m|mm|cpp|cc|cxx|h|hh|hpp|hxx|inl|ipp|s|S)$/;
+const NON_SWIFT_MESSAGE = 'only Swift sources are scanned; extend scripts/check-apple-required-reasons.mjs to scan C/Objective-C/C++/assembly before shipping it';
 
 const SHIPPED_TARGET_TYPE = /^(?:application(?:\..+)?|app-extension(?:\..+)?|.*-extension)$/;
 const TEST_TARGET_TYPES = new Set(['bundle.unit-test', 'bundle.ui-testing']);
@@ -321,20 +326,42 @@ function parsePlist(xml, label) {
 }
 
 // ---------------------------------------------------------------------------
-// Swift source scanning: blank out comments (keeping strings and line numbers).
+// Swift source scanning: blank out comments (keeping strings, regex literals
+// and line numbers). Regex literals follow the Swift 6 lexer: extended
+// `#/.../#` literals end at the matching `/#`; a bare `/.../` literal starts
+// where an expression can start (not straight after an identifier, literal,
+// `)`, `]` or postfix operator), cannot start with whitespace, and ends at the
+// first unescaped `/` on the line, unless that `/` starts a comment or follows
+// whitespace. Anything that could hide code fails closed instead: a comment
+// marker straight after `\` (an undelimited regex) or an unterminated block
+// comment or extended regex.
 
-function stripSwiftComments(source) {
+const SWIFT_OPERATOR_CHARS = '=-+!*%<>&|^~?.';
+const EXPRESSION_KEYWORDS = new Set([
+  'return', 'throw', 'case', 'in', 'where', 'if', 'guard', 'while', 'try', 'await', 'switch',
+  'yield', 'else', 'do', 'repeat', 'catch', 'is', 'as', 'some', 'any', 'then', 'consume', 'copy',
+]);
+
+function stripSwiftComments(source, label) {
   const out = [];
   let i = 0;
   const n = source.length;
+  const problem = (index, message) => {
+    fail(`${label}:${source.slice(0, index).split('\n').length}: ${message}; rewrite it or extend scripts/check-apple-required-reasons.mjs.`);
+  };
 
   const blank = (end) => {
     for (; i < end && i < n; i += 1) out.push(source[i] === '\n' ? '\n' : ' ');
   };
-  const rawStringAhead = () => {
+  const hashesThen = (char) => {
     let j = i;
     while (source[j] === '#') j += 1;
-    return j > i && source[j] === '"';
+    return j > i && source[j] === char;
+  };
+  const lookback = (count) => {
+    let text = '';
+    for (let k = out.length - 1; k >= 0 && text.length < count; k -= 1) text = out[k] + text;
+    return text;
   };
 
   function lineComment() {
@@ -343,6 +370,7 @@ function stripSwiftComments(source) {
   }
 
   function blockComment() {
+    const start = i;
     let depth = 0;
     while (i < n) {
       if (source.startsWith('/*', i)) {
@@ -356,6 +384,58 @@ function stripSwiftComments(source) {
         blank(i + 1);
       }
     }
+    problem(start, 'unterminated block comment (possibly a misread regex literal) would hide the rest of the file');
+  }
+
+  // Swift's left-bound rule: a `/` straight after an expression is division.
+  function slashIsLeftBound() {
+    const before = lookback(64);
+    let k = before.length - 1;
+    while (k >= 0 && SWIFT_OPERATOR_CHARS.includes(before[k])) k -= 1;
+    if (k < 0 || /[\s([{,;:]/.test(before[k])) return false;
+    const word = /[A-Za-z_][A-Za-z0-9_]*$/.exec(before.slice(0, k + 1))?.[0];
+    if (word && EXPRESSION_KEYWORDS.has(word) && before[k - word.length] !== '.') return false;
+    return true;
+  }
+
+  // Returns the end index of a bare regex literal starting at i, or -1.
+  function bareRegexEnd() {
+    if (i + 1 >= n || /\s/.test(source[i + 1]) || slashIsLeftBound()) return -1;
+    for (let j = i + 1; j < n && source[j] !== '\n'; j += 1) {
+      if (source[j] === '\\') {
+        if (source[j + 1] === '\n') return -1;
+        j += 1;
+      } else if (source[j] === '/') {
+        if (source[j + 1] === '/' || source[j + 1] === '*' || /[ \t]/.test(source[j - 1])) return -1;
+        return j + 1;
+      }
+    }
+    return -1;
+  }
+
+  function extendedRegexLiteral() {
+    const start = i;
+    let hashes = 0;
+    while (source[i] === '#') {
+      hashes += 1;
+      i += 1;
+    }
+    i += 1; // opening '/'
+    const terminator = '/' + '#'.repeat(hashes);
+    while (i < n) {
+      if (source[i] === '\\') {
+        i += 2;
+      } else if (source.startsWith(terminator, i)) {
+        i += terminator.length;
+        out.push(source.slice(start, i));
+        return;
+      } else {
+        i += 1;
+      }
+    }
+    i = n;
+    out.push(source.slice(start));
+    problem(start, 'unterminated extended regex literal');
   }
 
   function stringLiteral() {
@@ -399,12 +479,20 @@ function stripSwiftComments(source) {
     let depth = 0;
     while (i < n) {
       const c = source[i];
-      if (source.startsWith('//', i)) {
-        lineComment();
-      } else if (source.startsWith('/*', i)) {
-        blockComment();
-      } else if (c === '"' || (c === '#' && rawStringAhead())) {
+      let regexEnd = -1;
+      if (source.startsWith('//', i) || source.startsWith('/*', i)) {
+        if (source[i - 1] === '\\') {
+          problem(i, `comment marker ${source.slice(i, i + 2)} straight after "\\" looks like an escaped slash in a regex literal the checker could not delimit`);
+        }
+        if (source[i + 1] === '/') lineComment();
+        else blockComment();
+      } else if (c === '"' || (c === '#' && hashesThen('"'))) {
         stringLiteral();
+      } else if (c === '#' && hashesThen('/')) {
+        extendedRegexLiteral();
+      } else if (c === '/' && (regexEnd = bareRegexEnd()) !== -1) {
+        out.push(source.slice(i, regexEnd));
+        i = regexEnd;
       } else {
         if (inInterpolation && c === '(') depth += 1;
         if (inInterpolation && c === ')') {
@@ -428,7 +516,7 @@ function stripSwiftComments(source) {
 const usageCache = new Map();
 function apiUsage(file) {
   if (usageCache.has(file)) return usageCache.get(file);
-  const lines = stripSwiftComments(readFileSync(file, 'utf8')).split('\n');
+  const lines = stripSwiftComments(readFileSync(file, 'utf8'), display(file)).split('\n');
   const usages = [];
   lines.forEach((line, lineIndex) => {
     for (const [category, { patterns }] of Object.entries(CATEGORIES)) {
@@ -553,7 +641,7 @@ function resolvePackage(name, spec) {
     fail(`project.yml package ${name}: ${display(manifestPath)} does not exist.`);
     return files;
   }
-  const manifest = stripSwiftComments(readFileSync(manifestPath, 'utf8'));
+  const manifest = stripSwiftComments(readFileSync(manifestPath, 'utf8'), display(manifestPath));
   for (const [pattern, reason] of [
     [/\bpath\s*:/, 'custom target paths'],
     [/\bsources\s*:/, 'custom source lists'],
