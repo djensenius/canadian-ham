@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -u
 
-script_dir=$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
-default_root=$(CDPATH= cd -- "$script_dir/.." && pwd)
+script_dir=$(CDPATH='' cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
+default_root=$(CDPATH='' cd -- "$script_dir/.." && pwd)
 repo_root=${APPLE_NO_NETWORK_ROOT:-$default_root}
 cd "$repo_root" || exit 2
 

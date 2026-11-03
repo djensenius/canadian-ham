@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -u
 
-script_dir=$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
+script_dir=$(CDPATH='' cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 audit_script="$script_dir/check-apple-no-network.sh"
 rbr4_url="https://ised-isde.canada.ca/site/spectrum-management-telecommunications/en/licences-and-certificates/regulations-reference-rbr/rbr-4-standards-operation-radio-stations-amateur-radio-service"
 tmp_root=$(mktemp -d "${TMPDIR:-/tmp}/apple-network-audit-test.XXXXXX") || exit 2
