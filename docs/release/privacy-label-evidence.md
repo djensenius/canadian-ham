@@ -772,10 +772,23 @@ works as follows:
   - An interpolation that holds only string literals, `+`, parentheses and
     whitespace is inlined (`"system\("Uptime")"`). Any other interpolation
     becomes a boundary no name can span.
-  - String literals joined by `+`, with parentheses, whitespace or comments
-    between them, are matched as one string (`"system" + "Uptime"`), and the
-    exact-name rule applies to the whole chain (`"creation" + "Date"`). A decoded
-    NUL ends the string for the exact-name rule, as C strings do
+  - String literals joined by `+` are matched as one string
+    (`"system" + "Uptime"`), and the exact-name rule applies to the whole
+    chain (`"creation" + "Date"`). From each literal's opening quote the
+    join looks back over whitespace, parentheses and comments to one `+`,
+    then on to the closing quote of an earlier literal. Anything else ends
+    the chain, so a cast (`("system" as String) + "Uptime"`) or an
+    initialiser or other call around the literal after the `+`
+    (`"system" + String("Uptime")`) is a name computed at run time (see
+    Limitations). Because the look-back skips a closing `)`, a call around
+    the literal before the `+` is joined: `f("system") + "Uptime"` and
+    `String("system") + "Uptime"` are matched as `systemUptime`. For names
+    matched anywhere in a string this can only add matches. For the
+    exact-name rule it can hide one case: a call whose last argument is
+    written with escapes and is followed by `+` and a literal
+    (`k("st\u{61}t") + "x"` is read as `"statx"`). The plain spelling
+    `k("stat") + "x"` is still matched by the raw scan. A decoded NUL ends
+    the string for the exact-name rule, as C strings do
     (`dlsym(handle, "stat\0")`).
   - The three characters whose canonical decomposition is ASCII (U+212A
     KELVIN SIGN, U+037E and U+1FEF) count as `K`, `;` and `` ` `` inside
@@ -998,16 +1011,23 @@ works as follows:
   API names built at run time, wholesale attribute reads and post-build
   scripts are also not detected (see the table above). String literals
   joined only by `+`, or inlined through literal-only interpolations, are
-  decoded and matched, but a name built from a variable, a call, `+=`,
+  decoded and matched, but a name built from a variable or a call's result,
+  a cast (`("system" as String) + "Uptime"`), an initialiser or other call
+  around the literal after the `+` (`"system" + String("Uptime")`), `+=`,
   `joined()`, `String(format:)` or a non-literal interpolation is not,
-  because its value is computed at run time. Binary inspection (below) is
-  the cross-check. Decoding drops every leading blank of each line in a
-  multi-line literal, more than Swift's indentation stripping, which can
-  only add matches. The Swift lexer is narrower than swiftc: a file with
-  non-ASCII code, a control character (even one swiftc accepts, such as
-  NUL, VT or FF in a comment), NEL, U+2028 or U+2029 fails even when swiftc
-  compiles it; rewrite the character as a `\u{...}` escape in a string or
-  remove it. The manifest parser
+  because its value is computed at run time. The join's look-back skips a
+  closing `)`, so a call around the literal before the `+` is joined
+  (`f("system") + "Uptime"` is matched). That can only add matches, except
+  that an exact name written with escapes as a call's last argument and
+  followed by `+` and a literal (`k("st\u{61}t") + "x"`) is read as part of
+  the joined string and not matched; the plain spelling is still matched.
+  Binary inspection (below) is the cross-check. Decoding drops every
+  leading blank of each line in a multi-line literal, more than Swift's
+  indentation stripping, which can only add matches. The Swift lexer is
+  narrower than swiftc: a file with non-ASCII code, a control character
+  (even one swiftc accepts, such as NUL, VT or FF in a comment), NEL, U+2028
+  or U+2029 fails even when swiftc compiles it; rewrite the character as a
+  `\u{...}` escape in a string or remove it. The manifest parser
   is deliberately narrower than Apple's: it rejects plists Apple would
   accept (binary, JSON or OpenStep plists, CDATA, attributes, a missing
   `<plist>` root, trailing content, duplicate keys), so such a manifest fails
