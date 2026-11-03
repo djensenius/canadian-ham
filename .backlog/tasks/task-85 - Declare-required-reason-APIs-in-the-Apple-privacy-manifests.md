@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-11-03T02:32:00Z'
-updated_date: '2026-11-03T03:08:00Z'
+updated_date: '2026-11-03T03:09:00Z'
 labels:
   - apple
   - privacy
@@ -26,9 +26,9 @@ TASK-81 found that the Apple apps now read and write UserDefaults (Morse setting
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
 - [x] #1 Every required-reason API category used by each shipped target (CanadianHam for iOS/iPadOS/macOS, CanadianHamTV, CanadianHamVision, CanadianHamWatch), including linked local packages, is identified against Apple's current documentation, and the rationale is recorded in docs/release/privacy-label-evidence.md
-- [ ] #2 Each shipped target's PrivacyInfo.xcprivacy declares those categories with Apple-approved reason codes that match the actual behaviour, and declares none the target does not use
+- [x] #2 Each shipped target's PrivacyInfo.xcprivacy declares those categories with Apple-approved reason codes that match the actual behaviour, and declares none the target does not use
 - [ ] #3 An automated check run in CI fails when Apple app or package sources use a required-reason API spelling that the relevant manifest does not declare
-- [ ] #4 Release builds made with xbuild for iOS (with the embedded watch app), macOS, tvOS and visionOS contain the expected manifests, confirmed by inspecting the built products
+- [x] #4 Release builds made with xbuild for iOS (with the embedded watch app), macOS, tvOS and visionOS contain the expected manifests, confirmed by inspecting the built products
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -75,4 +75,6 @@ Worker evidence (2026-11-03 UTC, commit ff7d7c50):
 - AC3 is left unchecked until CI runs pnpm test:apple-required-reasons and pnpm check:apple-required-reasons.
 
 Doc drift follow-up (commit dc67a2ea, after coordinator b7877c4d): release-checklist.md required-reason item now points to the completed TASK-85 review (re-run pnpm check:apple-required-reasons and inspect bundled manifests on the release commit). privacy-label-evidence.md: dependency row lists all four local packages (CanadianHam links engine/content/morse/calculator; TV, Vision, Watch link engine/content/morse, verified in apps/apple/project.yml); recorded coordinator decision 2026-11-02 to keep CA92.1 for the app-domain AppleLanguages read, fallbacks retained; check row notes it passes on the branch since b7877c4d. Checker header now states the #if/string-literal limitation (already in the evidence doc). Checks: pnpm check:links -> 'Markdown relative links verified.'; pnpm check:apple-required-reasons -> passed (CanadianHam 53 files SystemBootTime [35F9.1], UserDefaults [CA92.1]; Watch 31 SystemBootTime [35F9.1]; TV 33 and Vision 32 UserDefaults [CA92.1]); pnpm test:apple-required-reasons -> 'passed self-test fixtures.'; git diff --check clean. No xbuild run (coordinator owns TV/Vision Release rebuild and watch test). AC2/AC3/AC4 left for the coordinator.
+
+Coordinator native validation on b7877c4d+ (2026-11-02, xbuild, -derivedDataPath /tmp/ch-task85-dd): Release CanadianHamTV (generic tvOS Simulator) and CanadianHamVision (generic visionOS Simulator) built (exit 0); each .app contains exactly one PrivacyInfo.xcprivacy with NSPrivacyAccessedAPITypes = [UserDefaults CA92.1] only. iOS (with embedded watch) and macOS Release manifests were verified by the worker on the same sources (shared manifest unchanged by b7877c4d). Targeted watch test CanadianHamWatchTests/testIndependentOfflineBundle on Apple Watch Series 12 (42mm) OS 27.0: passed (1 test, 0 failures). pnpm check:apple-required-reasons passes for all four targets with exactly the used categories. AC3 waits for the CI steps (added in b7877c4d) to pass on the PR.
 <!-- SECTION:NOTES:END -->
