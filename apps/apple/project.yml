@@ -444,9 +444,6 @@ targets:
       - path: CanadianHam/Resources/Localizable.xcstrings
         type: file
         buildPhase: resources
-      - path: CanadianHam/Resources/PrivacyInfo.xcprivacy
-        type: file
-        buildPhase: resources
       - path: ../../content/lessons
         type: folder
         buildPhase: resources
@@ -595,9 +592,6 @@ targets:
       - path: CanadianHam/Design/Tokens.swift
       - path: CanadianHam/Support/LaunchArguments.swift
       - path: CanadianHam/Resources/Localizable.xcstrings
-        type: file
-        buildPhase: resources
-      - path: CanadianHam/Resources/PrivacyInfo.xcprivacy
         type: file
         buildPhase: resources
       - path: ../../content/lessons
