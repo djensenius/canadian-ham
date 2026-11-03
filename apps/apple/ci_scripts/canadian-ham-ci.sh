@@ -270,18 +270,21 @@ LINES
 # platform and marketing version; Mac build numbers must also keep increasing
 # across versions (https://developer.apple.com/documentation/xcode/setting-the-next-build-number-for-xcode-cloud-builds).
 # build-number-floors records the highest Fastlane upload per platform and
-# version, so:
+# version. All four platforms already have uploads, so a missing, unreadable or
+# empty file, or one without an entry for the platform being built, fails.
+# Otherwise:
 #   macos: the number must exceed every macOS floor, whatever the version;
 #   ios, tvos, visionos: it must exceed the floor for the version being built,
 #     and a version with no Fastlane uploads may start from small numbers.
 ch_check_build_number() {
   local number=${CI_BUILD_NUMBER:-} floors_file="$CH_REPO_ROOT/apps/apple/ci_scripts/build-number-floors"
-  local entry_platform entry_version entry_build extra seen=" " entries=0 floor="" floor_version=""
+  local entry_platform entry_version entry_build extra seen=" " entries=0 platform_entries=0 floor="" floor_version=""
   [[ "$number" =~ ^[1-9][0-9]{0,17}$ ]] \
     || ch_fail "CI_BUILD_NUMBER '$number' is not a positive integer"
   ch_platform_key
   ch_read_marketing_version
   [[ -f "$floors_file" ]] || ch_fail "missing $floors_file"
+  [[ -r "$floors_file" ]] || ch_fail "cannot read $floors_file"
   while read -r entry_platform entry_version entry_build extra || [[ -n "$entry_platform" ]]; do
     [[ -z "$entry_platform" || "$entry_platform" == \#* ]] && continue
     [[ -n "$entry_build" && -z "$extra" ]] \
@@ -300,6 +303,7 @@ ch_check_build_number() {
     seen="$seen$entry_platform@$entry_version "
     entries=$((entries + 1))
     [[ "$entry_platform" == "$CH_PLATFORM_KEY" ]] || continue
+    platform_entries=$((platform_entries + 1))
     if [[ "$CH_PLATFORM_KEY" == "macos" ]]; then
       if [[ -z "$floor" ]] || ((entry_build > floor)); then
         floor=$entry_build
@@ -311,7 +315,12 @@ ch_check_build_number() {
     fi
   done <"$floors_file"
   ((entries > 0)) || ch_fail "$floors_file has no entries"
+  ((platform_entries > 0)) \
+    || ch_fail "$floors_file has no $CH_PLATFORM_KEY entry; every platform already has App Store Connect uploads, so record its highest upload. See docs/release/distribution.md#build-numbers"
   if [[ -z "$floor" ]]; then
+    # Only iOS, tvOS and visionOS may restart at a new marketing version.
+    [[ "$CH_PLATFORM_KEY" != "macos" ]] \
+      || ch_fail "no macOS floor in $floors_file; Mac build numbers never restart"
     ch_log "no Fastlane uploads recorded for $CH_PLATFORM_KEY $CH_MARKETING_VERSION; build number $number may start a new sequence"
     return 0
   fi

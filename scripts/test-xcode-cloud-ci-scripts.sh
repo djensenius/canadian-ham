@@ -261,6 +261,31 @@ zero_floor=$(floors_with zero-floor 'tvos 1.0.1 0123')
 version_floor=$(floors_with version-floor 'tvos 1.0.0.0 5')
 two_part_floor=$(floors_with two-part-floor 'ios 1.0 202611010000')
 leading_zero_floor=$(floors_with leading-zero-floor 'tvos 1.0.00 5')
+# floors_without NAME PLATFORM [VERSION]: fixture floors with every PLATFORM
+# line removed, at MARKETING_VERSION VERSION (default 1.0.0).
+floors_without() {
+  local root
+  root=$(make_fixture "$1" "" "" "${3:-1.0.0}")
+  sed -i '' "/^$2 /d" "$root/$fixture_floors"
+  ! grep -q "^$2 " "$root/$fixture_floors" || die "could not remove $2 from the $1 floors fixture"
+  grep -q '^[a-z]' "$root/$fixture_floors" || die "the $1 floors fixture has no other entries"
+  printf '%s\n' "$root"
+}
+no_mac_floor=$(floors_without no-mac-floor macos)
+no_mac_floor_next=$(floors_without no-mac-floor-next macos 1.0.1)
+no_ios_floor_next=$(floors_without no-ios-floor-next ios 1.0.1)
+no_tv_floor=$(floors_without no-tv-floor tvos)
+no_vision_floor_next=$(floors_without no-vision-floor-next visionos 1.0.1)
+# Missing, zero-byte, comment-only and unreadable floors files at a new
+# marketing version, where iOS, tvOS and visionOS would otherwise accept 1.
+no_floors_next=$(make_fixture no-floors-next "" "" 1.0.1)
+rm -f "$no_floors_next/$fixture_floors"
+zero_byte_floors=$(make_fixture zero-byte-floors "" "" 1.0.1)
+: >"$zero_byte_floors/$fixture_floors"
+comment_floors_next=$(make_fixture comment-floors-next "" "" 1.0.1)
+printf '# no entries\n\n' >"$comment_floors_next/$fixture_floors"
+unreadable_floors=$(make_fixture unreadable-floors "" "" 1.0.1)
+chmod 000 "$unreadable_floors/$fixture_floors"
 
 # Calls ch_check_build_number on its own, after only ch_init, to show it fails
 # closed even if the scheme check did not run first.
@@ -456,6 +481,54 @@ run_case "two-part floors version fails closed instead of missing 1.0.0" fail \
   ci_pre_xcodebuild.sh CI_PRIMARY_REPOSITORY_PATH="$two_part_floor" "${ios_archive[@]}"
 run_case "leading-zero floors version fails closed" fail "invalid version '1\.0\.00'" "fixture-guard" \
   ci_pre_xcodebuild.sh CI_PRIMARY_REPOSITORY_PATH="$leading_zero_floor" "${ios_archive[@]}"
+no_platform_entry() { printf 'has no %s entry; every platform already has App Store Connect uploads' "$1"; }
+run_case "macOS without a macos floor fails closed at build number 1" fail "$(no_platform_entry macos)" \
+  "fixture-guard|new sequence" ci_pre_xcodebuild.sh CI_PRIMARY_REPOSITORY_PATH="$no_mac_floor" \
+  CI_XCODEBUILD_ACTION=archive "${mac[@]}" CI_BUILD_NUMBER=1
+run_case "macOS without a macos floor fails closed above every other floor" fail "$(no_platform_entry macos)" \
+  "fixture-guard|is above the" ci_pre_xcodebuild.sh CI_PRIMARY_REPOSITORY_PATH="$no_mac_floor" \
+  CI_XCODEBUILD_ACTION=archive "${mac[@]}" CI_BUILD_NUMBER="$above_floor"
+run_case "macOS without a macos floor fails closed at a new marketing version" fail "$(no_platform_entry macos)" \
+  "fixture-guard|new sequence" ci_pre_xcodebuild.sh CI_PRIMARY_REPOSITORY_PATH="$no_mac_floor_next" \
+  CI_XCODEBUILD_ACTION=archive "${mac[@]}" CI_BUILD_NUMBER=1
+run_case "build-number check alone: macOS without a macos floor fails closed" fail "$(no_platform_entry macos)" \
+  "new sequence" "$build_number_only" CI_PRIMARY_REPOSITORY_PATH="$no_mac_floor_next" CI_PRODUCT_PLATFORM=macOS \
+  CI_BUILD_NUMBER=1
+run_case "iOS above its floor still passes when only macos is missing" pass "above the ios floor $ios_floor.*$all_guards" "" \
+  ci_pre_xcodebuild.sh CI_PRIMARY_REPOSITORY_PATH="$no_mac_floor" CI_XCODEBUILD_ACTION=archive "${ios[@]}" \
+  CI_BUILD_NUMBER="$((ios_floor + 1))"
+run_case "iOS without an ios floor fails closed at a new marketing version" fail "$(no_platform_entry ios)" \
+  "fixture-guard|new sequence" ci_pre_xcodebuild.sh CI_PRIMARY_REPOSITORY_PATH="$no_ios_floor_next" \
+  CI_XCODEBUILD_ACTION=archive "${ios[@]}" CI_BUILD_NUMBER=1
+run_case "tvOS without a tvos floor fails closed above every other floor" fail "$(no_platform_entry tvos)" \
+  "fixture-guard|is above the" ci_pre_xcodebuild.sh CI_PRIMARY_REPOSITORY_PATH="$no_tv_floor" \
+  CI_XCODEBUILD_ACTION=archive "${tv[@]}" CI_BUILD_NUMBER="$above_floor"
+run_case "xrOS without a visionos floor fails closed at a new marketing version" fail "$(no_platform_entry visionos)" \
+  "fixture-guard|new sequence" ci_pre_xcodebuild.sh CI_PRIMARY_REPOSITORY_PATH="$no_vision_floor_next" \
+  CI_XCODEBUILD_ACTION=archive CI_XCODE_SCHEME=CanadianHamVision CI_PRODUCT_PLATFORM=xrOS CI_BUILD_NUMBER=1
+for platform_case in "macOS:CanadianHam" "iOS:CanadianHam" "tvOS:CanadianHamTV" "visionOS:CanadianHamVision"; do
+  platform_args=(CI_XCODEBUILD_ACTION=archive CI_XCODE_SCHEME="${platform_case#*:}"
+    CI_PRODUCT_PLATFORM="${platform_case%%:*}" CI_BUILD_NUMBER=1)
+  run_case "${platform_case%%:*}: missing floors file fails closed at a new marketing version" fail \
+    "missing .*/build-number-floors" "fixture-guard|new sequence" ci_pre_xcodebuild.sh \
+    CI_PRIMARY_REPOSITORY_PATH="$no_floors_next" "${platform_args[@]}"
+  run_case "${platform_case%%:*}: zero-byte floors file fails closed at a new marketing version" fail \
+    "build-number-floors has no entries" "fixture-guard|new sequence" ci_pre_xcodebuild.sh \
+    CI_PRIMARY_REPOSITORY_PATH="$zero_byte_floors" "${platform_args[@]}"
+  run_case "${platform_case%%:*}: comment-only floors file fails closed at a new marketing version" fail \
+    "build-number-floors has no entries" "fixture-guard|new sequence" ci_pre_xcodebuild.sh \
+    CI_PRIMARY_REPOSITORY_PATH="$comment_floors_next" "${platform_args[@]}"
+  if [[ -r "$unreadable_floors/$fixture_floors" ]]; then
+    # Root can read a mode 000 file, so this case can't be simulated.
+    failures=$((failures + 1))
+    printf 'FAIL %s: unreadable floors file is still readable; run the harness as a non-root user\n' \
+      "${platform_case%%:*}" >&2
+  else
+    run_case "${platform_case%%:*}: unreadable floors file fails closed at a new marketing version" fail \
+      "cannot read .*/build-number-floors" "fixture-guard|new sequence" ci_pre_xcodebuild.sh \
+      CI_PRIMARY_REPOSITORY_PATH="$unreadable_floors" "${platform_args[@]}"
+  fi
+done
 
 printf '== Non-archive actions\n'
 run_case "build action runs the guards without archive checks" pass "$all_guards" "uses Release" \

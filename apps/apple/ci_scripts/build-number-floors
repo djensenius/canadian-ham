@@ -3,7 +3,9 @@
 # (CFBundleShortVersionString). ci_pre_xcodebuild.sh refuses Xcode Cloud archives
 # that would not be above these: macOS must beat every macOS entry whatever the
 # version; iOS, tvOS and visionOS must beat the entry for the version they build,
-# and a version without an entry may start from small Xcode Cloud numbers.
+# and a version without an entry may start from small Xcode Cloud numbers. All
+# four platforms already have uploads, so every platform needs at least one entry:
+# a platform with no entry, or a missing, unreadable or empty file, fails closed.
 # Record every later Fastlane upload here in a PR right after the upload, before
 # the next Xcode Cloud archive. See docs/release/distribution.md#build-numbers.
 #

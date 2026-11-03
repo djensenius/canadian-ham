@@ -73,8 +73,9 @@ Every Fastlane upload so far is version 1.0.0, and all of them are above 2,147,4
 `ci_pre_xcodebuild.sh` reads the platform from Xcode Cloud's `CI_PRODUCT_PLATFORM` and the version from the plain `MARKETING_VERSION = x.y.z;` lines in `project.pbxproj`, which must all agree. It fails an archive when:
 
 - **macOS:** `CI_BUILD_NUMBER` isn't above the highest `macos` entry of any version.
-- **iOS, tvOS, visionOS:** `CI_BUILD_NUMBER` isn't above the entry for the version being built. A version with no entry has no Fastlane uploads, so small numbers pass.
-- The platform is missing or unknown, the version is missing, conflicting or not in `x.y.z` form, or the floors file is missing or malformed (including any version not in `x.y.z` form).
+- **iOS, tvOS, visionOS:** `CI_BUILD_NUMBER` isn't above the entry for the version being built. A version with no entry has no Fastlane uploads, so small numbers pass. This restart applies only to these three platforms.
+- The floors file has no entry at all for the platform being built. All four platforms already have App Store Connect uploads, so a missing platform line means the record is incomplete, not that the platform can start again from 1; for macOS that would let build numbers go backwards.
+- The platform is missing or unknown, the version is missing, conflicting or not in `x.y.z` form, or the floors file is missing, unreadable, empty or malformed (including any version not in `x.y.z` form).
 
 The check only stops mistakes early; App Store Connect still enforces its own rules.
 
@@ -155,7 +156,7 @@ It runs the real guards against the repository and checks the real floors file. 
 - archives for all four platforms;
 - `build`, `analyze`, `build-for-testing` and `test-without-building` actions;
 - `DebugCloudKit` and environment overrides, including branch, tag and pull request names;
-- per-platform floors at the current and a new marketing version, plus broken versions and floors files;
+- per-platform floors at the current and a new marketing version, plus broken versions, a platform with no floors entry, and missing, unreadable, empty or malformed floors files;
 - failing and missing guards;
 - Node discovery with a stub Homebrew, and with Homebrew hidden by `sandbox-exec` (skipped if the sandbox can't hide it);
 - unset, empty and invalid exit codes;
