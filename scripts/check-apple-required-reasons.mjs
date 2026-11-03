@@ -15,10 +15,13 @@
 // new source folders are mapped automatically. Every Swift file under
 // apps/apple must belong to some project.yml target; XcodeGen constructs this
 // script does not understand fail the check rather than being skipped, as do
-// symbolic links, prebuilt code (also inside folder references and
-// buildPhase none entries, which are otherwise not compiled), build scripts
-// that run before compiling, header/search-path/linker settings, non -D Swift
-// flags, and SwiftPM plugins, macros, system libraries and unsafe flags.
+// symbolic links and special files, prebuilt code (Mach-O, universal, archive,
+// bitcode and Swift module formats, also inside resource catalogues, excluded
+// paths, folder references and buildPhase none entries, which are otherwise
+// not compiled), build scripts that run before compiling,
+// header/search-path/linker settings, non -D Swift flags, unmodelled source
+// types, build phases and exclude globs, and SwiftPM plugins, macros, system
+// libraries, unsafe flags and paths outside the package.
 // Manifests are read with a strict XML plist parser that keeps value types
 // and rejects anything Apple's parser could read differently.
 //
@@ -30,7 +33,7 @@
 // string) and wholesale attribute reads that never name a listed key are not
 // detected; docs/release/privacy-label-evidence.md lists every such class.
 import { closeSync, existsSync, lstatSync, openSync, readdirSync, readFileSync, readSync, statSync } from 'node:fs';
-import { basename, join, normalize, relative, resolve, sep } from 'node:path';
+import { basename, dirname, join, normalize, relative, resolve, sep } from 'node:path';
 
 const root = resolve(process.env.REQUIRED_REASONS_ROOT ?? process.cwd());
 const verbose = process.argv.includes('--verbose');
@@ -121,13 +124,24 @@ const CATEGORIES = {
 // required-reason APIs (stat, mach_absolute_time, NSUserDefaults, ...) with
 // other spellings, and module maps or API notes could import or rename them,
 // so any such file in a shipped target or linked package fails the check.
-const NON_SWIFT_SOURCE = /\.(?:c|m|mm|cpp|cc|cxx|h|hh|hpp|hxx|inl|ipp|s|S|modulemap|apinotes)$/;
+// Prefix headers (.pch), LLVM IR (.ll) and legacy module.map files count too.
+const NON_SWIFT_SOURCE = /\.(?:c|m|mm|cpp|cc|cxx|h|hh|hpp|hxx|inl|ipp|pch|s|S|ll|modulemap|apinotes)$|\/module\.map$/;
 const NON_SWIFT_MESSAGE = 'only Swift sources are scanned; extend scripts/check-apple-required-reasons.mjs to scan C/Objective-C/C++/assembly, module maps and API notes before shipping it';
 // Prebuilt code in a shipped target's sources is linked, embedded or loadable
-// without any Swift spelling to scan: match bundle-like paths and libraries by
-// name, and any other file by its Mach-O, universal-binary or ar magic.
-const BINARY_CODE = /\.(?:framework|xcframework|xpc|appex)\/|\.(?:a|dylib|so|o)$/;
-const BINARY_MAGIC = ['feedface', 'feedfacf', 'cefaedfe', 'cffaedfe', 'cafebabe', 'bebafeca', '213c617263683e0a'];
+// without any Swift spelling to scan. Code bundles and prebuilt Swift modules
+// match by directory name; libraries, objects, text-based stubs and module
+// interfaces by extension (the linker and XcodeGen find them by extension);
+// any other file by its magic bytes. Resource bundles (.bundle, Settings.bundle)
+// are data unless they hold an executable, which its Mach-O magic catches.
+// docs/release/privacy-label-evidence.md lists the formats left out and why.
+const BINARY_CODE = /\.(?:app|appex|framework|xcframework|xpc|swiftmodule)\/|\.(?:a|dylib|so|o|tbd|swiftmodule|swiftinterface)$/;
+const BINARY_MAGIC = [
+  'feedface', 'cefaedfe', 'feedfacf', 'cffaedfe', // Mach-O, 32- and 64-bit, both byte orders
+  'cafebabe', 'bebafeca', 'cafebabf', 'bfbafeca', // universal (fat), 32- and 64-bit, both byte orders
+  '213c617263683e0a', '213c7468696e3e0a', // ar "!<arch>\n" and thin "!<thin>\n" archives
+  '4243c0de', 'dec0170b', // LLVM bitcode ("BC\xC0\xDE") and its wrapper (0x0B17C0DE, little-endian)
+  'e29ca80e', // binary .swiftmodule
+];
 function isBinaryCode(file) {
   if (BINARY_CODE.test(display(file))) return true;
   const header = Buffer.alloc(8);
@@ -150,6 +164,10 @@ const KNOWN_SOURCE_KEYS = new Set([
   'inferDestinationFiltersByPath', 'group', 'name', 'optional', 'attributes',
   'resourceTags', 'headerVisibility',
 ]);
+// XcodeGen source types and build phases the checker models (a copyFiles
+// phase is a mapping); anything else, such as syncedFolder, fails.
+const SOURCE_TYPES = new Set(['file', 'group', 'folder']);
+const SOURCE_BUILD_PHASES = new Set(['sources', 'resources', 'headers', 'none']);
 // XcodeGen target keys that cannot add compiled code. Anything else on a
 // shipped target (preBuildScripts, postCompileScripts, buildRules,
 // buildToolPlugins, scheme pre-actions, legacy, configFiles, ...) fails until
@@ -690,17 +708,27 @@ function apiUsage(file) {
 // ---------------------------------------------------------------------------
 // project.yml target resolution.
 
+// XcodeGen expands excludes with glob(3) plus globstar, whose wildcards never
+// match a leading dot, so neither do these: a hidden file stays compiled (and
+// counted) unless an exclude names it literally. `**` is supported only as a
+// whole path component; character classes, braces and escapes fail, so an
+// exclude can never hide more than XcodeGen's would.
 function globToRegExp(glob) {
+  if (/[[{\\]/.test(glob) || /[^/]\*\*|\*\*[^/]/.test(glob)) {
+    throw new Error(`exclude pattern ${JSON.stringify(glob)} uses glob syntax the checker does not model (character classes, braces, escapes or ** inside a name)`);
+  }
   let pattern = '';
   for (let i = 0; i < glob.length; i += 1) {
     const c = glob[i];
+    const componentStart = i === 0 || glob[i - 1] === '/';
     if (c === '*' && glob[i + 1] === '*') {
-      pattern += glob[i + 2] === '/' ? '(?:.*/)?' : '.*';
+      // Zero or more non-hidden path components.
+      pattern += glob[i + 2] === '/' ? '(?:(?!\\.)[^/]+/)*' : '(?:(?!\\.)[^/]+(?:/(?!\\.)[^/]+)*)?';
       i += glob[i + 2] === '/' ? 2 : 1;
     } else if (c === '*') {
-      pattern += '[^/]*';
+      pattern += componentStart ? '(?!\\.)[^/]*' : '[^/]*';
     } else if (c === '?') {
-      pattern += '[^/]';
+      pattern += componentStart ? '(?!\\.)[^/]' : '[^/]';
     } else {
       pattern += c.replace(/[.+^${}()|[\]\\]/g, '\\$&');
     }
@@ -709,9 +737,10 @@ function globToRegExp(glob) {
 }
 
 // XcodeGen compiles hidden files and follows symbolic links (SwiftPM skips
-// hidden files), so hidden entries are scanned, only .DS_Store is skipped, and
-// a symbolic link fails the check instead of being silently skipped.
+// hidden files), so hidden entries are scanned and a symbolic link fails the
+// check instead of being silently skipped.
 const symlinkMessage = (absolutePath) => `${display(absolutePath)} is a symbolic link; the checker does not follow links, so replace it with the real file or directory (or extend scripts/check-apple-required-reasons.mjs).`;
+const specialFileMessage = (absolutePath) => `${display(absolutePath)} is not a regular file, directory or symbolic link; the checker cannot scan it, so remove it (or extend scripts/check-apple-required-reasons.mjs).`;
 
 // Scan entry paths (project.yml sources, package directories and their
 // Sources) would be followed by statSync/readdirSync, so the path itself and
@@ -736,22 +765,44 @@ function symlinkOnPath(absolutePath) {
   return false;
 }
 
-// Folder references are copied into the bundle as they are, so their walk
-// also descends into asset catalogue, icon and string catalogue directories.
-function walk(directory, excludes, base, visit, descendAll = false) {
+// Asset, icon and string catalogues are compiled by actool or the string
+// catalogue compiler (SwiftPM processes them as resources), never as Swift
+// sources and never copied as the bundle's manifest, so their contents count
+// only for the prebuilt-code and symbolic-link checks.
+const RESOURCE_CONTAINER = /\.(?:xcassets|icon|xcstrings)$/;
+
+// Walks every entry below `directory` with no silent skips: hidden files,
+// .DS_Store, resource catalogues and excluded paths are all visited, so
+// prebuilt code, symbolic links and special files are always seen. visit(file,
+// { excluded, container }) learns whether an XcodeGen exclude matched the file
+// or a directory above it (excluded files are neither compiled nor copied, so
+// they count only for the prebuilt-code check; scanning them too means a glob
+// mismatch cannot hide prebuilt code) and whether it is inside a resource
+// catalogue. Only `prune` patterns skip a subtree: the unmapped-Swift walk uses
+// them for the generated project and build output, and no target walk does.
+function walk(directory, visit, { base = directory, excludes = [], prune = [] } = {}, state = { excluded: false, container: RESOURCE_CONTAINER.test(directory) }) {
   for (const entry of readdirSync(directory, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
-    if (entry.name === '.DS_Store') continue;
     const absolutePath = join(directory, entry.name);
     const relativePath = relative(base, absolutePath).split(sep).join('/');
-    if (excludes.some((pattern) => pattern.test(relativePath))) continue;
+    if (prune.some((pattern) => pattern.test(relativePath))) continue;
+    const excluded = state.excluded || excludes.some((pattern) => pattern.test(relativePath));
     if (entry.isSymbolicLink()) {
       fail(symlinkMessage(absolutePath));
-    } else if (entry.isDirectory() && (descendAll || !/\.(?:xcassets|icon|xcstrings)$/.test(entry.name))) {
-      walk(absolutePath, excludes, base, visit, descendAll);
+    } else if (entry.isDirectory()) {
+      walk(absolutePath, visit, { base, excludes, prune }, { excluded, container: state.container || RESOURCE_CONTAINER.test(entry.name) });
     } else if (entry.isFile()) {
-      visit(absolutePath);
+      visit(absolutePath, { excluded, container: state.container });
+    } else {
+      fail(specialFileMessage(absolutePath));
     }
   }
+}
+
+// Xcode copies files from groups flat into the bundle root, but keeps a
+// directory with an extension (a bundle, .lproj or other wrapper) as its own
+// folder, so a manifest below one is not the bundle's manifest.
+function inWrapperDirectory(entryPath, file) {
+  return relative(dirname(entryPath), file).split(sep).slice(0, -1).some((part) => part.lastIndexOf('.') > 0);
 }
 
 function resolveTarget(name, target, packages) {
@@ -777,6 +828,22 @@ function resolveTarget(name, target, packages) {
       continue;
     }
     const buildPhase = entry.buildPhase ?? 'default';
+    const copyFilesPhase = isDict(buildPhase) && Object.keys(buildPhase).join() === 'copyFiles';
+    if (!(buildPhase === 'default' || SOURCE_BUILD_PHASES.has(buildPhase) || copyFilesPhase)) {
+      fail(`${name}: sources entry ${entry.path} uses unsupported buildPhase ${JSON.stringify(buildPhase)}; extend scripts/check-apple-required-reasons.mjs.`);
+      continue;
+    }
+    if (entry.type !== undefined && !SOURCE_TYPES.has(entry.type)) {
+      fail(`${name}: sources entry ${entry.path} uses unsupported type ${JSON.stringify(entry.type)}; extend scripts/check-apple-required-reasons.mjs.`);
+      continue;
+    }
+    let excludes = [];
+    try {
+      excludes = (entry.excludes ?? []).map((glob) => globToRegExp(glob));
+    } catch (error) {
+      fail(`${name}: sources entry ${entry.path}: ${error.message}; extend scripts/check-apple-required-reasons.mjs.`);
+      continue;
+    }
     // Folder references (copied into the bundle as a whole, ignoring
     // excludes) and buildPhase none entries (in the project but in no build
     // phase) compile nothing and never supply the target's manifest, even when
@@ -785,6 +852,9 @@ function resolveTarget(name, target, packages) {
     // prebuilt code and symbolic links.
     const reference = entry.type === 'folder' || buildPhase === 'none';
     const compiles = !reference && (buildPhase === 'default' || buildPhase === 'sources');
+    // Only the resources phase copies to the bundle root; headers and
+    // copyFiles phases (other destinations or subpaths) never supply it.
+    const copiesToRoot = !reference && (buildPhase === 'default' || buildPhase === 'resources');
     const absolutePath = normalize(join(appleDir, entry.path));
     if (symlinkOnPath(absolutePath)) continue;
     if (!existsSync(absolutePath)) {
@@ -794,25 +864,24 @@ function resolveTarget(name, target, packages) {
       }
       continue;
     }
-    if (reference) {
-      const scan = (file) => {
-        if (isBinaryCode(file)) binaryFiles.add(file);
-      };
-      if (statSync(absolutePath).isDirectory()) walk(absolutePath, [], absolutePath, scan, true);
-      else scan(absolutePath);
+    const stats = statSync(absolutePath);
+    if (!stats.isFile() && !stats.isDirectory()) {
+      fail(specialFileMessage(absolutePath));
       continue;
     }
-    const record = (file) => {
+    // A directory added as `type: file` is copied as one folder, like a wrapper.
+    const copiedAsFolder = stats.isDirectory() && entry.type === 'file';
+    const record = (file, { excluded, container }) => {
+      if (isBinaryCode(file)) binaryFiles.add(file);
+      if (reference || excluded || container) return;
       if (file.endsWith('.swift') && compiles) swiftFiles.add(file);
       if (NON_SWIFT_SOURCE.test(file) && buildPhase !== 'resources') nonSwiftFiles.add(file);
-      if (isBinaryCode(file)) binaryFiles.add(file);
-      if (basename(file) === MANIFEST_NAME && buildPhase !== 'sources') manifests.add(file);
+      if (basename(file) === MANIFEST_NAME && copiesToRoot && !copiedAsFolder && !inWrapperDirectory(absolutePath, file)) manifests.add(file);
     };
-    if (statSync(absolutePath).isDirectory()) {
-      const excludes = (entry.excludes ?? []).map((glob) => globToRegExp(glob));
-      walk(absolutePath, excludes, absolutePath, record);
+    if (stats.isDirectory()) {
+      walk(absolutePath, record, { excludes: reference ? [] : excludes });
     } else {
-      record(absolutePath);
+      record(absolutePath, { excluded: false, container: false });
     }
   }
 
@@ -861,16 +930,23 @@ function resolvePackage(name, spec) {
     [/\.macro\s*\(/, 'macro targets'],
     [/\.systemLibrary\s*\(/, 'system library targets'],
     [/\bunsafeFlags\b/, 'unsafe compiler or linker flags'],
+    // Resource and exclude paths are relative to the target directory under
+    // Sources, which is walked whole; a `..` could reach files outside it.
+    [/(?:^|[/"])\.\.(?:[/"]|$)/m, 'paths outside the target directory (..)'],
   ]) {
     if (pattern.test(manifest)) {
       fail(`${display(manifestPath)} uses ${reason}; extend scripts/check-apple-required-reasons.mjs before linking it.`);
     }
   }
   if (existsSync(sourcesDir)) {
-    walk(sourcesDir, [], sourcesDir, (file) => {
+    // Package exclude and resources rules only narrow what SwiftPM compiles,
+    // so they are ignored: all of Sources is scanned. Resource catalogues are
+    // bundled as resources, so they count only for prebuilt code and links.
+    walk(sourcesDir, (file, { container }) => {
+      if (isBinaryCode(file)) fail(`package ${name}: ${display(file)} is prebuilt code; binary or third-party code needs its own required-reason review.`);
+      if (container) return;
       if (file.endsWith('.swift')) files.add(file);
       if (NON_SWIFT_SOURCE.test(file)) fail(`package ${name}: ${display(file)} is not Swift; ${NON_SWIFT_MESSAGE}.`);
-      if (isBinaryCode(file)) fail(`package ${name}: ${display(file)} is prebuilt code; binary or third-party code needs its own required-reason review.`);
     });
   }
   return files;
@@ -1097,9 +1173,12 @@ function main() {
 
   const allSwift = [];
   if (existsSync(appleDir)) {
-    walk(appleDir, [/\.xcodeproj$/, /(?:^|\/)DerivedData$/, /(?:^|\/)build$/], appleDir, (file) => {
-      if (file.endsWith('.swift')) allSwift.push(file);
-    });
+    // Only Swift attribution happens here; the generated project and build
+    // output are pruned because no target compiles them, and Swift inside a
+    // resource catalogue is never compiled.
+    walk(appleDir, (file, { container }) => {
+      if (!container && file.endsWith('.swift')) allSwift.push(file);
+    }, { prune: [/\.xcodeproj$/, /(?:^|\/)DerivedData$/, /(?:^|\/)build$/] });
   }
   for (const file of allSwift) {
     if (!claimed.has(file)) {

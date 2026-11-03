@@ -2,7 +2,7 @@
 import { mkdtempSync, mkdirSync, writeFileSync, rmSync, symlinkSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { tmpdir } from 'node:os';
-import { spawnSync } from 'node:child_process';
+import { execFileSync, spawnSync } from 'node:child_process';
 
 const scriptPath = join(process.cwd(), 'scripts/check-apple-required-reasons.mjs');
 let failures = 0;
@@ -187,7 +187,9 @@ function writeFixture(changes = {}) {
   for (const [path, content] of Object.entries(files)) {
     if (content === null) continue;
     mkdirSync(dirname(join(root, path)), { recursive: true });
-    if (typeof content === 'object' && !Buffer.isBuffer(content)) {
+    if (typeof content === 'object' && content.fifo) {
+      execFileSync('mkfifo', [join(root, path)]);
+    } else if (typeof content === 'object' && !Buffer.isBuffer(content)) {
       symlinkSync(content.symlink, join(root, path));
     } else {
       writeFileSync(join(root, path), content);
@@ -201,6 +203,8 @@ function runCheck(root) {
     cwd: process.cwd(),
     env: { ...process.env, REQUIRED_REASONS_ROOT: root },
     encoding: 'utf8',
+    // Opening a FIFO blocks, so a checker that reads one must not hang the test.
+    timeout: 60_000,
   });
 }
 
@@ -764,6 +768,139 @@ assertFail('symbolic links in and as folder references', {
   'content/lessons/latest is a symbolic link; the checker does not follow links',
   'content/linked-lessons is a symbolic link; the checker does not follow links',
 ]);
+// Every native-code format the checker models: by magic bytes for files with
+// any name, and by name for code bundles, Swift modules and text-based stubs.
+const NATIVE_MAGIC = {
+  'macho-32': 'feedface00000007', 'macho-32-swapped': 'cefaedfe07000000',
+  'macho-64': 'feedfacf01000007', 'macho-64-swapped': 'cffaedfe07000001',
+  'universal-32': 'cafebabe00000002', 'universal-32-swapped': 'bebafeca02000000',
+  'universal-64': 'cafebabf00000002', 'universal-64-swapped': 'bfbafeca02000000',
+  archive: '213c617263683e0a', 'thin-archive': '213c7468696e3e0a',
+  bitcode: '4243c0de35140000', 'bitcode-wrapper': 'dec0170b00000000',
+  'swift-module': 'e29ca80e01000000',
+};
+assertFail('native code formats by magic', {
+  ...tvManifest(TV_WITH_PACKAGE),
+  ...Object.fromEntries(Object.entries(NATIVE_MAGIC).map(([label, hex]) => [`apps/apple/Platforms/tvOS/Payloads/${label}`, Buffer.from(hex, 'hex')])),
+}, Object.keys(NATIVE_MAGIC).map((label) => `TV: apps/apple/Platforms/tvOS/Payloads/${label} is prebuilt code`));
+assertFail('native code by name', {
+  ...tvManifest(TV_WITH_PACKAGE),
+  'apps/apple/Platforms/tvOS/Embedded/Helper.app/Info.plist': '<plist/>\n',
+  'apps/apple/Platforms/tvOS/Modules/Vendor.swiftmodule/x.swiftdoc': 'doc\n',
+  'apps/apple/Platforms/tvOS/Modules/Legacy.swiftmodule': 'module\n',
+  'apps/apple/Platforms/tvOS/Modules/Vendor.private.swiftinterface': '// swift-interface-format-version: 1.0\n',
+  'apps/apple/Platforms/tvOS/Stubs/libVendor.tbd': '--- !tapi-tbd\n',
+  'apps/apple/Platforms/tvOS/Shim/module.map': 'module Shim { header "shim.h" }\n',
+  'apps/apple/Platforms/tvOS/Shim/Prefix.pch': '#include <sys/stat.h>\n',
+  'apps/apple/Platforms/tvOS/Shim/uptime.ll': 'declare i64 @mach_absolute_time()\n',
+}, [
+  'TV: apps/apple/Platforms/tvOS/Embedded/Helper.app/Info.plist is prebuilt code',
+  'TV: apps/apple/Platforms/tvOS/Modules/Vendor.swiftmodule/x.swiftdoc is prebuilt code',
+  'TV: apps/apple/Platforms/tvOS/Modules/Legacy.swiftmodule is prebuilt code',
+  'TV: apps/apple/Platforms/tvOS/Modules/Vendor.private.swiftinterface is prebuilt code',
+  'TV: apps/apple/Platforms/tvOS/Stubs/libVendor.tbd is prebuilt code',
+  'TV: apps/apple/Platforms/tvOS/Shim/module.map is not Swift',
+  'TV: apps/apple/Platforms/tvOS/Shim/Prefix.pch is not Swift',
+  'TV: apps/apple/Platforms/tvOS/Shim/uptime.ll is not Swift',
+]);
+// Resource catalogues are traversed in ordinary target and package walks, but
+// their Swift files, headers and nested manifests are not sources or the
+// bundle's manifest; nor are manifests in wrappers or .lproj folders. A real
+// .DS_Store (Bud1 magic) is scanned and passes.
+const TV_SUMMARY = 'TV: 3 Swift files; apps/apple/Platforms/tvOS/Resources/PrivacyInfo.xcprivacy; categories: FileTimestamp [C617.1], UserDefaults [CA92.1]';
+assertPass('resource catalogues, bundles and nested manifests that pass', {
+  ...tvManifest(TV_WITH_PACKAGE),
+  'apps/apple/Platforms/tvOS/Media.xcassets/Contents.json': '{"info": {"version": 1}}\n',
+  'apps/apple/Platforms/tvOS/Media.xcassets/Script.dataset/Probe.swift': 'let free = URLResourceKey.volumeAvailableCapacityKey\n',
+  'apps/apple/Platforms/tvOS/Media.xcassets/Privacy.dataset/PrivacyInfo.xcprivacy': manifest([[DISK_SPACE, ['E174.1']]]),
+  'apps/apple/Platforms/tvOS/Media.xcassets/Header.dataset/shim.h': '#include <sys/stat.h>\n',
+  'apps/apple/Platforms/tvOS/Settings.bundle/Root.plist': '<plist/>\n',
+  'apps/apple/Platforms/tvOS/Settings.bundle/PrivacyInfo.xcprivacy': manifest([[DISK_SPACE, ['E174.1']]]),
+  'apps/apple/Platforms/tvOS/Resources/en.lproj/PrivacyInfo.xcprivacy': manifest([[DISK_SPACE, ['E174.1']]]),
+  'apps/apple/Platforms/tvOS/Resources/.DS_Store': Buffer.from('0000000142756431', 'hex'),
+  'packages/engine-swift/Sources/Engine/Media.xcassets/Data.dataset/Disk.swift': 'let free = URLResourceKey.volumeAvailableCapacityKey\n',
+}, [TV_SUMMARY]);
+assertFail('prebuilt code and links in resource catalogues and excluded paths', {
+  ...tvManifest(TV_WITH_PACKAGE),
+  ...projectYml(PROJECT_YML.replace('      - path: Platforms/tvOS\n', '      - path: Platforms/tvOS\n      - path: ../../vendor-docs\n        excludes:\n          - Drafts\n')),
+  'apps/apple/App/Resources/Assets.xcassets/Helper.dataset/Helper': Buffer.from('cffaedfe0c000001', 'hex'),
+  'packages/engine-swift/Sources/Engine/Media.xcassets/Tool.dataset/tool': Buffer.from('cafebabf00000002', 'hex'),
+  'packages/engine-swift/Sources/Engine/Media.xcassets/Linked.dataset/data': { symlink: '../Tool.dataset/tool' },
+  'vendor-docs/README.md': '# Vendor\n',
+  'vendor-docs/Drafts/tool': Buffer.from('bfbafeca02000000', 'hex'),
+  'vendor-docs/Drafts/latest': { symlink: 'tool' },
+  'apps/apple/Platforms/watchOS/.DS_Store': Buffer.from('feedfacf01000007', 'hex'),
+  'apps/apple/App/DebugOnly/probe': Buffer.from('cffaedfe0c000001', 'hex'),
+}, [
+  'App: apps/apple/App/Resources/Assets.xcassets/Helper.dataset/Helper is prebuilt code',
+  'package EnginePkg: packages/engine-swift/Sources/Engine/Media.xcassets/Tool.dataset/tool is prebuilt code',
+  'packages/engine-swift/Sources/Engine/Media.xcassets/Linked.dataset/data is a symbolic link',
+  'TV: vendor-docs/Drafts/tool is prebuilt code',
+  'vendor-docs/Drafts/latest is a symbolic link',
+  'Watch: apps/apple/Platforms/watchOS/.DS_Store is prebuilt code',
+  'App: apps/apple/App/DebugOnly/probe is prebuilt code',
+]);
+// Only a manifest copied flat into the bundle root is the target's manifest:
+// not one excluded and re-added through a copyFiles phase, not one inside a
+// directory added as a single file, and not one inside .lproj or a bundle.
+assertFail('nested manifests are not the bundle manifest', {
+  ...tvManifest(TV_WITH_PACKAGE),
+  ...projectYml(PROJECT_YML
+    .replace('          - "DebugOnly/**"\n', '          - "DebugOnly/**"\n          - Resources/PrivacyInfo.xcprivacy\n      - path: App/Resources/PrivacyInfo.xcprivacy\n        buildPhase:\n          copyFiles:\n            destination: plugins\n            subpath: Extras\n')
+    .replace('      - path: Platforms/tvOS\n', '      - path: Platforms/tvOS\n        excludes:\n          - Resources\n      - path: Platforms/tvOS/Resources\n        type: file\n')),
+  'apps/apple/Platforms/watchOS/Resources/PrivacyInfo.xcprivacy': null,
+  'apps/apple/Platforms/watchOS/Resources/en.lproj/PrivacyInfo.xcprivacy': manifest(WATCH_MANIFEST),
+  'apps/apple/Platforms/watchOS/Kit.bundle/PrivacyInfo.xcprivacy': manifest(WATCH_MANIFEST),
+}, [
+  'App: expected exactly one bundled PrivacyInfo.xcprivacy, found 0.',
+  'TV: expected exactly one bundled PrivacyInfo.xcprivacy, found 0.',
+  'Watch: expected exactly one bundled PrivacyInfo.xcprivacy, found 0.',
+]);
+// Exclude wildcards never match a leading dot (glob(3) without GLOB_PERIOD),
+// so hidden Swift files under Generated/* and Cache/** are still compiled.
+assertFail('hidden files are not matched by exclude wildcards', {
+  ...tvManifest(TV_WITH_PACKAGE),
+  ...projectYml(PROJECT_YML.replace('      - path: Platforms/tvOS\n', '      - path: Platforms/tvOS\n        excludes:\n          - "Generated/*"\n          - "Cache/**"\n')),
+  'apps/apple/Platforms/tvOS/Generated/Visible.swift': 'let excludedUptime = ProcessInfo.processInfo.systemUptime\n',
+  'apps/apple/Platforms/tvOS/Generated/.Hidden.swift': 'let hiddenUptime = ProcessInfo.processInfo.systemUptime\n',
+  'apps/apple/Platforms/tvOS/Cache/.state/Snapshot.swift': 'let ticks = mach_absolute_time()\n',
+}, [
+  TV_BOOT_TIME,
+  'apps/apple/Platforms/tvOS/Cache/.state/Snapshot.swift:1',
+  'apps/apple/Platforms/tvOS/Generated/.Hidden.swift:1',
+  // The visible file is excluded (so it is reported as compiled by no target).
+  'apps/apple/Platforms/tvOS/Generated/Visible.swift is not compiled by any project.yml target',
+]);
+assertFail('unsupported exclude patterns', {
+  ...tvManifest(TV_WITH_PACKAGE),
+  ...projectYml(PROJECT_YML.replace('      - path: Platforms/tvOS\n', '      - path: Platforms/tvOS\n        excludes:\n          - "[Tt]ests"\n      - path: Shared\n        excludes:\n          - "**.swift"\n      - path: ../../content/lessons\n        excludes:\n          - "{A,B}"\n')),
+}, [
+  'TV: sources entry Platforms/tvOS: exclude pattern "[Tt]ests"',
+  'TV: sources entry Shared: exclude pattern "**.swift"',
+  'TV: sources entry ../../content/lessons: exclude pattern "{A,B}"',
+]);
+assertFail('unsupported source type and build phase', {
+  ...tvManifest(TV_WITH_PACKAGE),
+  ...projectYml(PROJECT_YML.replace('      - path: Platforms/tvOS\n', '      - path: Platforms/tvOS\n      - path: ../../content/synced\n        type: syncedFolder\n      - path: Shared/Settings.swift\n        buildPhase: frameworks\n')),
+}, [
+  'TV: sources entry ../../content/synced uses unsupported type "syncedFolder"',
+  'TV: sources entry Shared/Settings.swift uses unsupported buildPhase "frameworks"',
+]);
+// A FIFO or other special file cannot be scanned (opening a FIFO blocks), so
+// it fails whether it sits inside a walked directory or is an entry path.
+assertFail('special files', {
+  ...tvManifest(TV_WITH_PACKAGE),
+  ...projectYml(PROJECT_YML.replace('      - path: Platforms/tvOS\n', '      - path: Platforms/tvOS\n      - path: ../../content/pipe\n        type: file\n        buildPhase: resources\n')),
+  'apps/apple/Platforms/tvOS/Resources/pipe': { fifo: true },
+  'content/pipe': { fifo: true },
+}, [
+  'apps/apple/Platforms/tvOS/Resources/pipe is not a regular file, directory or symbolic link',
+  'content/pipe is not a regular file, directory or symbolic link',
+]);
+assertFail('package paths outside the package', {
+  ...tvManifest(TV_WITH_PACKAGE),
+  'packages/engine-swift/Package.swift': PACKAGE_SWIFT.replace('.target(name: "Engine")', '.target(name: "Engine", resources: [.copy("../Shared")])'),
+}, 'packages/engine-swift/Package.swift uses paths outside the target directory (..)');
 // Build scripts, scheme pre-actions, xcconfig files, headers, search paths and
 // compiler or linker flags can add code the checker does not scan.
 assertFail('pre-build script on a shipped target', { ...tvManifest(TV_WITH_PACKAGE), ...projectYml(PROJECT_YML.replace('  TV:\n    type: application\n', '  TV:\n    type: application\n    preBuildScripts:\n      - name: Generate\n        script: ./generate.sh\n')) },

@@ -454,9 +454,15 @@ works as follows:
   compiled Swift files and bundled `PrivacyInfo.xcprivacy`, honouring
   `sources`, `excludes`, `buildPhase` and folder references. Linked local
   packages contribute their `Sources/**`. Test bundles count only for
-  coverage. Like XcodeGen, the walk includes hidden files and directories
-  and skips only `.DS_Store`. SwiftPM ignores hidden files, so package walks
-  may scan more than SwiftPM compiles, which is the safe direction. Folder
+  coverage. Like XcodeGen, the walk includes hidden files and directories.
+  It skips nothing silently: `.DS_Store` files, resource catalogues
+  (`.xcassets`, `.icon`, `.xcstrings`) and excluded paths are all walked,
+  and every file in them is checked for prebuilt code, symbolic links and
+  special files (FIFOs, sockets, devices). Excludes and catalogues only
+  decide whether a file counts as compiled Swift, as a non-Swift source or
+  as the target's manifest. SwiftPM ignores hidden files and applies
+  `exclude:`, so package walks may scan more than SwiftPM compiles, which is
+  the safe direction. Folder
   references (`type: folder`) and `buildPhase: none` entries compile nothing
   and never supply the target's manifest, even if they hold Swift files or a
   nested `PrivacyInfo.xcprivacy`. Their paths must still exist unless
@@ -467,6 +473,47 @@ works as follows:
   `reference-sheet` and `generated/basic-2025-07-15` folders (Markdown and
   JSON only) and the UI tests' `ContrastMeasurement` PNGs; there are no
   `buildPhase: none` entries.
+- **Pruning points.** Every place the checker skips, filters or narrows a
+  path, and why the prebuilt-code and link checks still see everything Xcode
+  or SwiftPM would copy or compile for a shipped target:
+
+  | Point | Behaviour | Why it is safe |
+  |---|---|---|
+  | `.DS_Store` | Scanned like any file (no longer skipped). | A real Finder file starts with `00000001 Bud1` and passes; Xcode does not copy it. |
+  | `excludes` | Walked; excluded files count only for the prebuilt-code, link and special-file checks. Only `*`, `?` and `**` (as a whole path component) are modelled. Wildcards never match a leading dot, as in glob(3) without `GLOB_PERIOD`. Character classes, braces, escapes and `**` inside a name fail. | Excluded files are neither compiled nor copied. Matching less than XcodeGen only scans more, and binaries are found even when a glob differs. |
+  | Resource catalogues (`.xcassets`, `.icon`, `.xcstrings`), in targets and packages | Walked; contents count only for the prebuilt-code, link and special-file checks. | `actool` and the string catalogue compiler process them; Swift inside is never compiled and a nested manifest is not at the bundle root. |
+  | Extension filters | Every visited file gets the prebuilt-code check first. Then `.swift` counts as compiled Swift (sources or default phase only), C-family and similar files fail as unscanned sources (except in the resources phase, where they are copied as data), and `PrivacyInfo.xcprivacy` counts as the manifest only under the rule below. Other files are data. | Data files cannot call these APIs. |
+  | `buildPhase` | `sources` and the default compile Swift. `resources` copies files to the bundle root. `headers` and `copyFiles` compile nothing and never supply the manifest. `none` and `type: folder` are references (above). Other phases fail. | XcodeGen's phases are exactly these; unknown ones fail closed. |
+  | `type` | `file`, `group` and `folder` are modelled; anything else, such as `syncedFolder`, fails. A directory added as `type: file` is copied as one folder, so a manifest inside it is not the bundle's manifest. Its Swift still counts, which can only over-declare. | Unknown types fail closed. |
+  | Bundle manifest rule | Only a manifest copied flat to the bundle root counts: from the default or resources phase, not excluded, not in a catalogue, and not below a directory whose name has an extension (`.lproj`, `.bundle` or another wrapper). | Manifests elsewhere are copied into subfolders, which Apple does not read as the app's manifest. Zero manifests fail the check. |
+  | `optional` | A missing optional path is skipped; an existing one is fully scanned. Missing non-optional compiled paths and references fail. | A missing path has nothing to copy or compile. |
+  | Unmapped-file walk prunes `*.xcodeproj`, `DerivedData` and `build` | Only for finding Swift files under `apps/apple` that no target compiles; Swift in catalogues is not counted there either. | Target walks never prune, so a target entry inside one of those paths is still fully scanned. |
+  | Test targets | Not checked for categories, non-Swift sources or prebuilt code. Their sources are still walked for coverage, so links, special files and unsupported entries fail there too. | Test bundles are not shipped. |
+  | Target `target:` and `sdk:` dependencies | Embedded app targets are checked as their own targets; SDK frameworks are Apple's. Any other dependency type fails. | Apple's own use is not declared by the app. |
+  | Package root other than `Sources` | Not scanned; `Package.swift` is checked for custom `path:` or `sources:`, binary, plugin, macro and system-library targets, `unsafeFlags`, package dependencies and `..`. | Only `Sources/<target>` is compiled or bundled when those are absent. |
+  | Package `exclude:` and `resources:` | Ignored: all of `Sources` is scanned. | Over-scans. A `..` path, which could reach outside `Sources`, fails. |
+- **Native-code formats.** Prebuilt code is found by magic bytes where the
+  format has them and by name otherwise:
+
+  | Format | Detection |
+  |---|---|
+  | Mach-O, 32- and 64-bit, both byte orders (executables, dylibs, bundles, `.o`) | Magic `feedface`, `cefaedfe`, `feedfacf`, `cffaedfe`. |
+  | Universal (fat), 32- and 64-bit, both byte orders | Magic `cafebabe`, `bebafeca`, `cafebabf`, `bfbafeca`. |
+  | `ar` and thin archives (`.a`) | Magic `!<arch>\n` and `!<thin>\n`, and the `.a` extension. |
+  | LLVM bitcode and the bitcode wrapper | Magic `BC\xC0\xDE` and `0x0B17C0DE` (bytes `de c0 17 0b`). |
+  | Binary Swift modules | Magic `e29ca80e`, and the `.swiftmodule` extension on a file or directory. |
+  | Text-based stubs and module interfaces | The `.tbd` and `.swiftinterface` extensions. |
+  | Code bundles | The `.framework`, `.xcframework`, `.app`, `.appex` and `.xpc` directory names. |
+  | Libraries and objects without magic | The `.dylib`, `.so`, `.o` and `.a` extensions. |
+  | Module maps (`.modulemap`, `module.map`), API notes, prefix headers (`.pch`), LLVM IR (`.ll`), C-family and assembly sources | Fail as unscanned non-Swift sources. |
+  | `.bundle`, `.plugin`, `.kext` and similar | Not by name, because `Settings.bundle` and resource bundles are data. An executable inside is Mach-O and is caught by magic. |
+  | Left out: ELF | dyld cannot load it on Apple platforms (a `.so` name still fails). |
+  | Left out: WebAssembly | Not native: it needs a runtime the app would have to ship (as Swift or a framework, both checked) and can call only host imports. |
+  | Left out: scripts and JavaScript | Interpreted; any bridge to these APIs is Swift, which is scanned. |
+  | Left out: zip, tar and other containers | Code inside could run only after extraction and a run-time `dlopen`, which code signing blocks; this is the run-time limitation below. |
+  | Left out: `.metal` and `.metallib` | GPU code, which cannot call system APIs. |
+  | Left out: precompiled modules and headers (`.pcm`, `.gch`) | Usable only through compiler flags, which fail the check. |
+  | False positives (safe) | Java class files share `cafebabe`, and a `.dSYM`'s DWARF file is Mach-O, so both fail. |
 - **Manifest parsing.** Manifests are read with a strict XML property list
   parser that keeps plist value types, so each key must have its documented
   type:
@@ -531,15 +578,17 @@ works as follows:
   - a shipped target or linked package contains C, Objective-C, C++ or
     assembly sources or headers, module maps or API notes, because only
     Swift is scanned;
-  - a shipped target's sources, including its folder references and
-    `buildPhase: none` entries, or a linked package's `Sources` contain
-    prebuilt code: a `.framework`, `.xcframework`, `.xpc` or `.appex`
-    bundle, a `.a`, `.dylib`, `.so` or `.o` file, or any file that starts
-    with Mach-O, universal-binary or `ar` magic;
+  - a shipped target's sources, including its folder references,
+    `buildPhase: none` entries, excluded paths and resource catalogues, or a
+    linked package's `Sources` (including its catalogues) contain prebuilt
+    code in any format in the native-code table above;
   - a symbolic link appears under a scanned directory (including a folder
-    reference), or is a `project.yml` sources path, a package directory or
-    its `Sources`, or any directory between the repository root and one of
-    those (the checker does not follow links);
+    reference, an excluded path or a catalogue), or is a `project.yml`
+    sources path, a package directory or its `Sources`, or any directory
+    between the repository root and one of those (the checker does not
+    follow links);
+  - a scanned path or entry path is a special file (a FIFO, socket or
+    device), which cannot be scanned;
   - a compiled sources path, folder reference or `buildPhase: none` path
     does not exist and is not marked `optional`;
   - a Swift file under `apps/apple` is compiled by no target;
@@ -549,6 +598,10 @@ works as follows:
 - **Unsupported constructs.** It also fails on XcodeGen constructs that can
   add code it does not scan:
   - sources keys it does not model, including per-file `compilerFlags`;
+  - source `type`s other than `file`, `group` and `folder` (such as
+    `syncedFolder`), `buildPhase`s other than `sources`, `resources`,
+    `headers`, `none` and a `copyFiles` mapping, and exclude globs with
+    character classes, braces, escapes or `**` inside a name;
   - shipped-target keys outside its allow-list, such as `preBuildScripts`,
     `postCompileScripts`, `buildRules`, `buildToolPlugins`, `scheme` and
     `configFiles`;
@@ -562,8 +615,8 @@ works as follows:
     use the `-DFOO` form.
 
   It also fails on remote, binary or dynamic packages, on Package.swift
-  plugins, macros, system-library targets or `unsafeFlags`, and on unknown
-  target types.
+  plugins, macros, system-library targets, `unsafeFlags` or `..` paths, and
+  on unknown target types.
 - **Self-test.** `pnpm test:apple-required-reasons` runs the fixtures. They
   include comment-only mentions, a string containing `//` followed by real
   code, excluded and test-only files, unlinked packages and package tests,
@@ -576,6 +629,15 @@ works as follows:
   access, hidden files and directories, symbolic links, folder references
   holding plain data (which pass) or prebuilt code (which fails), the plist
   type and syntax cases in the table below, and the fail-closed cases above.
+  Round 6 fixtures cover every magic value and name in the native-code
+  table; Mach-O, universal-binary and symbolic-link payloads inside target
+  and package asset catalogues, excluded paths and a disguised `.DS_Store`;
+  catalogue Swift, headers and nested manifests (with `.lproj` and
+  `.bundle` manifests and a real `.DS_Store`) that pass; manifests that
+  are not the bundle manifest (copyFiles, a `type: file` directory,
+  `.lproj` and `.bundle`); hidden files that exclude wildcards do not
+  match; unsupported globs, types and build phases; FIFOs inside a walk and
+  as an entry path; and `..` in Package.swift.
 - **Bypass classes.** Each syntactic way a source could reach a listed API
   without the checker seeing it is covered or recorded here:
 
@@ -593,6 +655,11 @@ works as follows:
   | `#if` branches | Not a bypass: `#if` is not evaluated, so every branch is scanned and counts (over-declaration). |
   | C, Objective-C, C++, assembly, module maps, API notes | Fail closed. |
   | Prebuilt code (frameworks, libraries, Mach-O files) in sources or package `Sources` | Fail closed. |
+  | Native-code formats other than thin Mach-O (universal 64-bit, archives, bitcode, Swift modules and interfaces, text stubs, app and XPC bundles) | Fail closed with fixtures for every magic value and name in the native-code table. Formats left out are listed there with the reason. |
+  | Prebuilt code or links inside resource catalogues (`.xcassets`, `.icon`, `.xcstrings`) in a target or package | Fail closed with fixtures: catalogues are traversed, but their Swift files, headers and nested manifests are not counted. |
+  | Prebuilt code or links inside excluded paths, or hidden files an exclude glob would miss | Fail closed with fixtures: excluded paths are still scanned for binaries and links, and wildcards never match a leading dot, so a glob that differs from XcodeGen's can only scan more. Glob syntax the checker does not model fails. |
+  | A nested `PrivacyInfo.xcprivacy` standing in for the bundle manifest | Fail closed with fixtures: only a manifest copied flat to the bundle root counts. |
+  | Special files (FIFOs, sockets, devices) | Fail closed with fixtures. |
   | Prebuilt code in folder references or `buildPhase: none` entries, which are copied or listed but not compiled | Fail closed with fixtures: the whole folder is scanned, including asset catalogues; a folder of plain data passes, and its Swift files and nested manifest are not counted. |
   | Privacy manifest values of the wrong plist type (`<data>`, `<date>`, `<integer>` or `<real>` codes, a `<dict>` or `<array>` where a string is expected, a `<string>` where a boolean or array is expected) | Fail closed with fixtures: value types are kept and checked. |
   | Privacy manifest XML that Apple's parser could read differently (duplicate keys, where Apple keeps the last; a `__proto__` key; entities; comments, CDATA or processing instructions; attributes; other DOCTYPEs; binary, JSON or OpenStep plists; a missing root or trailing content) | Fail closed with fixtures. Equivalent forms that Apple reads the same way (comments between elements, character references, open-and-close empty elements) are accepted, also with a fixture. |
@@ -602,7 +669,7 @@ works as follows:
   | Pre-build scripts, build rules, plugins, macros, scheme pre-actions, xcconfig files, compiler and linker flags | Fail closed with fixtures. |
   | Post-build scripts (`postBuildScripts`) | Limitation: allowed, because they run after compiling. They only copy JSON and the reference sheet and delete README files. Review by hand; binary inspection is the cross-check. |
   | Xcode Cloud `ci_scripts` (`ci_post_clone.sh`, `ci_pre_xcodebuild.sh`) | Limitation: they run before compiling but are outside `project.yml`. Today they only install Node outside the repository and run guards and archive checks, writing no source files. Review by hand. |
-  | Generated or resource code (`.plist`, `.strings`, `.xcstrings`, asset catalogues, JSON) | Not a bypass: data only, cannot call these APIs. No `.metal`, `.xib`, `.storyboard`, `.xcdatamodeld`, `.intentdefinition`, `.mlmodel` or `.js` files exist. Their code generators cannot emit these APIs either. |
+  | Generated or resource code (`.plist`, `.strings`, `.xcstrings`, asset catalogues, JSON) | Not a bypass: data only, cannot call these APIs. Catalogues are still scanned for prebuilt code and links. No `.metal`, `.xib`, `.storyboard`, `.xcdatamodeld`, `.intentdefinition`, `.mlmodel` or `.js` files exist. Their code generators cannot emit these APIs either. |
   | Interface Builder bindings (macOS `NSUserDefaultsController`) | Limitation: no Interface Builder files exist; adding one needs a manual review. |
   | Clocks not on Apple's list (`ContinuousClock`, `DispatchTime`, `CACurrentMediaTime`) | Out of scope: Apple does not list them, so no declaration is needed. |
   | SDK macros and Apple framework internals | Out of scope: Apple's own use is not declared by the app. Package macro targets fail closed. |
@@ -625,7 +692,12 @@ works as follows:
   the check even when Apple would read it correctly. Rewrite it in the plain
   XML form Xcode writes. A Swift file inside a folder reference under
   `apps/apple` is not compiled but still fails the unmapped-file check; keep
-  such data outside `apps/apple` or give it another extension.
+  such data outside `apps/apple` or give it another extension. A directory
+  whose name has an extension but which XcodeGen treats as a group (for
+  example `Platforms/tvOS.v2`) is treated as a wrapper, so a manifest below
+  it is not counted and the check fails with zero manifests; rename the
+  directory. Native formats left out of the prebuilt-code check are listed
+  in the native-code table with the reason.
 
 ### Evidence
 
@@ -640,6 +712,7 @@ Run from the TASK-85 worktree on 2026-11-03 UTC:
 | `pnpm check:apple-network`, `pnpm check:apple-icloud-gate` | Passed. |
 | Walk verification (PR #1064 round 4): the checker's per-target Swift lists compared with the `PBXSourcesBuildPhase` files in the committed `CanadianHam.xcodeproj` (`plutil -convert json`), and each package's `Sources` walk compared with `swift package describe --type json` | Identical. `CanadianHam` 32 app files, `CanadianHamWatch` 11, `CanadianHamTV` 13, `CanadianHamVision` 12, with no non-Swift sources and no build rules. Each package has one library target and one test target and no dependencies; non-test sources are `calculator-swift` 1, `content-swift` 8, `engine-swift` 10 and `morse-swift` 2. The project links only those four package products, and its shell script phases all run after the Sources phase. No symbolic links or hidden entries exist under the scanned roots. |
 | Folder references (PR #1064 round 5): the six shipped `content/` folder references scanned for prebuilt code and links, with the strict manifest parser applied to the four manifests | 2,059 files (2,010 JSON, 49 Markdown), no prebuilt code, no symbolic links or hidden entries, no `buildPhase: none` entries. The four manifests parse unchanged, and the checker output is byte-identical to the previous round. |
+| Pruning sweep (PR #1064 round 6): `project.yml` sources, excludes, types and build phases, and package `Sources`, re-read against the pruning-point table; resource catalogues under the scanned roots counted with `find` | Every exclude is a literal path (`CanadianHam` excludes `Resources/AppIcon.icon`, both asset catalogues and the CloudKit `Info.plist`), every type and build phase is modelled, and no package declares `resources:`, `exclude:` or `..`. The eight catalogues (`CanadianHam` `Assets`, `FigureAssets`, `AppIcon.icon` and `Localizable.xcstrings`; the watchOS `Assets` and `InfoPlist.xcstrings`; the tvOS and visionOS `Assets`) hold 141 files, now also scanned through the ordinary walks, with no prebuilt code, links, hidden or special files. Package `Sources` hold no catalogues. Each manifest sits at `<target>/Resources/PrivacyInfo.xcprivacy` with no extension-named directory on its path. The `--verbose` checker output is byte-identical to round 5 and the run takes about 0.4 s. |
 | Release builds through `xbuild` (`-configuration Release`, generic simulator destinations, plus generic macOS, `CODE_SIGNING_ALLOWED=NO`), then `plutil -p` on each bundled `PrivacyInfo.xcprivacy` | All builds succeeded. Each bundle has exactly one manifest, byte-identical (`cmp`) to its source. iOS `CanadianHam.app` and macOS `CanadianHam.app/Contents/Resources` declare User defaults `CA92.1` and System boot time `35F9.1`. The embedded `CanadianHam.app/Watch/CanadianHamWatch.app` declares System boot time `35F9.1`. `CanadianHamTV.app` and `CanadianHamVision.app`, built from a regenerated project with the `project.yml` change, declare User defaults `CA92.1` only. |
 | `strings -a` / `nm -u` on the Release binaries, which include the statically linked package code | iOS app: `systemUptime`, `standardUserDefaults`, `persistentDomainForName`. Watch: `systemUptime` only. macOS: `standardUserDefaults` and `persistentDomainForName`, but no `systemUptime`, because those call sites are iOS-only. TV and Vision: `standardUserDefaults` only. No binary imports `stat`, `lstat`, `fstat`, `fstatat`, `statfs`, `statvfs`, `getattrlist` or `mach_absolute_time`, and none references the file-timestamp, disk-space or `activeInputModes` selectors. |
 
