@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-25T17:02:00Z'
-updated_date: '2026-11-03T02:33:00Z'
+updated_date: '2026-11-03T02:54:00Z'
 labels:
   - apple
   - watchos
@@ -57,6 +57,8 @@ From the TASK-14.2 review: the decoded Basic bank stays resident for the app's l
 2026-10-25: retained existing opaque 1024px cream/hex watch icon after circular native-size review at 1024/196/88/48 px; before/after evidence committed with release docs. Signed iOS export-only build 202610251833 and macOS export-only build 202610251835 succeeded; upload explicitly skipped. IPA inspection verifies matching phone/watch timestamps, IDs/independent flag, compiled icon, empty collection manifest, distribution signatures, no cloud/push/App Groups/WatchConnectivity/network/third-party direct links, and all 988 Basic/explanation JSON files byte-identical to source, with an exact full-bundle file allowlist. macOS pkg has no watch payload. Network/iCloud guards + fixtures and fastlane safety tests (4/53) pass. Full Series 12 42mm watch scheme is running; no upload/PR. AC4 reserved for post-merge processed internal upload and owner physical install/offline/haptics/listening checks; task stays In Progress.
 
 2026-10-25 final automated evidence: one complete CanadianHamWatch scheme run on Series 12 (42mm), watchOS 27.0 (24R362), 22:36:30–22:52:01 UTC passed 56/56 (29 unit, 27 UI), zero failures/skips, including all 16 full default EN/FR accessibility audits. Per-test names/durations and immutable-runtime provenance are in docs/testing/task-14.6-watch-release.md; raw result summary is in docs/evidence/task-14.6/watch-test-summary.json, xcresult/logs retained at ~/.cache/canadian-ham-task-14.6/. Result metadata misnames device iPhone Air; simctl confirms the same UUID is the requested Watch Series 12 42mm. Final asset diagnostic grep across both signed exports and watch simulator build found zero actool/icon/asset warnings/errors. Existing catalogue/audio deprecations, synchronous audio-session runtime warning and simulator metadata/diagnostics messages are recorded, not hidden. Links, preview byte-for-byte regeneration, fastlane syntax/safety tests, network/iCloud guards+fixtures, test guard and diff checks pass. No runtime/project/Fastfile or icon edits were needed; all changes are docs/evidence and task metadata. No upload, invitation or PR. AC1/2/3/5 checked with signed artifact and test evidence. AC4 remains blocked pending approved post-merge internal iOS upload/ASC processing and owner physical-watch install, offline practice/Morse/reference/EN-FR, three-style haptic comparison, VoiceOver, memory and launch checks; task intentionally stays In Progress. iOS/macOS/tvOS/visionOS full suites and tvOS/visionOS exports skipped because unchanged and outside this requested docs/evidence validation; coordinator retains merge/release gates.
+
+TASK-87 2026-11-03: owner steps and evidence format for this task are indexed in docs/release/owner-gates.md (Sitting 2: Apple Watch; AC#4 physical-watch results). The guide restates and links these criteria without changing them.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary

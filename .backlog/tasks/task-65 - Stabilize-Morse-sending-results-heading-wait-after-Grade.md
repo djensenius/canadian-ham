@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: 2026-10-20 06:58
-updated_date: '2026-11-03T02:33:00Z'
+updated_date: '2026-11-03T02:54:00Z'
 labels:
   - apple
   - testing
@@ -75,6 +75,8 @@ Figure baseline coordinator-stopped early: M7 4/5 (Code=-56 at295.085s), Ohms da
 Structural test first invocation SIGKILL before startup, exit137; sole approved identical rerun PASS552.210s (outer614s), exit0, no skips. L-005-02 collapsed331 descendants/285 texts/18 buttons/2 scrollviews/0 equivalent rows; expanded343/297/18/2/12. L-007-01 collapsed286/235/15/4/0; expanded291/240/15/4/5. Every image and explicit Enlarge button once; rows absent collapsed/exactly once expanded. Eight keepAlways tree/count attachments exported under /tmp/task-65-figure-tree-rerun-attachments. No app-side duplication found. Whole eager lesson tree plausibly contributes cost; not a demonstrated timeout cause.
 macOS build-for-testing PASS exit0 (outer3451s incl lock wait). Text-source check/self-test and test-guard/self-test PASS. Source identity proves all pre-existing tests/helpers/audits untouched. No full runtime suites or non-iPhone simulator runs; final code change only the iOS structural test.
 AC1-3 evidence covers investigation, unchanged coverage and honest targeted results, NOT resolution. Keep In Progress. Owner options: (a) approve timeout-only Code=-56 one FULL-audit retry in shared helper, failing any real finding; (b) separately evaluate lazy long lessons given331/286 descendants. Additional open sending question (not a third option): is120s auto-grade fixture too short for loaded UI tests? No further mitigation implemented.
+
+TASK-87 2026-11-03: owner steps and evidence format for this task are indexed in docs/release/owner-gates.md (Sitting 1: owner decisions; Code=-56 retry and lazy long-lessons follow-up). The guide restates and links these criteria without changing them.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
