@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-11-04T02:25:00Z'
-updated_date: '2026-11-04T02:32:00Z'
+updated_date: '2026-11-04T02:36:00Z'
 labels:
   - release
   - apple
@@ -49,4 +49,8 @@ Coordinator handoff: no real archive, export, upload, Apple account/credential c
 No real archive/export/DerivedData directories were created. Default archive paths are fastlane/archives/appstore/<ios|mac|appletvos|xros>/<CanadianHam|CanadianHam|CanadianHamTV|CanadianHamVision>-<YYYYMMDDHHMM>.xcarchive; export directories are fastlane/builds/appstore/<platform>/<YYYYMMDDHHMM>/. Explicit internal-only mode uses the corresponding roots without appstore/. Fastfile does not set -derivedDataPath; current XBUILD_DERIVED_DATA_ROOT is unset. For isolated coordinator cleanup, set XBUILD_DERIVED_DATA_ROOT=/tmp/canadian-ham-task-93-derived-data on the Fastlane invocation; the installed wrapper and Fastlane working directory resolve its derived-data directory to /tmp/canadian-ham-task-93-derived-data/fastlane-d80e88a4. Run platforms serially and retain evidence before deleting only task-owned outputs, given the low free disk space.
 
 Local post-archive guard: from this worktree run CI_XCODEBUILD_ACTION=archive CI_XCODEBUILD_EXIT_CODE=0 CI_ARCHIVE_PATH=<absolute .xcarchive path> bash apps/apple/ci_scripts/ci_post_xcodebuild.sh. CI_PRIMARY_REPOSITORY_PATH may be set to this worktree explicitly; otherwise ch_init uses the repository containing the script. CI_XCODE_SCHEME, CI_PRODUCT_PLATFORM and CI_BUILD_NUMBER are optional log context for this post guard. It scans every app/appex (including watch) for forbidden entitlements and official-sheet content, not export eligibility/privacy completeness; separately inspect the exported IPA/PKG and manifests. Do not set a nonzero CI_XCODEBUILD_EXIT_CODE, which intentionally skips failed archives.
+
+Review follow-up on d6c24545 (APPROVE WITH NOTES): fixed both low findings. upload_beta now normalizes string/symbol option keys once before validation, rejecting duplicate normalized names rather than allowing conflicts to silently override options. A supplied artifact_path is distinguished from omission and rejects nil/empty/whitespace values before any archive or upload. Added regressions for string-key export-only/default/internal modes, existing artifacts, duplicate string/symbol names, and nil/blank artifact paths in both modes.
+
+Requested targeted checks: pnpm test:fastlane -> 15 runs, 1175 assertions, 0 failures, 0 errors, 0 skips; ruby -c fastlane/Fastfile -> Syntax OK; git diff --check -> exit 0, no findings. The harness writes only temporary fixture roots; fastlane/archives and fastlane/builds were not touched. No Apple jobs or uploads. Task remains In Progress with AC4 unchecked for coordinator signed-export evidence; upload gates unchanged.
 <!-- SECTION:NOTES:END -->
