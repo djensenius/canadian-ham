@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@djensenius'
 created_date: 2026-10-01 02:27
-updated_date: '2026-11-03T02:54:00Z'
+updated_date: '2026-11-04T03:32:00Z'
 labels:
   - release
   - blocked
@@ -46,4 +46,6 @@ Owner task. The ISED Crown copyright clearance request (Basic and Advanced banks
 AC #1 evidence: Owner reported submitting the permission request through ISED's online 'Apply for Crown Copyright Clearance' form at https://ised-isde.canada.ca/site/ised/en/apply-crown-copyright-clearance on 2026-10-02 at 08:34 local time. Submitted as applicant type Individual; purpose Reproduction and Adaptation; languages English and French (ISED's own versions); Electronic only; Non-commercial; 1 electronic edition; price 0.00 CAD. Work scope: Basic Qualification Question Bank for Amateur Radio Operator Certificate Examinations (15 July 2025), year 2025, electronic delimited TXT (amat_basic_quest.zip) and PDF, EN/FR, URL https://www.ised-isde.canada.ca/site/amateur-radio-operator-certificate-services/en/downloads; materials Whole Work, Text, Database. Additional details requested the same permission for the Advanced bank (amat_adv_quest.zip and EN/FR PDFs, current edition and future revisions), publishing question text in the app's public source code, future revisions, and stated the app is always free/open source and collects no data. Not requested: reference sheets/reference PDFs, commercial use, revision, or translation. No confirmation/reference number has been reported; AC #2/#3 remain unchecked until written permission exists.
 
 TASK-87 2026-11-03: owner steps and evidence format for this task are indexed in docs/release/owner-gates.md (Sitting 1: owner decisions; AC#2-#3 permission record). The guide restates and links these criteria without changing them.
+
+Owner update 2026-11-03: "Please push. ISED is done." Treat this as confirmation that ISED permission has been obtained and explicit authorization for the requested new App Store-eligible TestFlight build, not App Store submission. Receipt is no longer an unanswered owner question. The reference number, permission date and exact granted scope were not provided in this message, so do not invent them or mark the documentation criteria complete. Release-candidate and other distribution gates remain separate.
 <!-- SECTION:NOTES:END -->
