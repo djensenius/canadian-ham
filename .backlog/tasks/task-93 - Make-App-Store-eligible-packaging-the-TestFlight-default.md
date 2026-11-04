@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-11-04T02:25:00Z'
-updated_date: '2026-11-04T02:36:00Z'
+updated_date: '2026-11-04T02:40:00Z'
 labels:
   - release
   - apple
@@ -25,10 +25,10 @@ Owner request 2026-11-03: new TestFlight builds should also be eligible for late
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 All four beta lanes default to App Store-eligible export options and exclude the internal-only official reference sheet; explicit internal-only mode remains available.
-- [ ] #2 Invalid and conflicting options fail closed; App Store-eligible uploads and protected distribution artifact uploads remain blocked by existing gates; permitted internal fallback delivery explicitly remains internal-only.
-- [ ] #3 Active TestFlight, distribution, owner-gate and agent instructions consistently document the new default, explicit fallback, and unchanged owner/upload/licensing gates.
-- [ ] #4 Focused Fastlane, reference-sheet, Xcode Cloud and documentation checks pass and signed export inspection evidence is recorded without claiming an upload.
+- [x] #1 All four beta lanes default to App Store-eligible export options and exclude the internal-only official reference sheet; explicit internal-only mode remains available.
+- [x] #2 Invalid and conflicting options fail closed; App Store-eligible uploads and protected distribution artifact uploads remain blocked by existing gates; permitted internal fallback delivery explicitly remains internal-only.
+- [x] #3 Active TestFlight, distribution, owner-gate and agent instructions consistently document the new default, explicit fallback, and unchanged owner/upload/licensing gates.
+- [x] #4 Focused Fastlane, reference-sheet, Xcode Cloud and documentation checks pass and signed export inspection evidence is recorded without claiming an upload.
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -53,4 +53,6 @@ Local post-archive guard: from this worktree run CI_XCODEBUILD_ACTION=archive CI
 Review follow-up on d6c24545 (APPROVE WITH NOTES): fixed both low findings. upload_beta now normalizes string/symbol option keys once before validation, rejecting duplicate normalized names rather than allowing conflicts to silently override options. A supplied artifact_path is distinguished from omission and rejects nil/empty/whitespace values before any archive or upload. Added regressions for string-key export-only/default/internal modes, existing artifacts, duplicate string/symbol names, and nil/blank artifact paths in both modes.
 
 Requested targeted checks: pnpm test:fastlane -> 15 runs, 1175 assertions, 0 failures, 0 errors, 0 skips; ruby -c fastlane/Fastfile -> Syntax OK; git diff --check -> exit 0, no findings. The harness writes only temporary fixture roots; fastlane/archives and fastlane/builds were not touched. No Apple jobs or uploads. Task remains In Progress with AC4 unchecked for coordinator signed-export evidence; upload gates unchanged.
+
+Coordinator signed export-only evidence (no upload) from packaging commit d6c24545 (later 29f85222 only tightens option validation): ios 202611032133 IPA (watch CFBundleVersion matches), mac 202611032136 pkg (Apple Distribution app; 3rd Party Mac Developer Installer pkg), appletvos 202611032138, xros 202611032139. For each export: ExportOptions method app-store-connect, testFlightInternalTestingOnly false, Apple Distribution team 9JALHNGRBQ, codesign verify ok, no iCloud/ubiquity/CloudKit/aps entitlements, no official-basic-exam content; ci_post_xcodebuild.sh archive guard passed for all four. Note: XBUILD_DERIVED_DATA_ROOT makes xbuild add -derivedDataPath to -exportArchive (xcodebuild rejects it); exports ran without it. Reviewer APPROVE WITH NOTES; both low findings fixed in 29f85222 (15 runs, 1175 assertions, 0 failures). Re-ran official-reference-sheet, xcode-cloud-scripts, check:links: pass. Upload remains blocked by TASK-1.7.
 <!-- SECTION:NOTES:END -->
