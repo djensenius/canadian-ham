@@ -1,11 +1,11 @@
 ---
 id: TASK-93
 title: Make App Store-eligible packaging the TestFlight default
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-11-04T02:25:00Z'
-updated_date: '2026-11-04T02:40:00Z'
+updated_date: '2026-11-04T02:52:00Z'
 labels:
   - release
   - apple
@@ -56,3 +56,9 @@ Requested targeted checks: pnpm test:fastlane -> 15 runs, 1175 assertions, 0 fai
 
 Coordinator signed export-only evidence (no upload) from packaging commit d6c24545 (later 29f85222 only tightens option validation): ios 202611032133 IPA (watch CFBundleVersion matches), mac 202611032136 pkg (Apple Distribution app; 3rd Party Mac Developer Installer pkg), appletvos 202611032138, xros 202611032139. For each export: ExportOptions method app-store-connect, testFlightInternalTestingOnly false, Apple Distribution team 9JALHNGRBQ, codesign verify ok, no iCloud/ubiquity/CloudKit/aps entitlements, no official-basic-exam content; ci_post_xcodebuild.sh archive guard passed for all four. Note: XBUILD_DERIVED_DATA_ROOT makes xbuild add -derivedDataPath to -exportArchive (xcodebuild rejects it); exports ran without it. Reviewer APPROVE WITH NOTES; both low findings fixed in 29f85222 (15 runs, 1175 assertions, 0 failures). Re-ran official-reference-sheet, xcode-cloud-scripts, check:links: pass. Upload remains blocked by TASK-1.7.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Fastlane beta lanes (ios, mac, appletvos, xros) now default to App Store-eligible export (app-store-connect, testFlightInternalTestingOnly false, official sheet excluded); explicit distribution:false keeps internal-only mode. Options fail closed; eligible/protected uploads remain blocked until TASK-1.7; internal fallback sets distribute_external:false. Docs updated. Verified with fastlane harness (15 runs, 0 failures), reference-sheet, Xcode Cloud script and link checks, and signed export-only inspection on all four platforms (no upload). Merged in #1082.
+<!-- SECTION:FINAL_SUMMARY:END -->
