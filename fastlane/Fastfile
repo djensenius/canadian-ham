@@ -244,7 +244,7 @@ BETA_OPTION_KEYS = %i[artifact_path export_only distribution].freeze
 # A "don't upload" switch must fail safe: reject unknown option names and
 # unrecognised values instead of falling through to a real upload.
 def beta_export_only?(options)
-  unknown = options.keys.map(&:to_sym) - BETA_OPTION_KEYS
+  unknown = options.keys - BETA_OPTION_KEYS
   UI.user_error!("Unknown beta option(s): #{unknown.join(', ')}; allowed: #{BETA_OPTION_KEYS.join(', ')}") unless unknown.empty?
   beta_boolean_option(options, :export_only)
 end
@@ -283,6 +283,9 @@ def beta_distribution_artifact?(path)
 end
 
 def upload_beta(platform_key, options = {})
+  normalized_options = options.transform_keys(&:to_sym)
+  UI.user_error!("Duplicate beta option names") unless normalized_options.length == options.length
+  options = normalized_options
   export_only = beta_export_only?(options)
   distribution = beta_distribution?(options)
   # TASK-85 must land and TASK-1.7 must allow it before any App Store Connect
@@ -291,7 +294,8 @@ def upload_beta(platform_key, options = {})
     UI.user_error!("distribution:true (the default) requires export_only:true; uploading App Store distribution builds waits for TASK-1.7 and TASK-85 (docs/release/distribution.md)")
   end
   result =
-    if options[:artifact_path]
+    if options.key?(:artifact_path)
+      UI.user_error!("artifact_path must be a non-empty path when supplied") if options[:artifact_path].to_s.strip.empty?
       config = BETA_PLATFORMS.fetch(platform_key)
       path = File.expand_path(options[:artifact_path])
       UI.user_error!("No artifact at #{path}") unless File.file?(path)

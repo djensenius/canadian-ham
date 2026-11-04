@@ -128,6 +128,49 @@ class FastlaneExportOnlyTests < Minitest::Test
     assert_equal File.expand_path(__FILE__), result[:artifact_path]
   end
 
+  def test_string_option_keys_are_normalized_before_deciding_whether_to_upload
+    [{ "export_only" => true },
+     { "export_only" => true, "distribution" => false },
+     { "export_only" => true, distribution: false }].each do |options|
+      lane = BetaLaneHarness.new
+      lane.upload_beta(:ios, options.freeze)
+      distribution = options.fetch("distribution") { options.fetch(:distribution, true) }
+      assert_equal [[:ios, !distribution]], lane.archives
+      assert_equal [distribution], lane.distributions
+      assert_empty lane.uploads
+    end
+    lane = BetaLaneHarness.new
+    result = lane.upload_beta(:ios, "artifact_path" => __FILE__, "export_only" => true)
+    assert_empty lane.archives
+    assert_empty lane.uploads
+    assert_equal File.expand_path(__FILE__), result[:artifact_path]
+  end
+
+  def test_duplicate_string_and_symbol_options_fail_before_archive_or_upload
+    [{ "export_only" => true, export_only: false, distribution: false },
+     { distribution: false, "distribution" => true, export_only: true }].each do |options|
+      lane = BetaLaneHarness.new
+      error = assert_raises(RuntimeError) { lane.upload_beta(:ios, options) }
+      assert_match(/Duplicate beta option names/, error.message)
+      assert_empty lane.archives
+      assert_empty lane.uploads
+    end
+  end
+
+  def test_supplied_nil_or_blank_artifact_path_never_falls_back_to_archiving
+    [nil, "", " ", "\t\n"].each do |path|
+      [:artifact_path, "artifact_path"].each do |key|
+        [{ export_only: true }, { distribution: false }, { distribution: false, export_only: true }].each do |options|
+          lane = BetaLaneHarness.new
+          error = assert_raises(RuntimeError) { lane.upload_beta(:ios, options.merge(key => path)) }
+          assert_match(/artifact_path must be a non-empty path when supplied/, error.message)
+          assert_empty lane.archives
+          assert_empty lane.uploads
+        end
+      end
+    end
+  end
+
   def test_explicit_false_distribution_keeps_internal_export_for_all_platforms
     [:ios, :mac, :appletvos, :xros].each do |platform|
       [false, "false", "NO", "0", 0, " false "].each do |option|
