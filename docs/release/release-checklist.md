@@ -93,7 +93,7 @@ Owner-only device checks and decisions (Apple Watch, Apple TV, iPhone Duo, signe
 ## Official reference sheet build gate (TASK-44.4)
 
 - [ ] Written ISED permission explicitly covers the sheet before public distribution; the gate in [content licensing](../content-licensing.md#public-release-gate) still applies even with the fallback.
-- [ ] Public Apple Release build has no `OFFICIAL_REFERENCE_SHEET` compilation condition / `-DOFFICIAL_REFERENCE_SHEET` flag and no `official-basic-exam/` in its resources. Internal fastlane `beta` lanes opt in under decision 2A; do **not** reuse that override in a public/App Store lane.
+- [ ] Public Apple Release build has no `OFFICIAL_REFERENCE_SHEET` compilation condition / `-DOFFICIAL_REFERENCE_SHEET` flag and no `official-basic-exam/` in its resources. Default fastlane `beta` exports are App Store-eligible and exclude it; only explicit `distribution:false` internal-only builds opt in under decision 2A. Do **not** reuse that override in public/App Store-eligible packaging.
 - [ ] Public web build runs `pnpm build:web` without `OFFICIAL_REFERENCE_SHEET=YES` and passes its automatic output exclusion check: every file is compared with the official page/transcript SHA-256 values in `content/reference/official-basic-exam/README.md`, including renamed assets and decoded base64 image data URLs. Filename and distinctive transcript-text checks also apply. Inspect the service-worker precache for official-sheet references; the original study sheet remains available. See the [gate limitations](../content-licensing.md#official-sheet-implementation-gate-task-444) for re-encoded images and obfuscated/assembled data URLs.
 - [ ] `pnpm test:official-reference-sheet` passes, including renamed/inline web leak fixtures, clean original-study-sheet output, and stale-resource removal on an off Apple build. See [internal TestFlight](testflight.md) for the internal-only exception.
 
@@ -110,7 +110,10 @@ build/commit/device/tester and failures, not just checkmarks.
   keychain, never a separate watch ASC platform or login keychain; never wrap
   fastlane in `lockf`. Delivery uses the owner-triggered Xcode Cloud iOS archive
   or a separately authorized internal fallback under the runbook's restrictions.
-  Verify `testFlightInternalTestingOnly` remains on.
+  The default export is App Store-eligible and must not be uploaded before TASK-1.7
+  and TASK-85 clear, even to internal testers. Before those gates clear, delivery
+  must keep `testFlightInternalTestingOnly` on (Fastlane requires explicit
+  `distribution:false` plus separate owner upload authorization).
 - [ ] Inspect `Payload/CanadianHam.app/Watch/CanadianHamWatch.app`: child bundle ID
   `org.davidjensenius.CanadianHam.watchkitapp`, companion ID matching the iOS
   container, independent-operation flag, matching `CFBundleVersion` (Xcode Cloud

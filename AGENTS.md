@@ -36,8 +36,11 @@
   automatically upload or trigger release workflows, including after merges. Merge or review approval and
   internal tester eligibility do not authorize uploads or workflow triggers; any agent-run upload needs separate
   explicit owner authorization and all existing gates. Agents do not trigger Xcode Cloud builds.
-- Fastlane is only a temporary, separately authorized internal fallback (`fastlane ios beta`, `mac beta`,
-  `appletvos beta`, `xros beta`), never an automatic post-merge step. Run the post-merge iOS/macOS checks first
+- Fastlane beta lanes default to App Store-eligible packaging without the official reference sheet;
+  while upload gates remain, use `fastlane <platform> beta export_only:true` for local inspection.
+  Fastlane uploads are only a temporary, separately authorized internal fallback: explicitly pass
+  `distribution:false` to `fastlane ios beta`, `mac beta`, `appletvos beta` or `xros beta`.
+  This legacy mode includes the official sheet under decision 2A. It is never an automatic post-merge step. Run the post-merge iOS/macOS checks first
   and use the main checkout. Fastlane build numbers are timestamps; Xcode Cloud uses incrementing integers.
   Under build-number option (b) in `docs/release/distribution.md#build-numbers`, from the merge that raises
   `MARKETING_VERSION` onward (including that merge), do not upload new-version Fastlane builds for iOS, tvOS
@@ -46,9 +49,12 @@
 - Signing uses the dedicated build keychain described in `docs/release/testflight.md`; never ask for or handle the login keychain password.
 - Internal testers only until task-1.7: no external groups, public links or App Store submission.
 - App Store distribution builds and Xcode Cloud are owner-gated (`docs/release/distribution.md`). Agents may run
-  `fastlane <platform> beta export_only:true distribution:true` to check a distribution export, but never upload one
+  `fastlane <platform> beta export_only:true` to check a distribution export, but never upload one
   and never create or edit Xcode Cloud workflows or App Store Connect settings. Distribution uploads wait for task-1.7
-  and task-85.
+  and task-85, even for internal testers. Packaging eligibility grants no upload authorization; a beta
+  command without `export_only:true` or explicit `distribution:false` fails closed.
+  Only after those gates clear, the owner may configure the standard Xcode Cloud workflow with
+  **TestFlight and App Store**, **Restrict Editing** on, and an internal-team-only TestFlight post-action.
 - After every separately authorized Fastlane fallback upload, the coordinator updates that platform's line in
   `apps/apple/ci_scripts/build-number-floors` to the uploaded build number in a PR right after the upload, before the
   next Xcode Cloud archive. If Xcode Cloud uses one build-number sequence (option (a) in

@@ -4,6 +4,8 @@ Status: internal TestFlight setup for Backlog `task-1.10`. Do not invite externa
 
 Xcode Cloud is preferred: the owner connects/configures it and triggers builds from main. Agents may prepare delivery and run local export-only checks, but must not automatically upload or trigger release workflows, including after merges; agents do not trigger Xcode Cloud builds. Merge or review approval and internal tester eligibility do not authorize uploads or workflow triggers. Any agent-run upload requires separate explicit owner authorization and all existing gates. The upload commands below are only a temporary, separately authorized internal Fastlane fallback.
 
+All four beta lanes now default to **App Store-eligible packaging**, not upload permission. Use `fastlane <platform> beta export_only:true` for local inspection. TASK-85 is Done, but TASK-1.7 is not: even an internal-team upload of this default export remains blocked. Only explicit `distribution:false` selects the legacy internal-only fallback.
+
 ## Scope and identifiers
 
 - App name: **Canadian Ham**.
@@ -82,15 +84,15 @@ To revoke access, delete the keychain, remove it from the search list, and revok
 
 ## Internal beta lanes
 
-Each beta lane archives and exports a **Release** build through `xbuild` with `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer`, automatic signing, team `9JALHNGRBQ`, `fastlane/ExportOptions.plist` (`method=app-store-connect`), and App Store Connect API-key signing arguments. The lanes then upload the exported `.ipa` or `.pkg` with `upload_to_testflight(skip_waiting_for_build_processing: true)`.
+Each beta lane archives and exports a **Release** build through `xbuild` with `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer`, automatic signing, team `9JALHNGRBQ`, and App Store Connect API-key signing arguments. The default uses `fastlane/ExportOptions-AppStore.plist` (`method=app-store-connect`, no internal-only flag) and excludes the official reference sheet. It requires `export_only:true` while the distribution upload gates remain; a bare `beta` command fails before archiving.
 
-Run these uploading commands only with separate explicit owner authorization for the internal fallback, after review/merge approval and the post-merge iOS/macOS checks, from the main checkout. They are never automatic post-merge steps; only internal TestFlight is eligible until `task-1.7` explicitly permits wider distribution:
+For the legacy internal-only fallback, explicitly pass `distribution:false`. It uses `fastlane/ExportOptions.plist` (`testFlightInternalTestingOnly=true`), opts in to the official reference sheet under decision 2A, and uploads with `upload_to_testflight(distribute_external: false, skip_waiting_for_build_processing: true)`. Run these uploading commands only with separate explicit owner authorization, after review/merge approval and the post-merge iOS/macOS checks, from the main checkout. They are never automatic post-merge steps; only internal-only TestFlight packaging is eligible until `task-1.7` explicitly permits wider distribution:
 
 ```sh
-fastlane ios beta       # CanadianHam, generic/platform=iOS, .ipa includes CanadianHamWatch
-fastlane mac beta       # CanadianHam, generic/platform=macOS, exports .pkg
-fastlane appletvos beta # CanadianHamTV, generic/platform=tvOS, exports .ipa
-fastlane xros beta      # CanadianHamVision, generic/platform=visionOS, exports .ipa
+fastlane ios beta distribution:false       # CanadianHam, generic/platform=iOS, .ipa includes CanadianHamWatch
+fastlane mac beta distribution:false       # CanadianHam, generic/platform=macOS, exports .pkg
+fastlane appletvos beta distribution:false # CanadianHamTV, generic/platform=tvOS, exports .ipa
+fastlane xros beta distribution:false      # CanadianHamVision, generic/platform=visionOS, exports .ipa
 ```
 
 Under build-number option (b) in [distribution.md](distribution.md#owner-decision-before-the-first-xcode-cloud-build), from the merge that raises `MARKETING_VERSION` onward (including that merge), stop Fastlane uploads for iOS, tvOS and visionOS. Never upload a new-version timestamp build for those platforms, including an inspection export; it would block their small Xcode Cloud build numbers. Their builds then come only from owner-triggered Xcode Cloud. The macOS fallback under option (c) is optional and still requires separate explicit owner authorization.
@@ -107,23 +109,24 @@ DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer FASTLANE_SKIP_UPDATE_CH
 DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer FASTLANE_SKIP_UPDATE_CHECK=1 fastlane mac beta export_only:true # no watch payload
 ```
 
-`export_only` accepts true/false (also yes/no, 1/0, any case). Any other value or an unknown option name stops the lane before archiving, so a typo never turns into an upload. `pnpm test:fastlane` runs the lane safety tests (`scripts/test-fastlane-export-only.rb`); it needs Ruby 3.0 or later (the mise Ruby fastlane uses), not macOS system Ruby 2.6. It also needs macOS `plutil`, so GitHub CI doesn't run it; run it locally (see [release-tooling checks](distribution.md#release-tooling-checks-github-ci-and-local)).
+`export_only` and `distribution` accept true/false (also yes/no, 1/0, any case). Only an omitted option gets its default (`export_only:false`, `distribution:true`); an empty or malformed supplied value or an unknown option name stops the lane before archiving, so a typo never turns into an upload. `pnpm test:fastlane` runs the lane safety tests (`scripts/test-fastlane-export-only.rb`); it needs Ruby 3.0 or later (the mise Ruby fastlane uses), not macOS system Ruby 2.6. It also needs macOS `plutil`, so GitHub CI doesn't run it; run it locally (see [release-tooling checks](distribution.md#release-tooling-checks-github-ci-and-local)).
 
-This uses the same Release signing, dedicated keychain, API key and internal-only
-export options as a normal beta run. Omitting the option uploads, so always
-include `export_only:true` for inspection.
-
-Add `distribution:true` (only together with `export_only:true`) to check an App
-Store distribution export instead: it uses `fastlane/ExportOptions-AppStore.plist`,
+This uses the same Release signing, dedicated keychain and API key as the internal
+fallback, but defaults to an App Store-eligible export. Explicit `distribution:true`
+is redundant: the default uses `fastlane/ExportOptions-AppStore.plist`,
 leaves out the internal-only official reference sheet, writes under
 `fastlane/archives/appstore/` and `fastlane/builds/appstore/`, and never uploads.
+To inspect legacy internal-only packaging instead, add `distribution:false` and
+keep `export_only:true`; omitting `export_only:true` in that explicit legacy mode
+uploads and requires separate owner authorization. Do not copy or move an App
+Store-eligible artifact into an internal path to bypass the upload gate.
 See [distribution.md](distribution.md#fastlane-distribution-export-fallback-and-local-check).
 
 ### watchOS beta entry path and installation
 
 **Use the owner-triggered Xcode Cloud iOS archive for the watch** (scheme
 `CanadianHam`). For local inspection use `fastlane ios beta export_only:true`;
-`fastlane ios beta` uploads only as a separately authorized internal fallback,
+`fastlane ios beta distribution:false` uploads only as a separately authorized internal fallback,
 subject to the [platform restrictions above](#internal-beta-lanes). There is no
 separate watchOS App Store Connect platform/lane. The iOS archive embeds
 `Payload/CanadianHam.app/Watch/CanadianHamWatch.app` in the exported IPA; the
@@ -159,7 +162,9 @@ Xcode Cloud or a separately authorized Fastlane fallback:
    Canadian Ham → Install** (ensure compatible watchOS and enough storage).
    Confirm Canadian Ham appears in the watch app list and launches on the watch.
 3. Do not create external groups, public invitation links, external testing or an
-   App Store submission. `testFlightInternalTestingOnly` remains enabled. Record
+   App Store submission. Before TASK-1.7 and TASK-85 clear, delivery must keep
+   `testFlightInternalTestingOnly` enabled; the default App Store-eligible local
+   export is not uploadable even to this internal group. Record
    processing/install failures rather than changing capabilities or widening
    distribution to work around them.
 
@@ -225,11 +230,11 @@ recorded. TASK-14.3's haptics and TASK-14.5's listening gates also remain explic
 Only with separate explicit owner authorization for an internal fallback upload, and subject to the [platform restrictions above](#internal-beta-lanes): if archive and export succeeded but the upload step failed, upload the exported artifact without rebuilding. A failed attempt does not authorize a retry:
 
 ```sh
-fastlane ios beta artifact_path:$PWD/fastlane/builds/ios/<build-number>/CanadianHam.ipa
-fastlane mac beta artifact_path:$PWD/fastlane/builds/mac/<build-number>/CanadianHam.pkg
+fastlane ios beta distribution:false artifact_path:$PWD/fastlane/builds/ios/<build-number>/CanadianHam.ipa
+fastlane mac beta distribution:false artifact_path:$PWD/fastlane/builds/mac/<build-number>/CanadianHam.pkg
 ```
 
-The Fastfile points fastlane's own Xcode lookup at `/Applications/Xcode.app` because `xcode-select` on the build host points at the Command Line Tools; without that, `upload_to_testflight` fails with `undefined method 'start_with?' for nil`.
+Only reuse a verified internal-only export. App Store-eligible exports remain gated, and paths under `fastlane/builds/appstore/` (including symlink/case aliases) are refused even with `distribution:false`. The Fastfile points fastlane's own Xcode lookup at `/Applications/Xcode.app` because `xcode-select` on the build host points at the Command Line Tools; without that, `upload_to_testflight` fails with `undefined method 'start_with?' for nil`.
 
 ## Versioning and build numbers
 
@@ -272,10 +277,10 @@ Do not switch to `DebugCloudKit` or disable Release signing for uploads.
 
 ### Internal-only builds
 
-`fastlane/ExportOptions.plist` sets `testFlightInternalTestingOnly`, so App Store Connect only allows these builds for internal testing. Builds uploaded before that flag was added (2026-10-10, 13:06–13:16) aren't flagged; no external groups exist, so they stay internal. Keep the flag in this file; distribution builds use the separate `fastlane/ExportOptions-AppStore.plist` (export-only until task-1.7 and task-85) or an Xcode Cloud "TestFlight and App Store" workflow, as described in [distribution.md](distribution.md).
+`fastlane/ExportOptions.plist` sets `testFlightInternalTestingOnly`, so App Store Connect only allows these legacy `distribution:false` builds for internal testing; they cannot later be submitted to the App Store. Builds uploaded before that flag was added (2026-10-10, 13:06–13:16) aren't flagged; no external groups exist, so they stay internal. Keep the flag in this file. Default beta exports now use the separate `fastlane/ExportOptions-AppStore.plist` and can be packaged for later App Store use, but remain export-only until task-1.7 and task-85 allow uploads. Only after those gates clear may the owner configure the future standard Xcode Cloud workflow with **TestFlight and App Store**, **Restrict Editing** on, and an internal-team-only TestFlight post-action, as described in [distribution.md](distribution.md).
 
 ## Internal-only official reference sheet
 
-Owner decision 2026-10-12 (2A) permits the official English Basic exam reference sheet in **internal team-member TestFlight builds only**, pending ISED permission. All four `beta` lanes explicitly add `OTHER_SWIFT_FLAGS=$(inherited) -DOFFICIAL_REFERENCE_SHEET` to their Release archive command. The iOS/iPadOS/macOS app copies the rendered pages and accessible text offline; tvOS/visionOS/watchOS have no official reference-sheet tool and do not bundle these assets. The watch target has separate Basic-bank/explanations-only study-resource membership even when the container's beta archive opts in; inspect the exported payload to confirm it stays that way. No upload is needed to enable the study fallback.
+Owner decision 2026-10-12 (2A) permits the official English Basic exam reference sheet in **internal team-member TestFlight builds only**, pending ISED permission. All four `beta` lanes add `OTHER_SWIFT_FLAGS=$(inherited) -DOFFICIAL_REFERENCE_SHEET` to their Release archive command **only with explicit `distribution:false`**. The iOS/iPadOS/macOS app copies the rendered pages and accessible text offline; tvOS/visionOS/watchOS have no official reference-sheet tool and do not bundle these assets. The watch target has separate Basic-bank/explanations-only study-resource membership even when the container's beta archive opts in; inspect the exported payload to confirm it stays that way. No upload is needed to enable the study fallback.
 
-Default Release builds do not opt in, and neither do `distribution:true` exports or Xcode Cloud archives ([distribution.md](distribution.md)). A future App Store/public lane **must not copy this override** until permission covers the sheet; check that `official-basic-exam/` is absent from the public app bundle. For private web previews only, `OFFICIAL_REFERENCE_SHEET=YES pnpm build:web` opts in; default production builds exclude it. Never publicly deploy the preview. See [content licensing](../content-licensing.md#official-sheet-implementation-gate-task-444) and the [release checklist](release-checklist.md#official-reference-sheet-build-gate-task-444).
+Default Release builds do not opt in, and neither do default beta exports (`distribution:true`) or Xcode Cloud archives ([distribution.md](distribution.md)). App Store-eligible/public packaging **must not copy this override** until permission covers the sheet; check that `official-basic-exam/` is absent from the exported app bundle. For private web previews only, `OFFICIAL_REFERENCE_SHEET=YES pnpm build:web` opts in; default production builds exclude it. Never publicly deploy the preview. See [content licensing](../content-licensing.md#official-sheet-implementation-gate-task-444) and the [release checklist](release-checklist.md#official-reference-sheet-build-gate-task-444).

@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<!-- App Store distribution export: eligible for external TestFlight and App Store review.
-	     No testFlightInternalTestingOnly. Selected only by `beta distribution:true`, which is
+	     No testFlightInternalTestingOnly. The default for every beta lane, which is
 	     export-only until TASK-1.7 and TASK-85 allow uploads; see docs/release/distribution.md. -->
 	<key>method</key>
 	<string>app-store-connect</string>

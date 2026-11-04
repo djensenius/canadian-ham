@@ -77,34 +77,42 @@ end
 class FastlaneExportOnlyTests < Minitest::Test
   ROOT_CONSTANTS = %i[ARCHIVE_ROOT BUILD_ROOT DISTRIBUTION_ARCHIVE_ROOT DISTRIBUTION_BUILD_ROOT].freeze
 
-  def test_export_only_archives_but_never_uploads_for_ios_and_mac
-    [:ios, :mac].each do |platform|
+  def test_default_export_only_archives_without_official_sheet_and_never_uploads_for_all_platforms
+    [:ios, :mac, :appletvos, :xros].each do |platform|
       [true, "true"].each do |option|
         lane = BetaLaneHarness.new
         result = lane.upload_beta(platform, export_only: option)
-        assert_equal [[platform, true]], lane.archives
+        assert_equal [[platform, false]], lane.archives
+        assert_equal [true], lane.distributions
         assert_empty lane.uploads
-        assert_equal "/export/CanadianHam.#{platform == :ios ? 'ipa' : 'pkg'}", result[:artifact_path]
+        assert_equal "/export/CanadianHam.#{platform == :mac ? 'pkg' : 'ipa'}", result[:artifact_path]
       end
     end
   end
 
-  def test_default_and_false_keep_internal_upload_behaviour
-    [{}, { export_only: false }, { export_only: "false" }].each do |options|
-      lane = BetaLaneHarness.new
-      lane.upload_beta(:ios, options)
-      assert_equal [[:ios, true]], lane.archives
-      assert_equal [{ app_identifier: "org.davidjensenius.CanadianHam", app_platform: "ios", skip_waiting_for_build_processing: true, ipa: "/export/CanadianHam.ipa" }], lane.uploads
+  def test_explicit_internal_mode_keeps_uploads_internal_for_all_platforms
+    [:ios, :mac, :appletvos, :xros].each do |platform|
+      [{}, { export_only: false }, { export_only: "false" }, { export_only: "NO" }, { export_only: 0 }].each do |options|
+        lane = BetaLaneHarness.new
+        lane.upload_beta(platform, options.merge(distribution: false))
+        assert_equal [[platform, true]], lane.archives
+        assert_equal [false], lane.distributions
+        config = BetaLaneHarness::BETA_PLATFORMS.fetch(platform)
+        assert_equal [{ app_identifier: "org.davidjensenius.CanadianHam", app_platform: config[:app_platform],
+                        distribute_external: false, skip_waiting_for_build_processing: true,
+                        config[:artifact] => "/export/CanadianHam.#{config[:artifact]}" }], lane.uploads
+      end
     end
   end
 
   def test_unrecognised_values_and_option_names_fail_before_archive_or_upload
-    [{ export_only: "TRUE" }, { export_only: 1 }, { export_only: "yes" }].each do |options|
+    [{ export_only: "TRUE" }, { export_only: 1 }, { export_only: "yes" }, { export_only: " true " }].each do |options|
       lane = BetaLaneHarness.new
       lane.upload_beta(:ios, options)
       assert_empty lane.uploads, "#{options.inspect} must mean export only"
     end
-    [{ export_only: "maybe" }, { export_only: "ture" }, { exportonly: true }, { export: "true" }].each do |options|
+    [nil, "", " ", "maybe", "ture", 2].map { |value| { export_only: value, distribution: false } }
+      .concat([{ exportonly: true, distribution: false }, { export: "true", distribution: false }]).each do |options|
       lane = BetaLaneHarness.new
       assert_raises(RuntimeError) { lane.upload_beta(:ios, options) }
       assert_empty lane.archives, "#{options.inspect} must fail before archiving"
@@ -120,13 +128,15 @@ class FastlaneExportOnlyTests < Minitest::Test
     assert_equal File.expand_path(__FILE__), result[:artifact_path]
   end
 
-  def test_default_and_false_distribution_keep_internal_export
-    [{}, { distribution: false }, { distribution: "no" }].each do |options|
-      lane = BetaLaneHarness.new
-      lane.upload_beta(:ios, options.merge(export_only: true))
-      assert_equal [[:ios, true]], lane.archives
-      assert_equal [false], lane.distributions
-      assert_empty lane.uploads
+  def test_explicit_false_distribution_keeps_internal_export_for_all_platforms
+    [:ios, :mac, :appletvos, :xros].each do |platform|
+      [false, "false", "NO", "0", 0, " false "].each do |option|
+        lane = BetaLaneHarness.new
+        lane.upload_beta(platform, distribution: option, export_only: true)
+        assert_equal [[platform, true]], lane.archives
+        assert_equal [false], lane.distributions
+        assert_empty lane.uploads
+      end
     end
     target = BetaLaneHarness.new.beta_export_target(false)
     assert_equal BetaLaneHarness::EXPORT_OPTIONS_PLIST, target[:export_options_plist]
@@ -151,15 +161,23 @@ class FastlaneExportOnlyTests < Minitest::Test
   end
 
   def test_distribution_without_export_only_fails_before_archive_or_upload
-    [{ distribution: true }, { distribution: "true", export_only: false }, { distribution: "yes", export_only: "no" }].each do |options|
-      lane = BetaLaneHarness.new
-      assert_raises(RuntimeError) { lane.upload_beta(:ios, options) }
-      assert_empty lane.archives, "#{options.inspect} must fail before archiving"
-      assert_empty lane.uploads, "#{options.inspect} must never upload"
+    [:ios, :mac, :appletvos, :xros].each do |platform|
+      [{}, { export_only: false }, { export_only: "false" }, { export_only: "no" }, { export_only: 0 },
+       { artifact_path: __FILE__ }, { distribution: true }, { distribution: "true", export_only: false },
+       { distribution: "yes", export_only: "no" }].each do |options|
+        lane = BetaLaneHarness.new
+        error = assert_raises(RuntimeError) { lane.upload_beta(platform, options) }
+        assert_match(/distribution:true \(the default\) requires export_only:true/, error.message)
+        assert_match(/TASK-1.7 and TASK-85/, error.message)
+        assert_empty lane.archives, "#{options.inspect} must fail before archiving"
+        assert_empty lane.uploads, "#{options.inspect} must never upload"
+      end
     end
-    [{ distribution: "maybe", export_only: true }, { distribution: "ture", export_only: true }, { distribuion: true, export_only: true }].each do |options|
+    [nil, "", " ", "maybe", "ture", 2].flat_map { |value| [true, false].map { |export| { distribution: value, export_only: export } } }
+      .concat([{ distribuion: true, export_only: true }]).each do |options|
       lane = BetaLaneHarness.new
-      assert_raises(RuntimeError) { lane.upload_beta(:ios, options) }
+      error = assert_raises(RuntimeError) { lane.upload_beta(:ios, options) }
+      assert_match(/distribution must be true\/false|Unknown beta option/, error.message)
       assert_empty lane.archives, "#{options.inspect} must fail before archiving"
       assert_empty lane.uploads, "#{options.inspect} must never upload"
     end
@@ -177,7 +195,7 @@ class FastlaneExportOnlyTests < Minitest::Test
       aliases << case_variant if File.file?(case_variant) # case-insensitive volumes only
       aliases.each do |artifact|
         lane = BetaLaneHarness.new
-        error = assert_raises(RuntimeError) { lane.upload_beta(:ios, artifact_path: artifact) }
+        error = assert_raises(RuntimeError) { lane.upload_beta(:ios, distribution: false, artifact_path: artifact) }
         assert_match(/Refusing to upload App Store distribution export/, error.message, artifact)
         result = lane.upload_beta(:ios, artifact_path: artifact, export_only: true)
         assert_equal File.expand_path(artifact), result[:artifact_path]
@@ -194,20 +212,24 @@ class FastlaneExportOnlyTests < Minitest::Test
       File.symlink(path, link)
       [path, link].each do |artifact|
         lane = BetaLaneHarness.new
-        lane.upload_beta(:ios, artifact_path: artifact)
+        lane.upload_beta(:ios, distribution: false, artifact_path: artifact)
         assert_equal [File.expand_path(artifact)], lane.uploads.map { |upload| upload[:ipa] }
+        assert_equal [false], lane.uploads.map { |upload| upload[:distribute_external] }
       end
       write_artifact(File.join(BetaLaneHarness::DISTRIBUTION_BUILD_ROOT, "ios", "1"))
       lane = BetaLaneHarness.new
-      lane.upload_beta(:ios, artifact_path: path)
+      lane.upload_beta(:ios, distribution: false, artifact_path: path)
       assert_equal 1, lane.uploads.length
+      assert_equal false, lane.uploads.first[:distribute_external]
     end
   end
 
   def test_export_options_plist_reaches_the_export_arguments
     with_temp_roots do |dir|
       [:ios, :mac, :appletvos, :xros].each do |platform|
-        [[{}, BetaLaneHarness::EXPORT_OPTIONS_PLIST, BetaLaneHarness::ARCHIVE_ROOT, BetaLaneHarness::BUILD_ROOT, true],
+        [[{}, BetaLaneHarness::DISTRIBUTION_EXPORT_OPTIONS_PLIST,
+          BetaLaneHarness::DISTRIBUTION_ARCHIVE_ROOT, BetaLaneHarness::DISTRIBUTION_BUILD_ROOT, false],
+         [{ distribution: false }, BetaLaneHarness::EXPORT_OPTIONS_PLIST, BetaLaneHarness::ARCHIVE_ROOT, BetaLaneHarness::BUILD_ROOT, true],
          [{ distribution: true }, BetaLaneHarness::DISTRIBUTION_EXPORT_OPTIONS_PLIST,
           BetaLaneHarness::DISTRIBUTION_ARCHIVE_ROOT, BetaLaneHarness::DISTRIBUTION_BUILD_ROOT, false]].each do |options, plist, archive_root, build_root, official|
           lane = ExportArgsHarness.new

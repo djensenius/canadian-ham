@@ -19,8 +19,8 @@ PRIMARY_LANGUAGE = "en-CA"
 REPO_ROOT = File.expand_path("..", __dir__)
 PROJECT_PATH = File.join(REPO_ROOT, "apps/apple/CanadianHam.xcodeproj")
 EXPORT_OPTIONS_PLIST = File.join(REPO_ROOT, "fastlane/ExportOptions.plist")
-# App Store distribution export (no testFlightInternalTestingOnly), selected only
-# by `beta distribution:true export_only:true`. See docs/release/distribution.md.
+# Default beta export (no testFlightInternalTestingOnly); requires export_only:true
+# until the distribution upload gates clear. See docs/release/distribution.md.
 DISTRIBUTION_EXPORT_OPTIONS_PLIST = File.join(REPO_ROOT, "fastlane/ExportOptions-AppStore.plist")
 DEVELOPER_DIR = "/Applications/Xcode.app/Contents/Developer"
 # xcode-select on the build host points at the Command Line Tools. fastlane's
@@ -127,7 +127,7 @@ platform :ios do
     print_asc_status
   end
 
-  desc "Archive/export the iOS Release build with xbuild and upload it to internal TestFlight."
+  desc "Export an App Store-eligible iOS Release build with export_only:true; distribution:false selects the internal-only fallback."
   lane :beta do |options|
     upload_beta(:ios, options)
   end
@@ -138,7 +138,7 @@ platform :mac do
     app_store_connect_api_key(**API_KEY)
   end
 
-  desc "Archive/export the macOS Release build with xbuild and upload it to internal TestFlight."
+  desc "Export an App Store-eligible macOS Release build with export_only:true; distribution:false selects the internal-only fallback."
   lane :beta do |options|
     upload_beta(:mac, options)
   end
@@ -149,7 +149,7 @@ platform :appletvos do
     app_store_connect_api_key(**API_KEY)
   end
 
-  desc "Archive/export the tvOS Release build with xbuild and upload it to internal TestFlight."
+  desc "Export an App Store-eligible tvOS Release build with export_only:true; distribution:false selects the internal-only fallback."
   lane :beta do |options|
     upload_beta(:appletvos, options)
   end
@@ -160,7 +160,7 @@ platform :xros do
     app_store_connect_api_key(**API_KEY)
   end
 
-  desc "Archive/export the visionOS Release build with xbuild and upload it to internal TestFlight."
+  desc "Export an App Store-eligible visionOS Release build with export_only:true; distribution:false selects the internal-only fallback."
   lane :beta do |options|
     upload_beta(:xros, options)
   end
@@ -233,12 +233,12 @@ def print_asc_status
   end
 end
 
-# Pass artifact_path:<exported .ipa/.pkg> to upload an existing export
-# without re-archiving (for example, after an upload-only failure).
-# Pass export_only:true to inspect a signed export without uploading it.
-# Pass distribution:true (with export_only:true) for an App Store distribution
-# export: ExportOptions-AppStore.plist, no internal-only official reference sheet
-# opt-in, and separate appstore/ archive and export folders.
+# Pass export_only:true to inspect a signed App Store-eligible export (the default):
+# ExportOptions-AppStore.plist, no internal-only official reference sheet opt-in,
+# and separate appstore/ archive and export folders.
+# Pass distribution:false for the legacy internal-only mode, including the sheet.
+# Only a separately owner-authorized internal fallback may upload; artifact_path
+# can reuse its exported .ipa/.pkg without re-archiving.
 BETA_OPTION_KEYS = %i[artifact_path export_only distribution].freeze
 
 # A "don't upload" switch must fail safe: reject unknown option names and
@@ -250,12 +250,12 @@ def beta_export_only?(options)
 end
 
 def beta_distribution?(options)
-  beta_boolean_option(options, :distribution)
+  beta_boolean_option(options, :distribution, default: true)
 end
 
-def beta_boolean_option(options, key)
+def beta_boolean_option(options, key, default: false)
+  return default unless options.key?(key)
   value = options[key]
-  return false if value.nil?
   case value.to_s.strip.downcase
   when "true", "yes", "1" then true
   when "false", "no", "0" then false
@@ -263,7 +263,7 @@ def beta_boolean_option(options, key)
   end
 end
 
-# Internal (default) or App Store distribution export settings.
+# App Store distribution (default) or explicit internal-only export settings.
 def beta_export_target(distribution)
   if distribution
     { export_options_plist: DISTRIBUTION_EXPORT_OPTIONS_PLIST, archive_root: DISTRIBUTION_ARCHIVE_ROOT, build_root: DISTRIBUTION_BUILD_ROOT }
@@ -288,7 +288,7 @@ def upload_beta(platform_key, options = {})
   # TASK-85 must land and TASK-1.7 must allow it before any App Store Connect
   # upload of a distribution build, so these lanes only export them.
   if distribution && !export_only
-    UI.user_error!("distribution:true requires export_only:true; uploading App Store distribution builds waits for TASK-1.7 and TASK-85 (docs/release/distribution.md)")
+    UI.user_error!("distribution:true (the default) requires export_only:true; uploading App Store distribution builds waits for TASK-1.7 and TASK-85 (docs/release/distribution.md)")
   end
   result =
     if options[:artifact_path]
@@ -311,6 +311,7 @@ def upload_beta(platform_key, options = {})
   upload_args = {
     app_identifier: PRIMARY_BUNDLE_ID,
     app_platform: result[:app_platform],
+    distribute_external: false,
     skip_waiting_for_build_processing: true
   }
   upload_args[result[:artifact]] = result[:artifact_path]
@@ -355,7 +356,7 @@ def archive_and_export(platform_key, official_reference_sheet: false, distributi
     "CODE_SIGNING_ALLOWED=YES",
     *(config[:build_settings] || [])
   ]
-  # Owner decision 2A: upload_beta explicitly opts in; shared archives default off.
+  # Owner decision 2A: only distribution:false betas opt in; shared archives default off.
   archive_args << "OTHER_SWIFT_FLAGS=$(inherited) -DOFFICIAL_REFERENCE_SHEET" if official_reference_sheet
   run_xbuild(archive_args)
 
