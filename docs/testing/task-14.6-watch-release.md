@@ -391,9 +391,12 @@ Every row below is from `watch-full.log` and the same result bundle; no exclusio
 
 ## Owner upload and physical-watch results (pending)
 
-**Not performed.** No TestFlight upload, processing, invitation, physical install,
-VoiceOver listening or tactile validation was done by this agent. Export-only
-build numbers above are **not processed TestFlight builds**. AC4 remains unchecked
+**Physical-watch checks not performed.** No invitation, physical install,
+VoiceOver listening or tactile validation was done by an agent, and the
+export-only build numbers above are **not processed TestFlight builds**. On
+2026-11-05, under separate explicit owner authorization, TASK-94 uploaded
+internal-only fallback builds for all four platforms; the iOS build contains the
+watch app (see the table). AC4 remains unchecked
 and TASK-14.6 In Progress. Xcode Cloud is preferred: the owner connects/configures
 it and triggers the internal iOS build from main, embedding the watch. Agents do
 not automatically upload or trigger release workflows after merges, and do not
@@ -418,7 +421,7 @@ accessibility audits cannot establish heard speech or fixed-preset fidelity.
 
 | Owner gate | Result |
 | --- | --- |
-| Approved upload / processed ASC version/build/commit | Pending owner-triggered Xcode Cloud or separately authorized fallback |
+| Approved upload / processed ASC version/build/commit | Separately authorized internal-only Fastlane fallback upload, 2026-11-05 (TASK-94, main `a98b5375`): iOS 1.0.0 build `202611050831` with the embedded watch app (same `CFBundleVersion`), processed VALID in App Store Connect, internal testing only. Owner-triggered Xcode Cloud build still pending |
 | Physical watch model/watchOS/install method/tester/date | Pending owner |
 | Practice, Morse, reference, EN/FR with phone absent and network off | Pending owner |
 | Same-session three-style haptics, Silent Mode, tone alignment/cancellation | Pending owner; TASK-14.3 AC2 still open |

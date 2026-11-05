@@ -68,10 +68,10 @@ Every Fastlane upload so far is version 1.0.0, and all of them are above 2,147,4
 
 | Platform | Version | Highest Fastlane upload |
 | --- | --- | --- |
-| `ios` | 1.0.0 | 202610271751 |
-| `macos` | 1.0.0 | 202610271753 |
-| `tvos` | 1.0.0 | 202610271756 |
-| `visionos` | 1.0.0 | 202610271757 |
+| `ios` | 1.0.0 | 202611050831 |
+| `macos` | 1.0.0 | 202611050836 |
+| `tvos` | 1.0.0 | 202611050840 |
+| `visionos` | 1.0.0 | 202611050844 |
 
 `ci_pre_xcodebuild.sh` reads the platform from Xcode Cloud's `CI_PRODUCT_PLATFORM` and the version from the plain `MARKETING_VERSION = x.y.z;` lines in `project.pbxproj`, which must all agree. It fails an archive when:
 
@@ -86,13 +86,13 @@ The check only stops mistakes early; App Store Connect still enforces its own ru
 
 The owner prefers Xcode Cloud. In every option below, Fastlane is only a temporary fallback whose internal uploads need separate explicit owner authorization.
 
-- **(a) One sequence for every platform.** Set Next Build Number to a plain integer above every floor, for example `202610271758`; Xcode Cloud then counts up by 1 from it. If App Store Connect accepts it, all four platforms continue at 1.0.0 from that number and nothing else changes.
+- **(a) One sequence for every platform.** Set Next Build Number to a plain integer above every floor, for example `202611050845`; Xcode Cloud then counts up by 1 from it. If App Store Connect accepts it, all four platforms continue at 1.0.0 from that number and nothing else changes.
 - **(b) App Store Connect refuses it (probably the 32-bit limit).** iOS, iPadOS, tvOS and visionOS ship a new marketing version, for example 1.0.1, starting from small Xcode Cloud numbers:
   1. The coordinator raises `MARKETING_VERSION` in `apps/apple/project.yml` to a new `x.y.z` (all targets share it, including the watch app), regenerates the project and merges it in a pull request.
   2. **From that version-bump merge onward (including that merge), the coordinator stops Fastlane uploads for iOS, tvOS and visionOS.** Do not upload any Fastlane timestamp build of those platforms at the new version, even one exported earlier for inspection: it would sit above every small Xcode Cloud number for that version and block them. The merge authorizes no upload or workflow trigger. A macOS fallback under (c) is optional and separately authorized, not a post-merge step.
   3. The owner leaves Next Build Number at a small value that App Store Connect accepts.
   4. The owner-triggered Xcode Cloud workflows archive iOS, tvOS and visionOS only, and deliver their internal TestFlight builds from now on. Leave out the macOS archive action; the floor check fails it anyway (see (c)).
-- **(c) macOS under (b).** Mac build numbers never go back, so Xcode Cloud can't build the Mac app until App Store Connect accepts a Next Build Number above `202610271753`. The owner chooses:
+- **(c) macOS under (b).** Mac build numbers never go back, so Xcode Cloud can't build the Mac app until App Store Connect accepts a Next Build Number above `202611050836`. The owner chooses:
   - optionally keep the Mac app on the Fastlane export path for now (`fastlane mac beta export_only:true` for an App Store-eligible inspection). Any legacy internal-only `fastlane mac beta distribution:false` upload needs separate explicit owner authorization and must be recorded in the floors file; default distribution uploads remain gated; or
   - ask Apple Developer Support whether App Store Connect can accept a higher Next Build Number for this app, or which Apple-supported route to use.
 
@@ -120,7 +120,7 @@ Agents don't do these steps. Record the date and settings in TASK-86's notes. Th
      | Platform | Scheme | Notes |
      | --- | --- | --- |
      | iOS | `CanadianHam` | Embeds `CanadianHamWatch`; don't archive the watch scheme separately. |
-     | macOS | `CanadianHam` | Same target as iOS (`platform: auto`). Leave out under [option (b)](#owner-decision-before-the-first-xcode-cloud-build) until App Store Connect accepts a Mac build number above `202610271753`. |
+     | macOS | `CanadianHam` | Same target as iOS (`platform: auto`). Leave out under [option (b)](#owner-decision-before-the-first-xcode-cloud-build) until App Store Connect accepts a Mac build number above `202611050836`. |
      | tvOS | `CanadianHamTV` | |
      | visionOS | `CanadianHamVision` | |
 
