@@ -1,7 +1,7 @@
 ---
 id: TASK-94
 title: Upload internal-only TestFlight builds via the Fastlane fallback
-status: In Progress
+status: Done
 assignee:
   - '@coordinator'
 created_date: '2026-11-05T13:29:00Z'
@@ -30,10 +30,10 @@ Owner request 2026-11-05 08:24: "Can you push a release that's ONLY eligible for
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Signed internal-only exports for iOS (with the embedded watch app), macOS, tvOS and visionOS are built from the accepted main commit with `distribution:false` and inspected before any upload: signing identity and team, `testFlightInternalTestingOnly` true, no iCloud/CloudKit/push entitlements, privacy manifests present, and the watch build number matching the phone.
-- [ ] #2 Each inspected build is uploaded with `distribute_external:false` and reaches a processed VALID state in App Store Connect, verified read-only; no external group, public link, App Store submission, Xcode Cloud workflow or App Store Connect setting is created or changed.
-- [ ] #3 The uploaded build numbers are recorded in `apps/apple/ci_scripts/build-number-floors` and the docs/release/distribution.md floor table through a merged PR, and the Xcode Cloud script checks pass.
-- [ ] #4 Generated exports and derived data are removed (the four gitignored `.xcarchive` bundles are kept for dSYMs), and the outcome (build numbers, what the builds include, limitations and the owner install/hardware checks still outstanding) is recorded in the task.
+- [x] #1 Signed internal-only exports for iOS (with the embedded watch app), macOS, tvOS and visionOS are built from the accepted main commit with `distribution:false` and inspected before any upload: signing identity and team, `testFlightInternalTestingOnly` true, no iCloud/CloudKit/push entitlements, privacy manifests present, and the watch build number matching the phone.
+- [x] #2 Each inspected build is uploaded with `distribute_external:false` and reaches a processed VALID state in App Store Connect, verified read-only; no external group, public link, App Store submission, Xcode Cloud workflow or App Store Connect setting is created or changed.
+- [x] #3 The uploaded build numbers are recorded in `apps/apple/ci_scripts/build-number-floors` and the docs/release/distribution.md floor table through a merged PR, and the Xcode Cloud script checks pass.
+- [x] #4 Generated exports and derived data are removed (the four gitignored `.xcarchive` bundles are kept for dSYMs), and the outcome (build numbers, what the builds include, limitations and the owner install/hardware checks still outstanding) is recorded in the task.
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -62,3 +62,9 @@ Cleanup: removed the four new exports under `fastlane/builds/<platform>/` (about
 
 Limits and outstanding owner work: these builds are internal-only (`testFlightInternalTestingOnly`) and cannot be used for external testing or App Store submission; App Store-eligible uploads stay blocked until TASK-1.7 (TASK-1.1 reference, date and scope still unrecorded; TASK-1.6 and TASK-1.8 To Do). The owner still has to install the builds from TestFlight and do the physical device and watch checks (TASK-14.6 AC#4, TASK-54 and the docs/release/owner-gates.md sittings). If the owner chooses Xcode Cloud build-number option (a), Next Build Number must be raised above 202611050844 (for example 202611050845) before the first Xcode Cloud build. The option (b) stop rule has not triggered because MARKETING_VERSION is still 1.0.0.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Uploaded internal-only (`testFlightInternalTestingOnly`) TestFlight builds for all four platforms through the owner-authorized Fastlane fallback `distribution:false`: iOS with the embedded watch app 202611050831, macOS 202611050836, tvOS 202611050840 and visionOS 202611050844, all 1.0.0 from main a98b5375. Each signed export was inspected before upload (signing identity and team, entitlements, privacy manifests, watch build number); all four are VALID in App Store Connect with internal=IN_BETA_TESTING and external=NOT_APPLICABLE (read-only check). The Xcode Cloud floors file and the release docs now record the new highest uploads; `pnpm test:xcode-cloud-scripts` (131 passed) and `pnpm check:links` pass. No gate changed: App Store-eligible uploads still wait for TASK-1.7, and no Xcode Cloud workflow, App Store Connect setting or external group was touched. Generated exports and DerivedData were removed; the four small `.xcarchive` bundles were kept for dSYMs. Follow-ups for the owner: install from TestFlight and do the physical device and watch checks (TASK-14.6 AC#4, TASK-54), and raise the Xcode Cloud Next Build Number above 202611050844 if using option (a).
+<!-- SECTION:FINAL_SUMMARY:END -->
