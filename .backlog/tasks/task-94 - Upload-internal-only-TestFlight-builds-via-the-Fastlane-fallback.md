@@ -33,6 +33,7 @@ Owner request 2026-11-05 08:24: "Can you push a release that's ONLY eligible for
 - [ ] #1 Signed internal-only exports for iOS (with the embedded watch app), macOS, tvOS and visionOS are built from the accepted main commit with `distribution:false` and inspected before any upload: signing identity and team, `testFlightInternalTestingOnly` true, no iCloud/CloudKit/push entitlements, privacy manifests present, and the watch build number matching the phone.
 - [ ] #2 Each inspected build is uploaded with `distribute_external:false` and reaches a processed VALID state in App Store Connect, verified read-only; no external group, public link, App Store submission, Xcode Cloud workflow or App Store Connect setting is created or changed.
 - [ ] #3 The uploaded build numbers are recorded in `apps/apple/ci_scripts/build-number-floors` and the docs/release/distribution.md floor table through a merged PR, and the Xcode Cloud script checks pass.
+- [ ] #4 Generated exports and derived data are removed (the four gitignored `.xcarchive` bundles are kept for dSYMs), and the outcome (build numbers, what the builds include, limitations and the owner install/hardware checks still outstanding) is recorded in the task.
 <!-- AC:END -->
 
 ## Implementation Plan
