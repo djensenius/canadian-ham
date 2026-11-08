@@ -3,9 +3,9 @@ id: TASK-95
 title: Refresh internal-only TestFlight builds for November 8
 status: In Progress
 assignee:
-  - '@worker'
+  - '@coordinator'
 created_date: '2026-11-08T05:14:00Z'
-updated_date: '2026-11-08T06:37:00Z'
+updated_date: '2026-11-08T06:45:00Z'
 labels:
   - release
   - apple
@@ -32,7 +32,7 @@ Owner request 2026-11-08: "Please upload a new internal testflght build". This e
 <!-- AC:BEGIN -->
 - [x] #1 New signed internal-only Release exports for all four platforms are built from accepted main and inspected before upload, including live fallback eligibility, increasing build numbers, signing/team, testFlightInternalTestingOnly, offline/no-cloud capabilities, privacy manifests, and matching phone/watch versions and payload.
 - [ ] #2 Each inspected artifact is uploaded with external distribution disabled and the exact platform/version/build reaches VALID and internal-testable state, verified read-only in App Store Connect; no workflow, settings, tester groups, external delivery or submission is changed.
-- [ ] #3 Verified uploaded build numbers are recorded in build-number-floors and the current release/watch documentation through the required reviewed PR; relevant release-script checks and links pass, and owner hardware gates stay pending.
+- [x] #3 Verified uploaded build numbers are recorded in build-number-floors and the current release/watch documentation through the required reviewed PR; relevant release-script checks and links pass, and owner hardware gates stay pending.
 - [x] #4 Only generated files owned by this release are cleaned up; archives needed for crash symbolication are retained, and provenance, artifact hashes, processing evidence and limitations are recorded.
 <!-- AC:END -->
 
@@ -86,6 +86,8 @@ Corrected Mac export-only artifact 1.0.0 (202611080127) built from accepted main
 Final continuation checks: the unchanged production ch_check_build_number helper was exercised through the same standalone entry point used by the existing release-script harness, against the real final floors, at each floor and floor+1: floors-only: 8 passed, 0 failed (exit 0). This verified iOS 202611080035, unchanged Mac 202611050836, TV 202611080112 and vision 202611080120; rejected each floor and accepted each next value. pnpm check:links -> Markdown relative links verified. (exit 0). git diff --check -> no output, exit 0. Prior xcode-cloud-ci-scripts-test: 131 passed, 0 failed and completed package/network/iCloud/privacy checks are retained, not repeated. No Apple suite/figure/title-sweep run was warranted for unchanged app source; no new dependencies installed this continuation.
 
 Final cleanup/evidence: only owned TV/vision exports, the three new extraction trees, five continuation helpers and transient xcdistributionlogs were removed. Corrected Mac export directory /Users/david/Developer/canadian-ham/fastlane/builds/mac/202611080127 is intentionally retained with CanadianHam.pkg and ExportOptions.plist; final SHA-256 recheck remains b8077c4d170dfaf87460e9a8ceccf1f4a343a73bdff3db54f63eb12b4f3e4bb2. All 110 original archives plus all five TASK-95 archives remain (115 total), with all six TASK-95 dSYMs; no DerivedData/other-job cache removal. Credential/JWT evidence scan passed; main remains accepted SHA with pre-existing status.md only; 58.3 GiB free. Canonical final evidence: /Users/david/.copilot/session-state/42bab210-ecdc-4814-aef6-1c5b86a47bf0/files/task-95/resumed-summary.json. It preserves current successful states, all candidate/failed hashes and paths, mode inventories, retained Mac authorization gate, checks and cleanup; earlier continuation-summary.json remains dated historical evidence. AC1 is now proven by accepted iOS/watch plus signed/inspected TV, vision and corrected Mac exports from accepted main; this does not authorize or establish a Mac upload. AC4 remains proven. AC2 remains unchecked for the missing successful new Mac upload; AC3 remains unchecked pending the reviewed records PR. TASK-95 stays In Progress. No Mac retry, workflow/settings/tester/group change, external delivery, distribution upload, App Store submission, push, PR or merge occurred.
+
+2026-11-08: Local reviewer APPROVE on full non-Backlog diff at 29892dd6f3895bbb4f96b6f0435ff036e0110f6c. All four source-record files were reviewed; review_git was unavailable, so the complete Git diff and file context were read. Reviewer independently checked successful floor/evidence equality, next-number ordering, retained corrected Mac package SHA-256, whitespace and unchanged release gates. Records PR #1088 is open: https://github.com/djensenius/canadian-ham/pull/1088. AC3 is satisfied by the validated recorded floors/docs and this locally approved records PR; coordinator will wait for Copilot feedback and exact-head CI before normal merge. TASK-95 remains In Progress with AC2 unchecked: Mac retry authorization is absent, so corrected export 202611080127 must not be uploaded yet. Physical hardware and wider-distribution gates remain pending. A read-only repository visibility check returned PUBLIC, a pre-existing mismatch with the still-open public-release gate; no visibility change or permission-gate waiver was made. This PR adds only nonsecret release records, not app/content data or broader build distribution.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
