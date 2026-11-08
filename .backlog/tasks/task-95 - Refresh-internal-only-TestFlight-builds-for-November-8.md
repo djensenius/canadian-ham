@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-11-08T05:14:00Z'
-updated_date: '2026-11-08T06:27:00Z'
+updated_date: '2026-11-08T06:32:00Z'
 labels:
   - release
   - apple
@@ -80,6 +80,8 @@ tvOS exact build 202611080112 GET verification passed at 2026-11-08T06:20:41Z: V
 visionOS 1.0.0 (202611080120) exported from accepted main using explicit child umask 022; archive/export succeeded. Exact IPA 9,758,190 bytes, SHA-256 9790e8a16bfcb1d89c48e2934d9fabe2434c69bc89e59b9565051cfa5ce1e35c. All 2109 stored ZIP member modes and expanded app modes passed public readability/searchability and no set-id/world-write checks. Internal-only ExportOptions, Apple Distribution/team 9JALHNGRBQ, deep/strict codesign, exact default entitlements, byte-identical CA92.1 privacy/no tracking/collection, OS27 and no official sheet/watch/test payload passed. Hash/source rechecked immediately before the single authorized vision upload; Fastlane reported Successfully uploaded the new binary to App Store Connect and exit 0 at 06:24:15Z. GET processing polling underway. No Mac retry or source/Fastfile changes; corrected Mac work remains export-only and will start only after vision verification finishes.
 
 visionOS exact build 202611080120 GET verification passed: VALID, raw audience INTERNAL_ONLY, internal IN_BETA_TESTING, external NOT_APPLICABLE, not expired, sole Internal group/no public link. Evidence verified-VISION_OS-202611080120.json and filesystem-modes-xros.json retained. iOS/watch, tvOS and visionOS are now delivered and verified under the original authorization; there was exactly one authorized transfer per successful platform. Starting a fresh corrected Mac export-only artifact with umask 022 for local validation/retention. The session runner explicitly refuses any Mac upload action; owner unavailable and renewed Mac authorization remain a genuine gate. Mac floor will stay at 202611050836 regardless of corrected export build number.
+
+Corrected Mac export-only artifact 1.0.0 (202611080127) built from accepted main with child umask 022; archive/export succeeded. Retain /Users/david/Developer/canadian-ham/fastlane/builds/mac/202611080127/CanadianHam.pkg (10,509,770 bytes; SHA-256 b8077c4d170dfaf87460e9a8ceccf1f4a343a73bdff3db54f63eb12b4f3e4bb2) plus archive/dSYM. All 4250 installed BOM entries passed: 4166 regular 100644 entries, 2 executable 100755 entries, 82 directories 40755, zero permission findings. Previously failing CodeResources/embedded.provisionprofile and AppleDouble entries are now root-owned 100644, not 100600. Installer signature and Apple Distribution/team 9JALHNGRBQ app deep/strict codesign passed; exact native Mac entitlements, byte-identical CA92.1+35F9.1 no-collection privacy and internal-only ExportOptions passed; official sheet present only as authorized internal packaging. This verifies the session-runner permission correction locally, not server acceptance. GET at 06:30:43Z confirms no processed build and only AWAITING_UPLOAD with uploadedDate=null; no transfer was attempted. Owner unavailable, renewed retry permission explicitly pending; Mac floor remains 202611050836. Evidence inspection-mac-corrected.json, filesystem-modes-mac-corrected.json and mac-corrected-asc-state.json. Updated only actual successful TV/vision floors and current distribution/owner guide; iOS/watch records stay accepted unchanged. Next run only focused floor/link/diff checks, retaining the already-passing 131-case release-script result and prior package/guard checks.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
