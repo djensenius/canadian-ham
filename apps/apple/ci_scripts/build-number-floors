@@ -17,5 +17,5 @@
 # build-number: positive integer without leading zeros
 ios 1.0.0 202611080035
 macos 1.0.0 202611050836
-tvos 1.0.0 202611050840
-visionos 1.0.0 202611050844
+tvos 1.0.0 202611080112
+visionos 1.0.0 202611080120
