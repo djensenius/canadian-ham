@@ -35,6 +35,25 @@ Sittings 2–4 need a processed internal TestFlight build from main, for the int
 - Until then, the owner may separately authorize a legacy internal-only Fastlane fallback upload with explicit `distribution:false` ([TestFlight runbook](testflight.md#internal-beta-lanes)); it is not an automatic post-merge step and stops for each platform once Xcode Cloud ships it. Under build-number [option (b)](distribution.md#owner-decision-before-the-first-xcode-cloud-build), Fastlane stops for iOS, tvOS and visionOS at the version-bump merge (including that merge), so no new-version timestamp build may be uploaded for those platforms. Their builds then come only from owner-triggered Xcode Cloud; macOS option (c) is optional and separately authorized.
 - Either way, the coordinator gives you the TestFlight version and build number and the commit. Distribution uploads, external testing, App Store submission and release stay owner-gated.
 
+Latest verified internal builds (all version **1.0.0**):
+
+| Platform | Build | App source | Authorized upload |
+| --- | --- | --- | --- |
+| iOS/watch | `202611080035` | `20260a9c` | 2026-11-08, TASK-95 |
+| macOS | `202611050836` | `a98b5375` | 2026-11-05, TASK-94 |
+| tvOS | `202611080112` | `20260a9c` | 2026-11-08, TASK-95 |
+| visionOS | `202611080120` | `20260a9c` | 2026-11-08, TASK-95 |
+
+App Store Connect reports `VALID`, `INTERNAL_ONLY`, `IN_BETA_TESTING` and external
+`NOT_APPLICABLE`; only the existing Internal group has access. Physical checks remain pending
+([watch results](../testing/task-14.6-watch-release.md#owner-upload-and-physical-watch-results-pending)).
+The Mac `202611080047` upload failed with Apple error 90255. Corrected Mac
+`202611080127` passed local export/signing/privacy/package-mode inspection and is
+retained at `fastlane/builds/mac/202611080127/CanadianHam.pkg`, but is **export-only,
+not uploaded or processed**. The owner was unavailable; explicit renewed Mac
+upload permission is still pending. No Mac retry occurred, so the latest usable
+Mac build remains the November 5 TASK-94 build above.
+
 ## Reporting results
 
 Send results to the coordinator as a reply. Any result that contains personal data (names, Apple Account emails, serial numbers, UDIDs, screenshots showing them, private correspondence) goes only as a reply. You can append a result without personal data to the task with `backlog task edit <task-id> --append-notes "..."`, but Backlog auto-commits that edit at once, and the repository is public. The coordinator copies results into the existing result tables ([TASK-14.3](../testing/task-14.3-watch-morse.md#hardware-observations-owner-to-fill-after-testing), [TASK-14.5](../testing/task-14.5-watch-a11y.md#owner-manual-checks--pending-do-not-mark-ac4-complete), [TASK-14.6](../testing/task-14.6-watch-release.md#owner-upload-and-physical-watch-results-pending), [tvOS listening check](../accessibility.md#owner-listening-check-tvos-voiceover), [permission record](../content-licensing.md#permission-record)), checks the criteria that passed, and files follow-up work for anything that failed.
@@ -277,14 +296,15 @@ Owner only: agents never create or edit Xcode Cloud workflows or App Store Conne
 
 - An App Store Connect Admin or App Manager role (needed for Next Build Number) and the Xcode release named in [Xcode Cloud setup](distribution.md#xcode-cloud-setup-owner-only) step 1.
 - The current highest recorded uploads, from `apps/apple/ci_scripts/build-number-floors` on main ([floors file](distribution.md#floors-file)). Every Fastlane upload raises them, so ask the coordinator for the current lines. On 2026-11-05 all four were at version 1.0.0 (internal-only Fastlane fallback uploads, TASK-94): iOS `202611050831`, macOS `202611050836`, tvOS `202611050840` and visionOS `202611050844`.
+- On 2026-11-08, TASK-95 raised the iOS/watch floor to `202611080035`, tvOS to `202611080112` and visionOS to `202611080120`. The Mac floor is unchanged: neither the failed `202611080047` upload nor the corrected, unuploaded `202611080127` export is a processed build. Mac retry permission is pending. Land the records PR before any owner-triggered Xcode Cloud archive.
 
 **Steps**
 
 1. **Environment and repository:** [Xcode Cloud setup](distribution.md#xcode-cloud-setup-owner-only) steps 1–2.
-2. **Build number, before any build** ([Build numbers](distribution.md#build-numbers)). In App Store Connect → the app → Xcode Cloud → Settings → Build Number, try a Next Build Number above the highest recorded upload, for example `202611050845` (option (a)). Nobody has tried a number this large for this app; some developers report that App Store Connect refuses numbers above 2,147,483,647.
+2. **Build number, before any build** ([Build numbers](distribution.md#build-numbers)). In App Store Connect → the app → Xcode Cloud → Settings → Build Number, try a Next Build Number above the highest recorded upload, for example `202611080121` (option (a)). Nobody has tried a number this large for this app; some developers report that App Store Connect refuses numbers above 2,147,483,647.
    - **Accepted:** all four platforms continue at 1.0.0 from that number. After any separately authorized Fastlane fallback upload, raise Next Build Number above it; the coordinator records its floor in a PR before the next Xcode Cloud archive ([While Fastlane uploads continue](distribution.md#while-fastlane-uploads-continue)).
    - **Refused:** choose the fallback in [the owner decision](distribution.md#owner-decision-before-the-first-xcode-cloud-build). Option (b): iOS, iPadOS, tvOS and visionOS move to a new marketing version (for example 1.0.1) from a small Next Build Number that App Store Connect accepts; the coordinator raises `MARKETING_VERSION` in a pull request, and from that merge on (including that merge), Fastlane stops for those platforms. The merge authorizes no upload or workflow trigger. Option (c), for the Mac app under (b): optionally use the separately authorized Fastlane fallback for now, or ask Apple Developer Support. Overriding `CFBundleVersion` in a script is unverified and not recommended; use it only with an owner decision and a test (see [distribution](distribution.md#owner-decision-before-the-first-xcode-cloud-build)).
-   - Reply with the option and the Next Build Number, e.g. "Owner decision 2026-11-05: option (a), Next Build Number 202611050845 accepted".
+   - Reply with the option and the Next Build Number, e.g. "Owner decision 2026-11-08: option (a), Next Build Number 202611080121 accepted".
 3. **Before the distribution gates clear:** only the legacy internal-only workflow in [Xcode Cloud setup](distribution.md#xcode-cloud-setup-owner-only) step 4 is eligible, with **TestFlight (Internal Testing Only)** and an internal-team-only post-action. Under option (b), leave out the macOS archive action.
 4. **First run:** the owner manually triggers the build, then follows Xcode Cloud setup step 6. Give the coordinator each platform's TestFlight version and build number; that platform's internal builds then come from owner-triggered Xcode Cloud ([Internal builds](#internal-builds-for-the-sittings)). On the first macOS archive, confirm that it produces a native macOS app without the watch app, since Xcode Cloud can't pass the Fastlane mac lane's SDK overrides ([macOS SDK](distribution.md#differences-from-fastlane)). Xcode Cloud builds never include the internal-only official reference sheet.
 5. **Future standard, only after the gates:** once TASK-1.7 is Done (TASK-85, its other gate, is Done), the owner may create or enable the App Store-eligible TestFlight workflow in Xcode Cloud setup step 5: **TestFlight and App Store**, **Restrict Editing** on, and **TestFlight Internal Testing** to the internal team group only. No external-testing post-action or automatic submission is authorized. External TestFlight and App Store submission still wait for their separate authorization, the [release checklist](release-checklist.md#store-submission) and the [`CA92.1` sign-off](#task-85-sign-off-on-ca921-before-app-store-submission). Once Xcode Cloud has shipped all four platforms, decide how to retire Fastlane ([Retiring Fastlane](distribution.md#retiring-fastlane)).
