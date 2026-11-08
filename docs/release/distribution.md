@@ -68,10 +68,16 @@ Every Fastlane upload so far is version 1.0.0, and all of them are above 2,147,4
 
 | Platform | Version | Highest Fastlane upload |
 | --- | --- | --- |
-| `ios` | 1.0.0 | 202611050831 |
+| `ios` | 1.0.0 | 202611080035 |
 | `macos` | 1.0.0 | 202611050836 |
 | `tvos` | 1.0.0 | 202611050840 |
 | `visionos` | 1.0.0 | 202611050844 |
+
+TASK-95's separately authorized 2026-11-08 refresh verified only iOS/watch
+`202611080035` from main `20260a9c`: `VALID`, `INTERNAL_ONLY`, `IN_BETA_TESTING`,
+external `NOT_APPLICABLE`. The macOS `202611080047` upload failed with Apple error
+90255 (root-only-readable package files); no retry or tvOS/visionOS upload followed.
+Their floors remain the verified 2026-11-05 TASK-94 uploads, not the failed Mac export.
 
 `ci_pre_xcodebuild.sh` reads the platform from Xcode Cloud's `CI_PRODUCT_PLATFORM` and the version from the plain `MARKETING_VERSION = x.y.z;` lines in `project.pbxproj`, which must all agree. It fails an archive when:
 
@@ -86,7 +92,7 @@ The check only stops mistakes early; App Store Connect still enforces its own ru
 
 The owner prefers Xcode Cloud. In every option below, Fastlane is only a temporary fallback whose internal uploads need separate explicit owner authorization.
 
-- **(a) One sequence for every platform.** Set Next Build Number to a plain integer above every floor, for example `202611050845`; Xcode Cloud then counts up by 1 from it. If App Store Connect accepts it, all four platforms continue at 1.0.0 from that number and nothing else changes.
+- **(a) One sequence for every platform.** Set Next Build Number to a plain integer above every floor, for example `202611080036`; Xcode Cloud then counts up by 1 from it. If App Store Connect accepts it, all four platforms continue at 1.0.0 from that number and nothing else changes.
 - **(b) App Store Connect refuses it (probably the 32-bit limit).** iOS, iPadOS, tvOS and visionOS ship a new marketing version, for example 1.0.1, starting from small Xcode Cloud numbers:
   1. The coordinator raises `MARKETING_VERSION` in `apps/apple/project.yml` to a new `x.y.z` (all targets share it, including the watch app), regenerates the project and merges it in a pull request.
   2. **From that version-bump merge onward (including that merge), the coordinator stops Fastlane uploads for iOS, tvOS and visionOS.** Do not upload any Fastlane timestamp build of those platforms at the new version, even one exported earlier for inspection: it would sit above every small Xcode Cloud number for that version and block them. The merge authorizes no upload or workflow trigger. A macOS fallback under (c) is optional and separately authorized, not a post-merge step.

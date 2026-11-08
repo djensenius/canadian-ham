@@ -15,7 +15,7 @@
 #   not 1.0 or 01.0.0), matching MARKETING_VERSION in the project, which must
 #   use the same form
 # build-number: positive integer without leading zeros
-ios 1.0.0 202611050831
+ios 1.0.0 202611080035
 macos 1.0.0 202611050836
 tvos 1.0.0 202611050840
 visionos 1.0.0 202611050844
