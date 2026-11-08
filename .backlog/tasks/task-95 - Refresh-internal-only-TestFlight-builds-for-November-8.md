@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-11-08T05:14:00Z'
-updated_date: '2026-11-08T05:32:00Z'
+updated_date: '2026-11-08T05:38:00Z'
 labels:
   - release
   - apple
@@ -54,4 +54,6 @@ Blocked handoff and cleanup: kept nonsecret evidence under /Users/david/.copilot
 2026-11-08 coordinator resolved the Cloud lookup blocker using the documented GET /v1/ciProducts list endpoint (Apple documentation: https://developer.apple.com/documentation/appstoreconnectapi/get-v1-ciproducts). The complete product list and each APP product app relationship succeeded: 11 products, 12 HTTP 200 requests, no product matching Canadian Ham app 6821356982 / org.davidjensenius.CanadianHam, no remaining pagination. Evidence: session files/task-95/cloud-products-resolution.json, observed 2026-11-08T05:30:16Z. Cloud is not configured for this app; the prior app/ciProduct error is not being treated as an authorization bypass. The documented internal-only fallback may proceed under this request, after confirming live latest build numbers/pending uploads. All prior passing unchanged-source quick checks and guards are retained; do not rerun them unnecessarily. No export or upload has yet occurred.
 
 Continuation 2026-11-08: sole worker resumed after coordinator resolved the Cloud lookup via the documented ciProducts list. Reconfirmed main accepted SHA 20260a9c766889737d9f0f891b02e414688341d4 and tracked cleanliness (only pre-existing untracked status.md), task branch clean, 62 GiB free. Retaining the existing plan and passing checks. Remaining execution: minimal latest-build/pending-upload GET snapshot; sequential internal-only export, exact-artifact inspection, one authorized transfer and GET processing verification per platform; then scoped release records/checks, owned cleanup and commit. No agents, new suite runs, Cloud writes, tester/settings changes, distribution uploads or upload retries.
+
+Live continuation snapshot 2026-11-08T05:34:24Z: GET-only 114 builds and 127 upload records, all pages complete; latest/max per-platform builds remain 202611050831/0836/0840/0844, version 1.0.0, VALID and raw audience INTERNAL_ONLY. Only 13 older AWAITING_UPLOAD records exist (all below current floors; newest November 3), no competing newer upload. Sole beta group Internal has isInternalGroup=true, hasAccessToAllBuilds=true and no public link. An unsupported GET_COLLECTION on /v1/buildUploads was corrected to the prior successful /v1/apps/6821356982/buildUploads relationship; error and success evidence retained. Cloud preflight evidence remains applicable; iOS/watch export has started from accepted main via explicit distribution:false export_only:true, xbuild only.
 <!-- SECTION:NOTES:END -->
