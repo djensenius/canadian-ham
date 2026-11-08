@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-11-08T05:14:00Z'
-updated_date: '2026-11-08T06:18:00Z'
+updated_date: '2026-11-08T06:20:00Z'
 labels:
   - release
   - apple
@@ -74,6 +74,8 @@ Required records checks: pnpm test:xcode-cloud-scripts -> xcode-cloud-ci-scripts
 Resumed on the same clean task branch at daaa0b32890eaab9979050558eb0398b45683ea9; main remains accepted 20260a9c766889737d9f0f891b02e414688341d4, only pre-existing untracked status.md, 61 GiB free. iOS success and prior checks are accepted and will not be repeated. Coordinator clarified tvOS/visionOS remain authorized despite Mac 90255, but explicitly confirmed the owner is unavailable and Mac retry permission is NOT granted. Session-only runners will use umask 022 for archive/export children and per-file restrictions for evidence/auth; no repository/Fastfile change. Every new artifact will have packaged filesystem modes verified before transfer. A corrected Mac export may be retained and inspected, never uploaded this session; Mac floor stays 202611050836.
 
 Continuation live GET snapshot 2026-11-08T06:12:13Z: 115 builds and 129 upload records, all pages complete, sole Internal group/no public link. Latest iOS remains verified 202611080035; Mac 202611050836, TV 202611050840 and vision 202611050844 unchanged; the only additional pending record is failed Mac 202611080047. No contradictory Cloud/version evidence; completed Cloud preflight retained. tvOS 1.0.0 (202611080112) exported from accepted main via Fastlane/xbuild with explicit child umask 022; archive/export succeeded. Exact IPA 6,736,977 bytes, SHA-256 ab774752e79d863b995b28dba4a5424e2a85c9f2d300a3b497aa47ee00dcba80. All 2109 ZIP entries and expanded app modes passed public readability/searchability and no set-id/world-write checks. Internal-only ExportOptions, Apple Distribution/team 9JALHNGRBQ, deep/strict codesign, exact default entitlements, byte-identical CA92.1 privacy/no tracking/collection, minimum OS27 and no official sheet/watch/test payload passed. Hash/source rechecked immediately before the single authorized TV upload; Fastlane reported Successfully uploaded the new binary to App Store Connect and exit 0 at 06:18:11Z. GET processing verification underway; no success claim from transfer alone. All old/new archives and dSYMs retained. Mac retry remains explicitly unauthorized.
+
+tvOS exact build 202611080112 GET verification passed at 2026-11-08T06:20:41Z: VALID, raw audience INTERNAL_ONLY, internal IN_BETA_TESTING, external NOT_APPLICABLE, not expired, no external groups or public links. Evidence verified-TV_OS-202611080112.json and filesystem-modes-appletvos.json retained. Starting the separately authorized unattempted visionOS export next, sequentially; no Mac retry/upload.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
