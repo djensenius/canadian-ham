@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-11-08T05:14:00Z'
-updated_date: '2026-11-08T05:38:00Z'
+updated_date: '2026-11-08T05:45:00Z'
 labels:
   - release
   - apple
@@ -56,4 +56,6 @@ Blocked handoff and cleanup: kept nonsecret evidence under /Users/david/.copilot
 Continuation 2026-11-08: sole worker resumed after coordinator resolved the Cloud lookup via the documented ciProducts list. Reconfirmed main accepted SHA 20260a9c766889737d9f0f891b02e414688341d4 and tracked cleanliness (only pre-existing untracked status.md), task branch clean, 62 GiB free. Retaining the existing plan and passing checks. Remaining execution: minimal latest-build/pending-upload GET snapshot; sequential internal-only export, exact-artifact inspection, one authorized transfer and GET processing verification per platform; then scoped release records/checks, owned cleanup and commit. No agents, new suite runs, Cloud writes, tester/settings changes, distribution uploads or upload retries.
 
 Live continuation snapshot 2026-11-08T05:34:24Z: GET-only 114 builds and 127 upload records, all pages complete; latest/max per-platform builds remain 202611050831/0836/0840/0844, version 1.0.0, VALID and raw audience INTERNAL_ONLY. Only 13 older AWAITING_UPLOAD records exist (all below current floors; newest November 3), no competing newer upload. Sole beta group Internal has isInternalGroup=true, hasAccessToAllBuilds=true and no public link. An unsupported GET_COLLECTION on /v1/buildUploads was corrected to the prior successful /v1/apps/6821356982/buildUploads relationship; error and success evidence retained. Cloud preflight evidence remains applicable; iOS/watch export has started from accepted main via explicit distribution:false export_only:true, xbuild only.
+
+iOS/watch internal Release export and one authorized transfer succeeded: build 1.0.0 (202611080035), source 20260a9c766889737d9f0f891b02e414688341d4; IPA 19,398,815 bytes, SHA-256 90ff681b776f35acad7bb1f55f3fd49ff14d4b564a7ac9fcef9b95f2cae98698. ExportOptions app-store-connect/internal-only=true, exact phone/watch version match, Apple Distribution/team 9JALHNGRBQ, deep/strict signatures and exact no-cloud/no-network entitlements passed. Current privacy files byte-identical (phone CA92.1+35F9.1; watch 35F9.1), no tracking/collection. Watch IDs/independence/minOS27/icon/Apple-only otool links passed; exactly 988 source-identical Basic/explanation JSON and 1004 regular files, digest 9122182849a193f888a9979c58af8dca601b4466c83507fd914b9d655cc1f32b; official sheet only in phone, not watch. Archive fastlane/archives/ios/CanadianHam-202611080035.xcarchive and both dSYMs retained. Upload lane reported Successfully uploaded the new binary to App Store Connect and exited 0 at 05:42:18Z after hash/source recheck. GET processing polling is underway; successful transfer alone is not marked complete. Evidence: lane-ios-export/upload JSON+logs and inspection-ios.json in session task-95 directory; free disk 62 GiB.
 <!-- SECTION:NOTES:END -->
